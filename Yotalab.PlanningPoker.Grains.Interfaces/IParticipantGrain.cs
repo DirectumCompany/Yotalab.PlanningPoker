@@ -35,7 +35,8 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
     /// <summary>
     /// Получить сессии, в которых состоит участник.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Задача на получение списка сессий участника.</returns>
+    // TODO: Подумать над тем, чтобы вынести в отдельный Grain IParticipantSessions.
     Task<ImmutableArray<ISessionGrain>> Sessions();
 
     /// <summary>
