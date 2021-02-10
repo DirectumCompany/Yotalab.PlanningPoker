@@ -6,3 +6,5 @@
 /.vs
 *.user
 /Yotalab.PlanningPoker.BlazorServerSide/ScaffoldingReadMe.txt
+**/obj
+**/bin
