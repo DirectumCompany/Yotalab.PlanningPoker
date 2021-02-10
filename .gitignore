@@ -8,3 +8,5 @@
 /Yotalab.PlanningPoker.BlazorServerSide/ScaffoldingReadMe.txt
 **/obj
 **/bin
+/logs
+/keys
