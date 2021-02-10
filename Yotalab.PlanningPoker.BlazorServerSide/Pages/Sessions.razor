@@ -1,0 +1,84 @@
+﻿@page "/"
+
+@inherits AuthorizedOwningComponentBase<SessionService>
+
+<h1 class="text-center">Мои сессии</h1>
+
+@if (this.sessions != null)
+{
+  <div class="w-75 m-auto">
+    <div>
+      <div class="list-group">
+        @if (this.sessions.Count > 0)
+        {
+          foreach (var session in this.sessions)
+          {
+            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+               href="sessions/@(session.Id)">
+              <div>
+                @session.Name
+                @if (session.ProcessingState == Grains.Interfaces.Models.SessionProcessingState.Started)
+                {
+                  <span class="badge bg-danger ms-2">Голосование идет</span>
+                }
+              </div>
+              <div>
+                @if (this.ParticipantId == session.ModeratorId)
+                {
+                  <span class="badge bg-primary me-2">Вы модератор</span>
+                }
+                <span class="badge bg-success">участников: @session.ParticipantsCount</span>
+              </div>
+            </a>
+          }
+        }
+        else
+        {
+          <div class="list-group-item list-group-item-action">
+            <strong>Сессий нет</strong>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="float-end p-4 pe-3">
+      <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#newSessionModal">Новая сессия</button>
+    </div>
+  </div>
+
+  <div class="modal fade" id="newSessionModal" tabindex="-1" aria-labelledby="newSessionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newSessionModalLabel">Новая сессия</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="session-name" class="col-form-label">Имя:</label>
+              <input @bind="this.newSessionName" type="text" class="form-control" id="session-name">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                  @onclick="@(async () => await this.CreateSessionAsync())">
+            Создать
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Отменить
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+else
+{
+  <div class="d-flex justify-content-center">
+    <div class="spinner-grow text-info" role="status">
+      <span class="visually-hidden">Загрузка...</span>
+    </div>
+  </div>
+}

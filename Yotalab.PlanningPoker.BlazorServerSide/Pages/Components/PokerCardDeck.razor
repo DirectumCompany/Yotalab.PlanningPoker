@@ -1,0 +1,18 @@
+﻿@using Yotalab.PlanningPoker.Grains.Interfaces.Models
+@inherits OwningComponentBase<ParticipantsService>
+
+<div class="row justify-content-md-center">
+  @foreach (var vote in Vote.GetAll())
+  {
+    if (Vote.Unset.Equals(vote))
+      continue;
+
+    <div class="col-auto">
+      <PokerCard @key="vote.Value"
+                 SessionId="this.SessionId"
+                 Value="vote"
+                 Selected="@(this.selectedVote?.Equals(vote) == true)"
+                 OnSelectedChanged="this.HandleSelectedChanged"/>
+    </div>
+  }
+</div>

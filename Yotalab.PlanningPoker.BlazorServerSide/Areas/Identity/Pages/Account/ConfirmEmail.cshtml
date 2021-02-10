@@ -1,0 +1,15 @@
+﻿@page
+@model ConfirmEmailModel
+@{
+  ViewData["Title"] = "Подверждение эл. почты";
+}
+
+<div style="width:500px;margin-left:-85px">
+  <div class="mb-4 text-center">
+    <component type="@typeof(Yotalab.PlanningPoker.BlazorServerSide.Shared.Logotype)" render-mode="ServerPrerendered" />
+  </div>
+  <h1 class="h3 mb-3 fw-normal">Вы подвердили вашу эл. почту</h1>
+  <p>
+    <a class="btn btn-primary" href="Identity/Account/Login">Войти</a>
+  </p>
+</div>

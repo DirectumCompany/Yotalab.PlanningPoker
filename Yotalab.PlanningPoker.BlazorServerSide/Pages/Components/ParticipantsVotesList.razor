@@ -1,0 +1,51 @@
+﻿@using Grains.Interfaces.Models
+@using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO
+
+@inject ParticipantsService Service
+
+<ul class="list-group mb-3">
+  @foreach (var participant in this.PaticipantVotes.OrderByDescending(p => p.Id == this.ParticipantId))
+  {
+    <li class="list-group-item d-flex justify-content-between lh-sm@(participant.Id == this.ParticipantId ? " list-group-item-secondary" : string.Empty)">
+      <div class="d-flex align-items-center">
+        <div class="me-3">
+          <img src="@(string.IsNullOrWhiteSpace(participant.AvatarUrl) ? DefaultAvatar : participant.AvatarUrl)" alt="Avatar" class="avatar">
+        </div>
+        <div>
+          <h6 class="my-0">@(string.IsNullOrEmpty(participant.Name) ? "Безымянный" : participant.Name)</h6>
+          @if (participant.Id == this.ParticipantId)
+          {
+            <ParticipantChangeNameLink ParticipantInfo="@participant.ToInfo()"
+                                       Title="Изменить имя"
+                                       ClassNames="btn-sm small">
+              <TitleTemplate>
+                <small>@context</small>
+              </TitleTemplate>
+            </ParticipantChangeNameLink>
+          }
+        </div>
+      </div>
+      @if (participant.Id == this.ParticipantId || this.SessionState == SessionProcessingState.Stopped || this.SessionState == SessionProcessingState.Finished)
+      {
+        <h3 class="text-muted"><strong>@participant.Vote.Value</strong></h3>
+      }
+      else
+      {
+        <h3>@(!Vote.Unset.Equals(participant.Vote) ? "👌" : string.Empty)</h3>
+      }
+    </li>
+  }
+</ul>
+
+@code {
+  [Parameter]
+  public IEnumerable<ParticipantInfoDTO> PaticipantVotes { get; set; }
+
+  [Parameter]
+  public Guid ParticipantId { get; set; }
+
+  [Parameter]
+  public SessionProcessingState SessionState { get; set; }
+
+  private const string DefaultAvatar = "img/default_avatar.png";
+}

@@ -1,0 +1,58 @@
+﻿@using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO
+
+<RadzenChart>
+  <RadzenDonutSeries Data="@this.chartData" CategoryProperty="Vote" ValueProperty="ParticipantCount" Radius="150" InnerRadius="140">
+    <TitleTemplate>
+      <div class="rz-donut-content">
+        <div class="text-muted">Участников: @this.PaticipantVotes.Count()</div>
+        <div><h2>Среднее: @this.FormatAverage(this.average)</h2></div>
+      </div>
+    </TitleTemplate>
+  </RadzenDonutSeries>
+</RadzenChart>
+
+@code {
+  private List<DataItem> chartData = new List<DataItem>();
+
+  private double average;
+
+  [Parameter]
+  public IEnumerable<ParticipantInfoDTO> PaticipantVotes { get; set; }
+
+  protected override void OnParametersSet()
+  {
+    base.OnParametersSetAsync();
+    this.chartData.Clear();
+
+    var numbersResults = this.PaticipantVotes.Where(v => v.Vote.IsNumber).Select(v => double.Parse(v.Vote.Value)).ToList();
+    this.average = numbersResults.Count > 0 ? numbersResults.Average() : 0;
+    var votesGroup = this.PaticipantVotes.GroupBy(v => v.Vote.Value);
+    var allVotesCount = this.PaticipantVotes.Count();
+    foreach (var voteGroup in votesGroup)
+    {
+      var voteCount = voteGroup.Count();
+      var percents = (double)voteCount / (double)allVotesCount;
+      this.chartData.Add(new DataItem()
+      {
+        Vote = $"Оценка {voteGroup.Key} - {this.FormatPercents(percents)} (голосов: {voteCount})",
+        ParticipantCount = voteCount
+      });
+    }
+  }
+
+  private string FormatPercents(double percents)
+  {
+    return (percents * 100) % 1 != 0 ? percents.ToString("P1") : percents.ToString("P0");
+  }
+
+  private string FormatAverage(double average)
+  {
+    return average % 1 != 0 ? average.ToString("N1") : average.ToString("N0");
+  }
+
+  class DataItem
+  {
+    public string Vote { get; set; }
+    public double ParticipantCount { get; set; }
+  }
+}

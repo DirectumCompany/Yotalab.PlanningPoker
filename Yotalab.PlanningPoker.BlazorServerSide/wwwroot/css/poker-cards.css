@@ -1,0 +1,129 @@
+﻿.poker-cards {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.poker-card {
+  position: relative;
+  display: inline-block;
+  width: 132px;
+  height: 172px;
+  font: 16px 'Trebuchet MS';
+  margin: 10px;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+}
+
+  .poker-card:before,
+  .poker-card:after {
+    content: attr(value);
+    position: absolute;
+    width: 12px;
+    text-align: center;
+    letter-spacing: -2px;
+  }
+
+  .poker-card:before {
+    top: 4px;
+    left: 4px;
+  }
+
+  .poker-card:after {
+    bottom: 4px;
+    right: 4px;
+    transform: rotate(180deg);
+  }
+
+  .poker-card:hover {
+    background: #ffe4c442;
+  }
+
+  .poker-card--heart {
+    color: #e44145;
+  }
+
+  .poker-card--heart:before,
+  .poker-card--heart:after {
+    content: attr(value) ' ♥';
+  }
+
+.poker-card--spade {
+  color: #252525;
+}
+
+  .poker-card--spade:before,
+  .poker-card--spade:after {
+    content: attr(value) ' ♠';
+  }
+
+.poker-card--selected {
+  background: bisque;
+}
+
+  .poker-card--selected:hover {
+    background: #fbd3a3!important;
+  }
+
+.poker-card__inner {
+  box-sizing: border-box;
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+}
+
+.poker-card__inner--centered {
+  justify-content: center;
+}
+
+.poker-card__column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.poker-card__column--centered {
+  justify-content: center;
+}
+
+.poker-card__symbol {
+  display: inline-block;
+  height: 40px;
+  text-align: center;
+}
+
+  .poker-card__symbol:before {
+    font-size: 40px;
+    line-height: 40px;
+  }
+
+.poker-card--heart .poker-card__symbol:before {
+  content: '♥';
+}
+
+.poker-card--spade .poker-card__symbol:before {
+  content: '♠';
+}
+
+.poker-card__symbol--rotated,
+.poker-card__symbol:last-of-type {
+  transform: rotate(180deg);
+}
+
+.poker-card__symbol:first-of-type {
+  transform: rotate(0);
+}
+
+.poker-card__symbol--big {
+  flex-basis: 60px;
+}
+
+.poker-card__symbol--huge {
+  flex-basis: 108px;
+}

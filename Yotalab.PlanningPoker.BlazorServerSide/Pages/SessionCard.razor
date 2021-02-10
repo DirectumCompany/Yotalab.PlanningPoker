@@ -1,0 +1,58 @@
+﻿@page "/sessions/{sessionId:guid}"
+@using Grains.Interfaces.Models
+@inherits AuthorizedOwningComponentBase<SessionService>
+@if (this.session != null)
+{
+  <h1 class="text-center">@this.session.Name</h1>
+
+  @if (this.userNotJoinedToSession)
+  {
+    <JoinPrompt Title="@($"Вы не являетесь участником сессии '{this.session.Name}'")"
+                SessionId="this.SessionId"
+                ParticipantId="this.ParticipantId"/>
+  }
+  else
+  {
+    <div class="row g-3">
+      <div class="col-md-5 col-lg-4 order-md-last mt-4">
+        <SessionStatusPrompt SessionId="this.SessionId"
+                             ModeratorId="this.session.ModeratorId"
+                             ParticipantId="this.ParticipantId"
+                             SessionState="this.session.ProcessingState" />
+
+        <h4 class="d-flex align-items-center mb-3">
+          <span class="text-muted me-2">Участники</span>
+          <span class="badge bg-secondary rounded-pill">@this.session.ParticipantsCount</span>
+        </h4>
+
+        <ParticipantsVotesList PaticipantVotes="this.participantVotes"
+                               ParticipantId="this.ParticipantId"
+                               SessionState="this.session.ProcessingState" />
+      </div>
+      <div class="col-md-7 col-lg-8">
+        @if (this.session.ProcessingState != SessionProcessingState.Finished)
+        {
+          if (this.User != null)
+          {
+            <PokerCardDeck SessionId="this.SessionId"
+                           ParticipantId="this.ParticipantId"
+                           ParticipantVote="this.participantVote"
+                           CanVote="this.session.ProcessingState == SessionProcessingState.Started || this.session.ProcessingState == SessionProcessingState.Stopped" />
+          }
+        }
+        else
+        {
+          <ParticipantsVotesResult PaticipantVotes="this.participantVotes" />
+        }
+      </div>
+    </div>
+  }
+}
+else
+{
+  <div class="d-flex justify-content-center">
+    <div class="spinner-grow text-info" role="status">
+      <span class="visually-hidden">Загрузка...</span>
+    </div>
+  </div>
+}

@@ -1,0 +1,10 @@
+﻿@using Yotalab.PlanningPoker.BlazorServerSide.Services
+@inherits OwningComponentBase<SessionService>
+
+<section class="poker-card poker-card--heart@(this.isSelected ? " poker-card--selected" : string.Empty)"
+         @onclick="@(async () => await this.OnPokerCardClick())"
+         value="@this.Value.Value">
+  <div class="d-flex justify-content-center align-items-center h-100">
+    <h1 class="display-1">@this.Value.Value</h1>
+  </div>
+</section>

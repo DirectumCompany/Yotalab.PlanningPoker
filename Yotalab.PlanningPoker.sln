@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yotalab.PlanningPoker.Api", "Yotalab.PlanningPoker.Api\Yotalab.PlanningPoker.Api.csproj", "{9033249A-FF91-436C-9E6E-F52F1A224848}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yotalab.PlanningPoker.Grains.Interfaces", "Yotalab.PlanningPoker.Grains.Interfaces\Yotalab.PlanningPoker.Grains.Interfaces.csproj", "{580F7DF7-1BA4-435E-BE67-A02F8A3E3E33}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yotalab.PlanningPoker.BlazorServerSide", "Yotalab.PlanningPoker.BlazorServerSide\Yotalab.PlanningPoker.BlazorServerSide.csproj", "{EAC82324-015B-4F4D-BE1B-653E90120305}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yotalab.PlanningPoker.Grains", "Yotalab.PlanningPoker.Grains\Yotalab.PlanningPoker.Grains.csproj", "{6E8BB09B-EE37-47FC-9326-674C04CD3797}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9033249A-FF91-436C-9E6E-F52F1A224848}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9033249A-FF91-436C-9E6E-F52F1A224848}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9033249A-FF91-436C-9E6E-F52F1A224848}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9033249A-FF91-436C-9E6E-F52F1A224848}.Release|Any CPU.Build.0 = Release|Any CPU
+		{580F7DF7-1BA4-435E-BE67-A02F8A3E3E33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{580F7DF7-1BA4-435E-BE67-A02F8A3E3E33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{580F7DF7-1BA4-435E-BE67-A02F8A3E3E33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{580F7DF7-1BA4-435E-BE67-A02F8A3E3E33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAC82324-015B-4F4D-BE1B-653E90120305}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAC82324-015B-4F4D-BE1B-653E90120305}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAC82324-015B-4F4D-BE1B-653E90120305}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAC82324-015B-4F4D-BE1B-653E90120305}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E8BB09B-EE37-47FC-9326-674C04CD3797}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E8BB09B-EE37-47FC-9326-674C04CD3797}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E8BB09B-EE37-47FC-9326-674C04CD3797}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E8BB09B-EE37-47FC-9326-674C04CD3797}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6EF01FB4-89CC-4184-9D7D-81D71429C2E6}
+	EndGlobalSection
+EndGlobal

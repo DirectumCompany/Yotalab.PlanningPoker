@@ -1,0 +1,95 @@
+﻿@using Grains.Interfaces.Models
+@inject SessionService Service
+
+<div class="alert @alertClass d-flex justify-content-between align-items-center py-2" role="alert">
+  <strong class="ms-2">@sessionStatus</strong>
+  @if (this.ParticipantId == this.ModeratorId)
+  {
+    <button type="button" class="btn btn-sm @buttonStyle"
+            disabled="@this.isSessionStateChanging"
+            @onclick="@(async () => await this.ChangeSessionState(requestedState))"
+            @ondblclick:preventDefault="true" @ondblclick:stopPropagation="true">
+      @buttonText
+    </button>
+  }
+</div>
+
+@code {
+  [Parameter]
+  public Guid SessionId { get; set; }
+
+  [Parameter]
+  public Guid ModeratorId { get; set; }
+
+  [Parameter]
+  public Guid ParticipantId { get; set; }
+
+  [Parameter]
+  public SessionProcessingState SessionState { get; set; }
+
+  private string buttonText;
+  private string buttonStyle;
+  private string sessionStatus;
+  private SessionProcessingState requestedState;
+  private string alertClass;
+  private bool isSessionStateChanging = false;
+
+  protected override void OnParametersSet()
+  {
+    base.OnParametersSet();
+
+    this.buttonText = "Начать";
+    this.buttonStyle = "btn-primary";
+    this.sessionStatus = "Голосование не проводится";
+    this.requestedState = SessionProcessingState.Started;
+    this.alertClass = "alert-secondary";
+
+    if (this.SessionState == SessionProcessingState.Started)
+    {
+      this.buttonText = "Остановить";
+      this.buttonStyle = "btn-warning";
+      this.sessionStatus = "Голосование началось...";
+      this.requestedState = SessionProcessingState.Stopped;
+      this.alertClass = "alert-primary";
+    }
+    else if (this.SessionState == SessionProcessingState.Stopped)
+    {
+      this.buttonText = "Завершить";
+      this.buttonStyle = "btn-success";
+      this.sessionStatus = "Голосование остановлено";
+      this.requestedState = SessionProcessingState.Finished;
+      this.alertClass = "alert-warning";
+    }
+    else if (this.SessionState == SessionProcessingState.Finished)
+    {
+      this.buttonText = "Обнулить";
+      this.buttonStyle = "btn-secondary";
+      this.sessionStatus = "Голосование завершилось";
+      this.requestedState = SessionProcessingState.Initial;
+      this.alertClass = "alert-success";
+    }
+  }
+
+  private async Task ChangeSessionState(SessionProcessingState requestedState)
+  {
+    try
+    {
+      this.isSessionStateChanging = true;
+      if (requestedState == SessionProcessingState.Initial)
+        await this.Service.ResetAsync(this.SessionId, this.ParticipantId);
+      else if (requestedState == SessionProcessingState.Started)
+        await this.Service.StartAsync(this.SessionId, this.ParticipantId);
+      else if (requestedState == SessionProcessingState.Stopped)
+        await this.Service.StopAsync(this.SessionId, this.ParticipantId);
+      else if (requestedState == SessionProcessingState.Finished)
+        await this.Service.FinishAsync(this.SessionId, this.ParticipantId);
+
+      // Небольшая задержка, иначе можно успеть быстро клянуть 2 раза и перескочить через состояние.
+      await Task.Delay(100);
+    }
+    finally
+    {
+      this.isSessionStateChanging = false;
+    }
+  }
+}

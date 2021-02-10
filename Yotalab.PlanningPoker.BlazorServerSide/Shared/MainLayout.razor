@@ -1,0 +1,16 @@
+﻿@inherits LayoutComponentBase
+
+  <AuthorizeView>
+    <Authorized>
+      <div class="main bg-light">
+        <NavMenu />
+        <RadzenNotification />
+        <div class="container content">
+          @Body
+        </div>
+      </div>
+    </Authorized>
+    <NotAuthorized>
+      <Welcome />
+    </NotAuthorized>
+  </AuthorizeView>

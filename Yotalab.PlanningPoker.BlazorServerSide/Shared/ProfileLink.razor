@@ -1,0 +1,45 @@
+﻿@using Grains.Interfaces.Models
+@using Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications
+@using Orleans.Streams
+@inherits AuthorizedOwningComponentBase<ParticipantsService>
+
+<ParticipantChangeNameLink ParticipantInfo="this.participantInfo"
+                           ClassNames="text-decoration-none"
+                           Title="@($"Привет, {this.participantInfo?.Name ?? "Безымянный"}")" />
+
+@code {
+  private ParticipantInfo participantInfo;
+  private StreamSubscriptionHandle<ParticipantChangedNotification> participantChangedSubscription;
+
+  protected override async Task OnInitializedAsync()
+  {
+    await base.OnInitializedAsync();
+    this.participantInfo = await this.Service.GetInfoAsync(this.ParticipantId);
+    this.participantChangedSubscription = await this.Service.SubscribeAsync(notification => this.InvokeAsync(() => this.Refresh(notification.ChangedInfo)));
+  }
+
+  private void Refresh(ParticipantInfo info)
+  {
+    this.participantInfo = info;
+    this.StateHasChanged();
+  }
+
+  protected override void Dispose(bool disposing)
+  {
+    base.Dispose(disposing);
+    if (this.IsDisposed)
+      return;
+
+    if (disposing)
+    {
+      try
+      {
+        this.participantChangedSubscription?.UnsubscribeAsync();
+      }
+      catch
+      {
+        // Игнорируем
+      }
+    }
+  }
+}
