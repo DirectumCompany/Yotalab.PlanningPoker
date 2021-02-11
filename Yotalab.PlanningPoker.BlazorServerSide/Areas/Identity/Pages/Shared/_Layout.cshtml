@@ -9,12 +9,10 @@
   <link href="/css/site.css" rel="stylesheet" />
   <link href="/css/form-signin.css" rel="stylesheet" />
 </head>
-<body class="d-flex flex-column h-100">
-  <app>
-    <main role="main" class="form-signin text-center">
-      @RenderBody()
-    </main>
-  </app>
+<body class="d-flex flex-column h-100 bg-light">
+  <main role="main" class="form-signin text-center">
+    @RenderBody()
+  </main>
   <script src="~/Identity/lib/jquery/dist/jquery.min.js"></script>
   <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
   @RenderSection("Scripts", required: false)
