@@ -36,7 +36,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
       this.participantsChangedSubscription = await this.Service.SubscribeAsync<ParticipantsChangedNotification>(this.SessionId, notification => this.InvokeAsync(this.HandleNotification));
       this.voteSubscription = await this.Service.SubscribeAsync<VoteNotification>(this.SessionId, notification => this.InvokeAsync(() => this.HandleVoteNotification(notification)));
       this.participantChangedSubscription = await this.ScopedServices.GetRequiredService<ParticipantsService>()
-        .SubscribeAsync(notification => this.InvokeAsync(this.HandleNotification));
+        .SubscribeAsync(this.TryRefreshParticipantChanges);
+    }
+
+    private Task TryRefreshParticipantChanges(ParticipantChangedNotification arg)
+    {
+      // Если в списке участников есть тот, чья информация поменялась, то обновим.
+      return this.participantVotes.Any(p => p.Id == arg.ChangedInfo.Id) ?
+        this.InvokeAsync(this.HandleNotification) :
+        Task.CompletedTask;
     }
 
     private async Task RefreshAsync()

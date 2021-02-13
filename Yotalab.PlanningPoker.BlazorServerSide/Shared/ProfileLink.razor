@@ -15,7 +15,14 @@
   {
     await base.OnInitializedAsync();
     this.participantInfo = await this.Service.GetInfoAsync(this.ParticipantId);
-    this.participantChangedSubscription = await this.Service.SubscribeAsync(notification => this.InvokeAsync(() => this.Refresh(notification.ChangedInfo)));
+    this.participantChangedSubscription = await this.Service.SubscribeAsync(this.TryRefreshIfCurrentParticipantChanged);
+  }
+
+  private Task TryRefreshIfCurrentParticipantChanged(ParticipantChangedNotification notification)
+  {
+    return notification.ChangedInfo.Id == this.ParticipantId ?
+      this.InvokeAsync(() => this.Refresh(notification.ChangedInfo)) :
+      Task.CompletedTask;
   }
 
   private void Refresh(ParticipantInfo info)
