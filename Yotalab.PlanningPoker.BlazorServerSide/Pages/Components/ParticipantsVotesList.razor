@@ -12,7 +12,13 @@
           <img src="@(string.IsNullOrWhiteSpace(participant.AvatarUrl) ? DefaultAvatar : participant.AvatarUrl)" alt="Avatar" class="avatar">
         </div>
         <div>
-          <h6 class="my-0">@(string.IsNullOrEmpty(participant.Name) ? "Безымянный" : participant.Name)</h6>
+          <div class="d-flex align-items-center">
+            <h6 class="my-0 me-2">@(string.IsNullOrEmpty(participant.Name) ? "Безымянный" : participant.Name)</h6>
+            @if (participant.Id == this.ModeratorId)
+            {
+              <img src="img/crown_icon.svg" alt="Host" />
+            }
+          </div>
           @if (participant.Id == this.ParticipantId)
           {
             <ParticipantChangeNameLink ParticipantInfo="@participant.ToInfo()"
@@ -43,6 +49,9 @@
 
   [Parameter]
   public Guid ParticipantId { get; set; }
+
+  [Parameter]
+  public Guid ModeratorId { get; set; }
 
   [Parameter]
   public SessionProcessingState SessionState { get; set; }
