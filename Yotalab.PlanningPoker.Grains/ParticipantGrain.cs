@@ -54,7 +54,7 @@ namespace Yotalab.PlanningPoker.Grains
         return;
 
       var sessionGrain = this.GrainFactory.GetGrain<ISessionGrain>(sessionId);
-      await sessionGrain.Exit(this.GetPrimaryKey()).ConfigureAwait(false);
+      await sessionGrain.Exit(this.GetPrimaryKey());
 
       this.grainState.State.SessionIds.Remove(sessionId);
     }

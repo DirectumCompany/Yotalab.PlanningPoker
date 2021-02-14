@@ -18,6 +18,13 @@
             {
               <img src="img/crown_icon.svg" alt="Host" />
             }
+            @if (participant.Id == this.ParticipantId && participant.Id != this.ModeratorId)
+            {
+              <img class="btn h-100"
+                   src="img/door_icon.svg"
+                   alt="Leave"
+                   @onclick="@(async () => await this.Service.LeaveAsync(this. SessionId, this.ParticipantId))"/>
+            }
           </div>
           @if (participant.Id == this.ParticipantId)
           {
@@ -52,6 +59,9 @@
 
   [Parameter]
   public Guid ModeratorId { get; set; }
+
+  [Parameter]
+  public Guid SessionId { get; set; }
 
   [Parameter]
   public SessionProcessingState SessionState { get; set; }
