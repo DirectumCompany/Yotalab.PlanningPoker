@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Orleans;
+using Orleans.Runtime;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Orleans;
-using Orleans.Runtime;
 using Yotalab.PlanningPoker.Grains.Interfaces;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications;
@@ -58,16 +58,14 @@ namespace Yotalab.PlanningPoker.Grains
 
     public Task Exit(Guid participantId)
     {
-      if (this.grainState.State.ParticipantVotes.ContainsKey(participantId))
-      {
-        this.grainState.State.ParticipantVotes.Remove(participantId);
+      if (!this.grainState.State.ParticipantVotes.ContainsKey(participantId))
+        return Task.CompletedTask;
 
-        this.NotifyParticipantExit(participantId);
+      this.grainState.State.ParticipantVotes.Remove(participantId);
 
-        return this.grainState.WriteStateAsync();
-      }
+      this.NotifyParticipantExit(participantId);
 
-      return Task.CompletedTask;
+      return this.grainState.WriteStateAsync();
     }
 
     public Task FinishAsync(Guid initiatorId)
