@@ -16,7 +16,7 @@ namespace Yotalab.PlanningPoker.Grains
   /// </summary>
   public class SessionGrain : Grain, ISessionGrain
   {
-    private IPersistentState<SessionGrainState> grainState;
+    private readonly IPersistentState<SessionGrainState> grainState;
 
     public SessionGrain([PersistentState("Session")] IPersistentState<SessionGrainState> grainState)
     {
@@ -54,6 +54,20 @@ namespace Yotalab.PlanningPoker.Grains
       this.NotifyNewParticipantEntered(participantId);
 
       return this.grainState.WriteStateAsync();
+    }
+
+    public Task Exit(Guid participantId)
+    {
+      if (this.grainState.State.ParticipantVotes.ContainsKey(participantId))
+      {
+        this.grainState.State.ParticipantVotes.Remove(participantId);
+
+        this.NotifyParticipantExit(participantId);
+
+        return this.grainState.WriteStateAsync();
+      }
+
+      return Task.CompletedTask;
     }
 
     public Task FinishAsync(Guid initiatorId)
@@ -156,6 +170,14 @@ namespace Yotalab.PlanningPoker.Grains
       var sessionId = this.GetPrimaryKey();
       this.GetStreamProvider("SMS").GetStream<ParticipantsChangedNotification>(sessionId, typeof(ParticipantsChangedNotification).FullName)
         .OnNextAsync(new ParticipantsChangedNotification(sessionId, new HashSet<Guid>() { participantId }, new HashSet<Guid>()))
+        .Ignore();
+    }
+
+    private void NotifyParticipantExit(Guid participantId)
+    {
+      var sessionId = this.GetPrimaryKey();
+      this.GetStreamProvider("SMS").GetStream<ParticipantsChangedNotification>(sessionId, typeof(ParticipantsChangedNotification).FullName)
+        .OnNextAsync(new ParticipantsChangedNotification(sessionId, new HashSet<Guid>(), new HashSet<Guid>() { participantId }))
         .Ignore();
     }
 

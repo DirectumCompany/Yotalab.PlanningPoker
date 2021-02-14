@@ -60,8 +60,15 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
     /// <summary>
     /// Войти в сессию пользователем.
     /// </summary>
-    /// <param name="participantInfo">Информация об участнике.</param>
+    /// <param name="participantId">Идентификатор участника.</param>
     /// <returns>Задача на вход в сессию.</returns>
     Task Enter(Guid participantId);
+
+    /// <summary>
+    /// Выйти пользователем из сессии.
+    /// </summary>
+    /// <param name="participantId">Идентификатор участника.</param>
+    /// <returns>Задача на выход из сессии.</returns>
+    Task Exit(Guid participantId);
   }
 }
