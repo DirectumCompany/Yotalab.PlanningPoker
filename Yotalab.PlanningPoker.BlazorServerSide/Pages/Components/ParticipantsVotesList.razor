@@ -20,10 +20,17 @@
             }
             @if (participant.Id == this.ParticipantId && participant.Id != this.ModeratorId)
             {
-              <img class="btn h-100"
+              <img class="btn p-0"
                    src="img/door_icon.svg"
                    alt="Leave"
-                   @onclick="@(async () => await this.Service.LeaveAsync(this. SessionId, this.ParticipantId))"/>
+                   @onclick="@(async () => await this.Service.LeaveAsync(this.SessionId, this.ParticipantId))" />
+            }
+            @if (participant.Id != this.ParticipantId && this.ParticipantId == this.ModeratorId)
+            {
+              <img class="btn p-0"
+                   src="img/kick_icon.svg"
+                   alt="Kick"
+                   @onclick="@(async () => await this.Service.KickAsync(this.SessionId, participant.Id))" />
             }
           </div>
           @if (participant.Id == this.ParticipantId)

@@ -68,6 +68,20 @@ namespace Yotalab.PlanningPoker.Grains
       return this.grainState.WriteStateAsync();
     }
 
+    public async Task Kick(Guid participantId)
+    {
+      if (!this.grainState.State.ParticipantVotes.ContainsKey(participantId))
+        return;
+
+      this.grainState.State.ParticipantVotes.Remove(participantId);
+
+      var participantGrain = this.GrainFactory.GetGrain<IParticipantGrain>(participantId);
+      await participantGrain.Leave(this.GetPrimaryKey());
+
+      this.NotifyParticipantExit(participantId);
+      await this.grainState.WriteStateAsync();
+    }
+
     public Task FinishAsync(Guid initiatorId)
     {
       var processingState = this.grainState.State.ProcessingState;

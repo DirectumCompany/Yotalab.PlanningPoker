@@ -38,6 +38,12 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       return participantGrain.Leave(sessionId);
     }
 
+    public Task KickAsync(Guid sessionId, Guid participantId)
+    {
+      var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
+      return sessionGrain.Kick(participantId);
+    }
+
     public Task<ParticipantInfo> GetInfoAsync(Guid participantId)
     {
       var participantGrain = this.client.GetGrain<IParticipantGrain>(participantId);

@@ -70,5 +70,12 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
     /// <param name="participantId">Идентификатор участника.</param>
     /// <returns>Задача на выход из сессии.</returns>
     Task Exit(Guid participantId);
+
+    /// <summary>
+    /// Исключить пользователя из сессии.
+    /// </summary>
+    /// <param name="participantId">Идентификатор участника.</param>
+    /// <returns>Задача на исключение из сессии.</returns>
+    Task Kick(Guid participantId);
   }
 }
