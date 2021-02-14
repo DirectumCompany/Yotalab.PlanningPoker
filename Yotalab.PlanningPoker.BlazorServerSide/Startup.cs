@@ -1,9 +1,9 @@
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Radzen;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.Mailing;
@@ -39,11 +39,13 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
         services.AddTransient<IEmailSender>(context =>
         {
           return new SmtpEmailSender(
-            this.Configuration["SmtpEmailSender:Host"],
-            this.Configuration.GetValue<int>("SmtpEmailSender:Port"),
-            this.Configuration.GetValue<bool>("SmtpEmailSender:EnableSSL"),
-            this.Configuration["SmtpEmailSender:UserName"],
-            this.Configuration["SmtpEmailSender:Password"]
+            new SmtpEmailSenderOptions(
+              this.Configuration["SmtpEmailSender:Host"],
+              this.Configuration.GetValue<int>("SmtpEmailSender:Port"),
+              this.Configuration.GetValue<bool>("SmtpEmailSender:EnableSSL"),
+              this.Configuration["SmtpEmailSender:UserName"],
+              this.Configuration["SmtpEmailSender:Password"]),
+             context.GetRequiredService<ILogger<SmtpEmailSender>>()
             );
         });
       }

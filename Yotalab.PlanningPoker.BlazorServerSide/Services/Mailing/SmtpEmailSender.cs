@@ -1,33 +1,37 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Services.Mailing
 {
   public class SmtpEmailSender : IEmailSender
   {
-    protected readonly string host;
-    protected readonly int port;
-    protected readonly bool enableSSL;
-    protected readonly string userName;
-    protected readonly string password;
+    private readonly SmtpEmailSenderOptions options;
+    private readonly ILogger<SmtpEmailSender> logger;
 
-    public SmtpEmailSender(string host, int port, bool enableSSL, string userName, string password)
+    public SmtpEmailSender(SmtpEmailSenderOptions options, ILogger<SmtpEmailSender> logger)
     {
-      this.host = host;
-      this.port = port;
-      this.enableSSL = enableSSL;
-      this.userName = userName;
-      this.password = password;
+      this.options = options;
+      this.logger = logger;
     }
 
     #region IEmailSender
 
-    public Task SendEmailAsync(string email, string subject, string htmlMessage)
+    public async Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
-      using var client = this.CreateClient();
-      using var message = new MailMessage(this.userName, email, subject, htmlMessage) { IsBodyHtml = true };
-      return client.SendMailAsync(message);
+      try
+      {
+        using var client = this.CreateClient();
+        using var message = new MailMessage(this.options.UserName, email, subject, htmlMessage) { IsBodyHtml = true };
+        await client.SendMailAsync(message);
+      }
+      catch (Exception ex)
+      {
+        this.logger.LogError(ex, "SendEmailAsync failed: From:{From}, To:{To}, Subject:{Subject}", this.options.UserName, email, subject);
+        throw;
+      }
     }
 
     #endregion
@@ -36,10 +40,10 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services.Mailing
 
     private SmtpClient CreateClient()
     {
-      return new SmtpClient(this.host, this.port)
+      return new SmtpClient(this.options.Host, this.options.Port)
       {
-        Credentials = new NetworkCredential(this.userName, this.password),
-        EnableSsl = this.enableSSL
+        Credentials = new NetworkCredential(this.options.UserName, this.options.Password),
+        EnableSsl = this.options.EnableSSL
       };
     }
 
