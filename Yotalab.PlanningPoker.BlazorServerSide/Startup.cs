@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -5,16 +6,19 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Radzen;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
+using Yotalab.PlanningPoker.BlazorServerSide.Services.Mailing;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide
 {
   public class Startup
   {
-    public Startup(IConfiguration configuration)
+    public Startup(IHostEnvironment environment, IConfiguration configuration)
     {
-      Configuration = configuration;
+      this.Environment = environment;
+      this.Configuration = configuration;
     }
 
+    public IHostEnvironment Environment { get; }
     public IConfiguration Configuration { get; }
 
     // This method gets called by the runtime. Use this method to add services to the container.
@@ -25,6 +29,25 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       services.AddServerSideBlazor();
       // Если используется UseOrleansSiloInProcess то эту строчку надо оставить закоментированной.
       // services.AddClusterService();
+
+      if (this.Environment.IsDevelopment())
+      {
+        services.AddTransient<IEmailSender, DebugEmailSender>();
+      }
+      else
+      {
+        services.AddTransient<IEmailSender>(context =>
+        {
+          return new SmtpEmailSender(
+            this.Configuration["SmtpEmailSender:Host"],
+            this.Configuration.GetValue<int>("SmtpEmailSender:Port"),
+            this.Configuration.GetValue<bool>("SmtpEmailSender:EnableSSL"),
+            this.Configuration["SmtpEmailSender:UserName"],
+            this.Configuration["SmtpEmailSender:Password"]
+            );
+        });
+      }
+
       services.AddScoped<NotificationService>();
       services.AddSingleton<SessionService>();
       services.AddSingleton<ParticipantsService>();
@@ -47,6 +70,12 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
 
       app.UseHttpsRedirection();
       app.UseStaticFiles();
+
+      var supportedCultures = new[] { "en-US", "ru-ru" };
+      app.UseRequestLocalization(new RequestLocalizationOptions()
+        .SetDefaultCulture(supportedCultures[1])
+        .AddSupportedCultures(supportedCultures)
+        .AddSupportedUICultures(supportedCultures));
 
       app.UseRouting();
 
