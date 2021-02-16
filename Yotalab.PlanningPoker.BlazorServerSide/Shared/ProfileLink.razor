@@ -3,18 +3,47 @@
 @using Orleans.Streams
 @inherits AuthorizedOwningComponentBase<ParticipantsService>
 
-<ParticipantChangeNameLink ParticipantInfo="this.participantInfo"
-                           ClassNames="text-decoration-none"
-                           Title="@($"Привет, {this.participantInfo?.Name ?? "Безымянный"}")" />
+@inject JSInteropFunctions JSFunctions
+
+@if (this.participantInfo != null)
+{
+  <div class="dropdown">
+    <div id="profileLinkMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <div class="d-flex align-items-center">
+        <Avatar ClassNames="avatar avatar--small me-2" Url="@this.participantInfo.AvatarUrl" />
+        <span class="text-muted fw-bold">@this.displayName</span>
+      </div>
+    </div>
+    <ul class="dropdown-menu" aria-labelledby="profileLinkMenu">
+      <li>
+        <button class="dropdown-item" @onclick="this.RaiseClickOnChangeNameLinkAsync">
+          Изменить имя
+        </button>
+      </li>
+      <li>
+        <form method="post" action="Identity/Account/LogOut">
+          <button type="submit" class="dropdown-item">Выйти</button>
+        </form>
+      </li>
+    </ul>
+  </div>
+
+  <ParticipantChangeNameLink Id="profileChangeNameGlobalButton"
+                             ParticipantInfo="this.participantInfo"
+                             ClassNames="visually-hidden">
+  </ParticipantChangeNameLink>
+}
 
 @code {
   private ParticipantInfo participantInfo;
+  private string displayName;
   private StreamSubscriptionHandle<ParticipantChangedNotification> participantChangedSubscription;
 
   protected override async Task OnInitializedAsync()
   {
     await base.OnInitializedAsync();
     this.participantInfo = await this.Service.GetInfoAsync(this.ParticipantId);
+    this.RefreshDisplayName(this.participantInfo);
     this.participantChangedSubscription = await this.Service.SubscribeAsync(this.TryRefreshIfCurrentParticipantChanged);
   }
 
@@ -28,7 +57,21 @@
   private void Refresh(ParticipantInfo info)
   {
     this.participantInfo = info;
+    this.RefreshDisplayName(info);
     this.StateHasChanged();
+  }
+
+  private void RefreshDisplayName(ParticipantInfo info)
+  {
+    this.displayName = string.IsNullOrWhiteSpace(info?.Name) ? "Безымянный" : info.Name;
+  }
+
+  private async Task RaiseClickOnChangeNameLinkAsync()
+  {
+    // Bootstrap не может простой разметкой показать модалку из скрытой области.
+    // Если добавить ParticipantChangeNameLink в контекстное меню, то он окажется в скрытой области.
+    // Нужно вынести модалку за контекстное меню и тогда можно щелкнуть по кнопке js-ом.
+    await this.JSFunctions.ClickElementById("profileChangeNameGlobalButton");
   }
 
   protected override void Dispose(bool disposing)

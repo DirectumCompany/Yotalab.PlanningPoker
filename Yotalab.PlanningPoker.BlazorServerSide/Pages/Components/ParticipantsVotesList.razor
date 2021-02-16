@@ -6,10 +6,44 @@
 <ul class="list-group mb-3">
   @foreach (var participant in this.PaticipantVotes.OrderByDescending(p => p.Id == this.ParticipantId))
   {
-    <li class="list-group-item d-flex justify-content-between lh-sm@(participant.Id == this.ParticipantId ? " list-group-item-secondary" : string.Empty)">
+    <li @key="participant.Id" class="list-group-item d-flex justify-content-between lh-sm@(participant.Id == this.ParticipantId ? " list-group-item-secondary" : string.Empty)">
       <div class="d-flex align-items-center">
         <div class="me-3">
-          <img src="@(string.IsNullOrWhiteSpace(participant.AvatarUrl) ? DefaultAvatar : participant.AvatarUrl)" alt="Avatar" class="avatar">
+          @if (participant.Id == this.ModeratorId)
+          {
+            <Avatar Url="@participant.AvatarUrl" />
+          }
+          else
+          {
+            var participantContextMenuId = $"avatarContextMenu-{participant.Id}";
+            <div class="dropdown">
+              <div id="@participantContextMenuId" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <Avatar Url="@participant.AvatarUrl" />
+              </div>
+              <ul class="dropdown-menu" aria-labelledby="@participantContextMenuId">
+                @if (this.ParticipantId == this.ModeratorId)
+                {
+                  <li>
+                    <button class="dropdown-item d-flex align-items-center"
+                            @onclick="@(async () => await this.Service.KickAsync(this.SessionId, participant.Id))">
+                      <img class="me-2" src="img/kick_icon.svg" alt="Leave" />
+                      Исключить
+                    </button>
+                  </li>
+                }
+                else
+                {
+                  <li>
+                    <button class="dropdown-item d-flex align-items-center"
+                            @onclick="@(async () => { await this.Service.LeaveAsync(this.SessionId, this.ParticipantId); })">
+                      <img class="me-2" src="img/door_icon.svg" alt="Leave" />
+                      Покинуть сессию
+                    </button>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
         </div>
         <div>
           <div class="d-flex align-items-center">
@@ -18,26 +52,12 @@
             {
               <img src="img/crown_icon.svg" alt="Host" />
             }
-            @if (participant.Id == this.ParticipantId && participant.Id != this.ModeratorId)
-            {
-              <img class="btn p-0"
-                   src="img/door_icon.svg"
-                   alt="Leave"
-                   @onclick="@(async () => await this.Service.LeaveAsync(this.SessionId, this.ParticipantId))" />
-            }
-            @if (participant.Id != this.ParticipantId && this.ParticipantId == this.ModeratorId)
-            {
-              <img class="btn p-0"
-                   src="img/kick_icon.svg"
-                   alt="Kick"
-                   @onclick="@(async () => await this.Service.KickAsync(this.SessionId, participant.Id))" />
-            }
           </div>
           @if (participant.Id == this.ParticipantId)
           {
             <ParticipantChangeNameLink ParticipantInfo="@participant.ToInfo()"
                                        Title="Изменить имя"
-                                       ClassNames="btn-sm small">
+                                       ClassNames="btn btn-link p-0 m-0 btn-sm small">
               <TitleTemplate>
                 <small>@context</small>
               </TitleTemplate>
@@ -72,6 +92,4 @@
 
   [Parameter]
   public SessionProcessingState SessionState { get; set; }
-
-  private const string DefaultAvatar = "img/default_avatar.png";
 }

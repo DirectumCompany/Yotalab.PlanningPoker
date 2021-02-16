@@ -1,0 +1,23 @@
+﻿<img id="@this.Id" class="@this.imgClassName" src="@this.imgSrc" alt="Avatar">
+
+@code {
+  [Parameter]
+  public string Id { get; set; }
+
+  [Parameter]
+  public string Url { get; set; }
+
+  [Parameter]
+  public string ClassNames { get; set; }
+
+  private string imgClassName;
+  private string imgSrc;
+  private const string DefaultAvatar = "img/default_avatar.png";
+
+  protected override void OnParametersSet()
+  {
+    base.OnParametersSet();
+    this.imgClassName = this.ClassNames ?? "avatar";
+    this.imgSrc = this.Url ?? DefaultAvatar;
+  }
+}
