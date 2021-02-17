@@ -2,6 +2,11 @@
 @model ConfirmEmailModel
 @{
   ViewData["Title"] = "Подверждение эл. почты";
+  var loginUrl = "Identity/Account/Login";
+  if (!string.IsNullOrWhiteSpace(this.Model.ReturnUrl))
+  {
+    loginUrl += $"?returnUrl={this.Model.ReturnUrl}";
+  }
 }
 
 <div style="width:500px;margin-left:-85px">
@@ -10,6 +15,6 @@
   </div>
   <h1 class="h3 mb-3 fw-normal">Вы подвердили вашу эл. почту</h1>
   <p>
-    <a class="btn btn-primary" href="Identity/Account/Login">Войти</a>
+    <a class="btn btn-primary" href="@loginUrl">Войти</a>
   </p>
 </div>
