@@ -13,8 +13,20 @@
   <div class="mb-4 text-center">
     <component type="@typeof(Yotalab.PlanningPoker.BlazorServerSide.Shared.Logotype)" render-mode="ServerPrerendered" />
   </div>
-  <h1 class="h3 mb-3 fw-normal">Вы подвердили вашу эл. почту</h1>
-  <p>
-    <a class="btn btn-primary" href="@loginUrl">Войти</a>
-  </p>
+  @if (this.Model.Result.Succeeded)
+  {
+    <h1 class="h3 mb-3 fw-normal">Вы подвердили вашу эл. почту</h1>
+    <div class="alert alert-success">
+      @this.Model.StatusMessage
+    </div>
+    <p>
+      <a class="btn btn-primary" href="@loginUrl">Войти</a>
+    </p>
+  }
+  else
+  {
+    <div class="alert alert-danger">
+      @this.Model.StatusMessage
+    </div>
+  }
 </div>
