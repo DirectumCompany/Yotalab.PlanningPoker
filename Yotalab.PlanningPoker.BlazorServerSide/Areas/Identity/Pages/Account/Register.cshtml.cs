@@ -45,7 +45,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages.Account
     public class InputModel
     {
       [Required(ErrorMessage = "The Email field is required")]
-      [EmailAddress]
+      [EmailAddress(ErrorMessage = "The {0} field is not a valid e-mail address")]
       [Display(Name = "Email")]
       public string Email { get; set; }
 
