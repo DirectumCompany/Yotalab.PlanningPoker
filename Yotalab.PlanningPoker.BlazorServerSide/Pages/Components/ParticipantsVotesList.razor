@@ -9,8 +9,10 @@
     <li @key="participant.Id" class="list-group-item d-flex justify-content-between lh-sm@(participant.Id == this.ParticipantId ? " list-group-item-secondary" : string.Empty)">
       <div class="d-flex align-items-center">
         <div class="me-3">
-          @if (participant.Id == this.ModeratorId)
+
+          @if (participant.Id == this.ModeratorId || (participant.Id != this.ParticipantId && this.ParticipantId != this.ModeratorId))
           {
+            // Контекстного меню нет для модератора и на участнике, если текущий пользователь не модератор.
             <Avatar Url="@participant.AvatarUrl" />
           }
           else
