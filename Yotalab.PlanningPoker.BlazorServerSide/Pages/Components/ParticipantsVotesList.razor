@@ -1,71 +1,13 @@
 ﻿@using Grains.Interfaces.Models
 @using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO
 
-@inject ParticipantsService Service
-
 <ul class="list-group mb-3">
   @foreach (var participant in this.PaticipantVotes.OrderByDescending(p => p.Id == this.ParticipantId))
   {
     <li @key="participant.Id" class="list-group-item d-flex justify-content-between lh-sm@(participant.Id == this.ParticipantId ? " list-group-item-secondary" : string.Empty)">
       <div class="d-flex align-items-center">
         <div class="me-3">
-
-          @if (this.Session.ModeratorIds.Contains(participant.Id) || (participant.Id != this.ParticipantId && !this.Session.ModeratorIds.Contains(this.ParticipantId)))
-          {
-            // Контекстного меню нет для модератора и на участнике, если текущий пользователь не модератор.
-            <Avatar Url="@participant.AvatarUrl" />
-          }
-          else
-          {
-            var participantContextMenuId = $"avatarContextMenu-{participant.Id}";
-            <div class="dropdown">
-              <div id="@participantContextMenuId" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <Avatar Url="@participant.AvatarUrl" />
-              </div>
-              <ul class="dropdown-menu" aria-labelledby="@participantContextMenuId">
-                @if (this.Session.ModeratorIds.Contains(this.ParticipantId))
-                {
-                  if (this.Session.ModeratorIds.Contains(participant.Id))
-                  {
-                    <li>
-                      <button class="dropdown-item d-flex align-items-center"
-                              @onclick="@(async () => await this.SessionService.RemoveModerator(this.Session.Id, participant.Id))">
-                        <img class="me-2" src="img/kick_icon.svg" alt="Leave" />
-                        Отменить модератора
-                      </button>
-                    </li>
-                  }
-                  else
-                  {
-                    <li>
-                      <button class="dropdown-item d-flex align-items-center"
-                              @onclick="@(async () => await this.SessionService.AddModerator(this.Session.Id, participant.Id))">
-                        <img class="me-2" src="img/kick_icon.svg" alt="Leave" />
-                        Сделать модератором
-                      </button>
-                    </li>
-                  }
-                  <li>
-                    <button class="dropdown-item d-flex align-items-center"
-                            @onclick="@(async () => await this.Service.KickAsync(this.Session.Id, participant.Id))">
-                      <img class="me-2" src="img/kick_icon.svg" alt="Leave" />
-                      Исключить
-                    </button>
-                  </li>
-                }
-                else
-                {
-                  <li>
-                    <button class="dropdown-item d-flex align-items-center"
-                            @onclick="@(async () => { await this.Service.LeaveAsync(this.Session.Id, this.ParticipantId); })">
-                      <img class="me-2" src="img/door_icon.svg" alt="Leave" />
-                      Покинуть сессию
-                    </button>
-                  </li>
-                }
-              </ul>
-            </div>
-          }
+          <ParticipantAvatar Participant="participant" ParticipantId="this.ParticipantId" />
         </div>
         <div>
           <div class="d-flex align-items-center">
@@ -109,5 +51,6 @@
   [CascadingParameter]
   public SessionInfo Session { get; set; }
 
+  @inject ParticipantsService Service
   @inject SessionService SessionService
 }

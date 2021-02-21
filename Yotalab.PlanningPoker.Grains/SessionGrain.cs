@@ -81,22 +81,23 @@ namespace Yotalab.PlanningPoker.Grains
       return this.grainState.WriteStateAsync();
     }
 
-    public async Task Kick(Guid participantId)
+    public Task Kick(Guid participantId, Guid initiatorId)
     {
-      if (!this.grainState.State.ParticipantVotes.ContainsKey(participantId))
-        return;
+      if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
+        throw new InvalidOperationException($"Only moderator can kick participant. Initiator: {initiatorId}");
 
-      this.grainState.State.ParticipantVotes.Remove(participantId);
+      if (!this.grainState.State.ParticipantVotes.ContainsKey(participantId))
+        return Task.CompletedTask;
 
       var participantGrain = this.GrainFactory.GetGrain<IParticipantGrain>(participantId);
-      await participantGrain.Leave(this.GetPrimaryKey());
-
-      this.NotifyParticipantExit(participantId);
-      await this.grainState.WriteStateAsync();
+      return participantGrain.Leave(this.GetPrimaryKey());
     }
 
     public Task FinishAsync(Guid initiatorId)
     {
+      if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
+        throw new InvalidOperationException($"Only moderator can change session processing state. Initiator: {initiatorId}");
+
       var processingState = this.grainState.State.ProcessingState;
       if (processingState != SessionProcessingState.Stopped && processingState != SessionProcessingState.Started)
         throw new InvalidOperationException($"Cannot finish not started session. Session processing state: {processingState}");
@@ -111,6 +112,9 @@ namespace Yotalab.PlanningPoker.Grains
 
     public Task ResetAsync(Guid initiatorId)
     {
+      if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
+        throw new InvalidOperationException($"Only moderator can change session processing state. Initiator: {initiatorId}");
+
       var processingState = this.grainState.State.ProcessingState;
       if (processingState != SessionProcessingState.Finished)
         throw new InvalidOperationException($"Cannot reset not finished session. Session processing state: {processingState}");
@@ -125,6 +129,9 @@ namespace Yotalab.PlanningPoker.Grains
 
     public Task StartAsync(Guid initiatorId)
     {
+      if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
+        throw new InvalidOperationException($"Only moderator can change session processing state. Initiator: {initiatorId}");
+
       var processingState = this.grainState.State.ProcessingState;
       if (processingState != SessionProcessingState.Initial)
         throw new InvalidOperationException($"Cannot start not initial session. Session processing state: {processingState}");
@@ -143,6 +150,9 @@ namespace Yotalab.PlanningPoker.Grains
 
     public Task StopAsync(Guid initiatorId)
     {
+      if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
+        throw new InvalidOperationException($"Only moderator can change session processing state. Initiator: {initiatorId}");
+
       var processingState = this.grainState.State.ProcessingState;
       if (processingState != SessionProcessingState.Started)
         throw new InvalidOperationException($"Cannot stop not started session. Session processing state: {processingState}");

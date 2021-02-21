@@ -11,6 +11,12 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
   /// </summary>
   public interface ISessionGrain : IGrainWithGuidKey
   {
+    /// <summary>
+    /// Создать сессию.
+    /// </summary>
+    /// <param name="name">Имя сессии.</param>
+    /// <param name="moderator">Модератор сессии.</param>
+    /// <returns>Задача на создание сессии.</returns>
     Task CreateAsync(string name, IParticipantGrain moderator);
 
     /// <summary>
@@ -22,24 +28,28 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
     /// <summary>
     /// Перевести сессию в начальное состояние.
     /// </summary>
+    /// <param name="initiatorId">Инициатор исключения.</param>
     /// <returns>Задача на перевод сессии в начальное состояние.</returns>
     Task ResetAsync(Guid initiatorId);
 
     /// <summary>
     /// Начать сессию планирования.
     /// </summary>
+    /// <param name="initiatorId">Инициатор исключения.</param>
     /// <returns>Задача на старт сессии.</returns>
     Task StartAsync(Guid initiatorId);
 
     /// <summary>
     /// Остановить сессию планирования.
     /// </summary>
+    /// <param name="initiatorId">Инициатор исключения.</param>
     /// <returns>Задача на остановку планирования.</returns>
     Task StopAsync(Guid initiatorId);
 
     /// <summary>
     /// Завершить сессию планирования.
     /// </summary>
+    /// <param name="initiatorId">Инициатор исключения.</param>
     /// <returns>Задача на завершение сессии.</returns>
     Task FinishAsync(Guid initiatorId);
 
@@ -75,8 +85,9 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
     /// Исключить пользователя из сессии.
     /// </summary>
     /// <param name="participantId">Идентификатор участника.</param>
+    /// <param name="initiatorId">Инициатор исключения.</param>
     /// <returns>Задача на исключение из сессии.</returns>
-    Task Kick(Guid participantId);
+    Task Kick(Guid participantId, Guid initiatorId);
 
     /// <summary>
     /// Добавить модератора сессии.
