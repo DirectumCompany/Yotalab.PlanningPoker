@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Orleans;
@@ -32,6 +30,18 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
     {
       var participantGrain = this.client.GetGrain<IParticipantGrain>(participantId);
       return participantGrain.Join(sessionId);
+    }
+
+    public Task LeaveAsync(Guid sessionId, Guid participantId)
+    {
+      var participantGrain = this.client.GetGrain<IParticipantGrain>(participantId);
+      return participantGrain.Leave(sessionId);
+    }
+
+    public Task KickAsync(Guid sessionId, Guid participantId)
+    {
+      var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
+      return sessionGrain.Kick(participantId);
     }
 
     public Task<ParticipantInfo> GetInfoAsync(Guid participantId)

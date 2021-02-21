@@ -1,6 +1,6 @@
 ﻿@using Grains.Interfaces.Models
 
-<button type="button" class="btn btn-link p-0 m-0 @this.ClassNames" data-bs-toggle="modal" data-bs-target="#changeNameModal">
+<button id="@this.Id" type="button" class="@(this.ClassNames ?? "btn btn-link p-0 m-0")" data-bs-toggle="modal" data-bs-target="#changeNameModal">
   @if (this.TitleTemplate == null)
   {
     <span>@this.Title</span>
@@ -23,9 +23,10 @@
           <div class="mb-3 d-flex justify-content-center">
             @foreach (var avatar in AvatarCollection)
             {
-              <div class="me-3" style="cursor:pointer">
-                <img src="@avatar" alt="Avatar" class="avatar@(this.newAvatarUrl == avatar ? " avatar--selected" : string.Empty)"
-                     @onclick="@(() => this.SelectAvatar(avatar))">
+              var avatarClassName = string.Equals(this.newAvatarUrl, avatar, StringComparison.OrdinalIgnoreCase) ?
+                "avatar avatar--selected" : null;
+              <div class="me-3" style="cursor:pointer" @onclick="@(() => this.SelectAvatar(avatar))">
+                <Avatar Url="@avatar" ClassNames="@avatarClassName" />
               </div>
             }
           </div>
@@ -50,6 +51,9 @@
 </div>
 
 @code {
+  [Parameter]
+  public string Id { get; set; }
+
   [Parameter]
   public ParticipantInfo ParticipantInfo { get; set; }
 
