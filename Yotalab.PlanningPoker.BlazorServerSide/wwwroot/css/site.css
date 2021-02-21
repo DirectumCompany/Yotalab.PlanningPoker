@@ -204,6 +204,11 @@ app {
   border: 2px solid lightskyblue;
 }
 
+.avatar--small {
+  width: 25px;
+  height: 25px;
+}
+
 .avatar:hover {
   border: 1px solid lightskyblue;
 }

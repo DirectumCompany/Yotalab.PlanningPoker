@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,7 +34,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       });
     }
 
-    public Task StopAsync(CancellationToken cancellationToken) => Client.Close();
+    public Task StopAsync(CancellationToken cancellationToken) => this.Client.Close();
   }
 
   public static class ClusterServiceBuilderExtensions

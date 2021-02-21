@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Orleans;
+using Orleans.Runtime;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Orleans;
-using Orleans.Runtime;
 using Yotalab.PlanningPoker.Grains.Interfaces;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications;
@@ -16,7 +16,7 @@ namespace Yotalab.PlanningPoker.Grains
   /// </summary>
   public class SessionGrain : Grain, ISessionGrain
   {
-    private IPersistentState<SessionGrainState> grainState;
+    private readonly IPersistentState<SessionGrainState> grainState;
 
     public SessionGrain([PersistentState("Session")] IPersistentState<SessionGrainState> grainState)
     {
@@ -54,6 +54,32 @@ namespace Yotalab.PlanningPoker.Grains
       this.NotifyNewParticipantEntered(participantId);
 
       return this.grainState.WriteStateAsync();
+    }
+
+    public Task Exit(Guid participantId)
+    {
+      if (!this.grainState.State.ParticipantVotes.ContainsKey(participantId))
+        return Task.CompletedTask;
+
+      this.grainState.State.ParticipantVotes.Remove(participantId);
+
+      this.NotifyParticipantExit(participantId);
+
+      return this.grainState.WriteStateAsync();
+    }
+
+    public async Task Kick(Guid participantId)
+    {
+      if (!this.grainState.State.ParticipantVotes.ContainsKey(participantId))
+        return;
+
+      this.grainState.State.ParticipantVotes.Remove(participantId);
+
+      var participantGrain = this.GrainFactory.GetGrain<IParticipantGrain>(participantId);
+      await participantGrain.Leave(this.GetPrimaryKey());
+
+      this.NotifyParticipantExit(participantId);
+      await this.grainState.WriteStateAsync();
     }
 
     public Task FinishAsync(Guid initiatorId)
@@ -156,6 +182,14 @@ namespace Yotalab.PlanningPoker.Grains
       var sessionId = this.GetPrimaryKey();
       this.GetStreamProvider("SMS").GetStream<ParticipantsChangedNotification>(sessionId, typeof(ParticipantsChangedNotification).FullName)
         .OnNextAsync(new ParticipantsChangedNotification(sessionId, new HashSet<Guid>() { participantId }, new HashSet<Guid>()))
+        .Ignore();
+    }
+
+    private void NotifyParticipantExit(Guid participantId)
+    {
+      var sessionId = this.GetPrimaryKey();
+      this.GetStreamProvider("SMS").GetStream<ParticipantsChangedNotification>(sessionId, typeof(ParticipantsChangedNotification).FullName)
+        .OnNextAsync(new ParticipantsChangedNotification(sessionId, new HashSet<Guid>(), new HashSet<Guid>() { participantId }))
         .Ignore();
     }
 

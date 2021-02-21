@@ -46,6 +46,19 @@ namespace Yotalab.PlanningPoker.Grains
       await sessionGrain.Enter(this.GetPrimaryKey());
 
       this.grainState.State.SessionIds.Add(sessionId);
+      await this.grainState.WriteStateAsync();
+    }
+
+    public async Task Leave(Guid sessionId)
+    {
+      if (!this.grainState.State.SessionIds.Contains(sessionId))
+        return;
+
+      var sessionGrain = this.GrainFactory.GetGrain<ISessionGrain>(sessionId);
+      await sessionGrain.Exit(this.GetPrimaryKey());
+
+      this.grainState.State.SessionIds.Remove(sessionId);
+      await this.grainState.WriteStateAsync();
     }
 
     public Task<ImmutableArray<ISessionGrain>> Sessions()

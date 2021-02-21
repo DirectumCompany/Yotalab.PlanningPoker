@@ -25,6 +25,13 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
     Task Join(Guid sessionId);
 
     /// <summary>
+    /// Покинуть сессию планирования.
+    /// </summary>
+    /// <param name="sessionId">Идентификатор сессии.</param>
+    /// <returns>Задача на выход из сессии.</returns>
+    Task Leave(Guid sessionId);
+
+    /// <summary>
     /// Отдать свой голос в сессии планирования.
     /// </summary>
     /// <param name="sessionId">Идентификатор сессии.</param>
