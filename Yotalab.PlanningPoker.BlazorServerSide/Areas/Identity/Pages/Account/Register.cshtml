@@ -17,15 +17,15 @@
   }
   <span asp-validation-for="Input.Email" class="text-danger"></span>
   <label asp-for="Input.Email" class="visually-hidden"></label>
-  <input asp-for="Input.Email" class="form-control" placeholder="Логин (e-mail)" autocomplete="off" />
+  <input asp-for="Input.Email" class="form-control" placeholder="@this.Html.DisplayNameFor(model => model.Input.Email)" autocomplete="off" />
 
   <span asp-validation-for="Input.Password" class="text-danger"></span>
   <label asp-for="Input.Password" class="visually-hidden"></label>
-  <input asp-for="Input.Password" class="form-control" placeholder="Пароль" autocomplete="off" />
+  <input asp-for="Input.Password" class="form-control" placeholder="@this.Html.DisplayNameFor(model => model.Input.Password)" autocomplete="off" />
 
   <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
   <label asp-for="Input.ConfirmPassword" class="visually-hidden"></label>
-  <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Повторите пароль" autocomplete="off" />
+  <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="@this.Html.DisplayNameFor(model => model.Input.ConfirmPassword)" autocomplete="off" />
 
   <button type="submit" class="w-100 btn btn-primary">Создать</button>
 </form>

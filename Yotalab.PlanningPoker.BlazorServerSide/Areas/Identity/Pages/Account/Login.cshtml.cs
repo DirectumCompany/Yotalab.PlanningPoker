@@ -39,15 +39,17 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages.Account
 
     public class InputModel
     {
-      [Required]
+      [Required(ErrorMessage = "The Email field is required")]
       [EmailAddress]
+      [Display(Name = "Email")]
       public string Email { get; set; }
 
-      [Required]
+      [Required(ErrorMessage = "The Password field is required")]
       [DataType(DataType.Password)]
+      [Display(Name = "Password")]
       public string Password { get; set; }
 
-      [Display(Name = "Запомнить меня?")]
+      [Display(Name = "Remember Me")]
       public bool RememberMe { get; set; }
     }
 

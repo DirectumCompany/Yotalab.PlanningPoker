@@ -1,64 +1,66 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Localization;
+using Yotalab.PlanningPoker.BlazorServerSide.Resources;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
 {
   public class OverrideIdentityErrorDescriber : IdentityErrorDescriber
   {
-    private ILogger<OverrideIdentityErrorDescriber> logger;
+    private IStringLocalizer<IdentityResource> localizer;
 
-    public OverrideIdentityErrorDescriber(ILogger<OverrideIdentityErrorDescriber> logger)
+    public OverrideIdentityErrorDescriber(IStringLocalizer<IdentityResource> localizer)
     {
-      this.logger = logger;
+      this.localizer = localizer;
     }
 
     public override IdentityError DuplicateEmail(string email)
     {
-      var result = base.DuplicateEmail(email);
-      result.Description = "Пользователь с указаной эл. почтой уже зарегистрирован";
-      return result;
+      return this.TryLocalize(base.DuplicateEmail(email), email);
     }
 
     public override IdentityError DuplicateUserName(string userName)
     {
-      var result = base.DuplicateEmail(userName);
-      result.Description = "Пользователь с таким именем уже зарегистрирован";
-      return result;
+      // Сейчас имя пользователя совпадает с эл. почтой.
+      return this.TryLocalize(base.DuplicateEmail(userName), userName);
     }
 
     public override IdentityError PasswordRequiresDigit()
     {
-      var result = base.PasswordRequiresDigit();
-      result.Description = "Пароль должен содержать хотя бы одну цифру";
-      return result;
+      return this.TryLocalize(base.PasswordRequiresDigit());
     }
 
     public override IdentityError PasswordRequiresLower()
     {
-      var result = base.PasswordRequiresLower();
-      result.Description = "Пароль должен содержать хотя бы одну прописную букву";
-      return result;
+      return this.TryLocalize(base.PasswordRequiresLower());
     }
 
     public override IdentityError PasswordRequiresNonAlphanumeric()
     {
-      var result = base.PasswordRequiresNonAlphanumeric();
-      result.Description = "Пароль должен содержать хотя бы один символ не из алфавита";
-      return result;
+      return this.TryLocalize(base.PasswordRequiresNonAlphanumeric());
     }
 
     public override IdentityError PasswordRequiresUpper()
     {
-      var result = base.PasswordRequiresUpper();
-      result.Description = "Пароль должен содержать хотя бы одну заглавную букву";
-      return result;
+      return this.TryLocalize(base.PasswordRequiresUpper());
     }
 
     public override IdentityError PasswordTooShort(int length)
     {
-      var result = base.PasswordTooShort(length);
-      result.Description = "Пароль слишком короткий";
-      return result;
+      return this.TryLocalize(base.PasswordTooShort(length), length);
+    }
+
+    private IdentityError TryLocalize(IdentityError identityError)
+    {
+      return this.TryLocalize(identityError, new object[0]);
+    }
+
+    private IdentityError TryLocalize(IdentityError identityError, params object[] arguments)
+    {
+      var localizedString = this.localizer.GetString(identityError.Code, arguments);
+      if (!localizedString.ResourceNotFound)
+        identityError.Description = localizedString.Value;
+
+      return identityError;
     }
   }
 }
