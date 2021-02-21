@@ -77,5 +77,19 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
     /// <param name="participantId">Идентификатор участника.</param>
     /// <returns>Задача на исключение из сессии.</returns>
     Task Kick(Guid participantId);
+
+    /// <summary>
+    /// Добавить модератора сессии.
+    /// </summary>
+    /// <param name="participantId">Идентификатор участника.</param>
+    /// <returns>Задача на добавление модератора.</returns>
+    Task AddModerator(Guid participantId);
+
+    /// <summary>
+    /// Удалить модератора сессии.
+    /// </summary>
+    /// <param name="participantId">Идентификатор участника.</param>
+    /// <returns>Задача на удаление модератора.</returns>
+    Task RemoveModerator(Guid participantId);
   }
 }

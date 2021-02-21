@@ -10,7 +10,7 @@
       <div class="d-flex align-items-center">
         <div class="me-3">
 
-          @if (participant.Id == this.ModeratorId || (participant.Id != this.ParticipantId && this.ParticipantId != this.ModeratorId))
+          @if (this.Session.ModeratorIds.Contains(participant.Id) || (participant.Id != this.ParticipantId && !this.Session.ModeratorIds.Contains(this.ParticipantId)))
           {
             // Контекстного меню нет для модератора и на участнике, если текущий пользователь не модератор.
             <Avatar Url="@participant.AvatarUrl" />
@@ -23,11 +23,31 @@
                 <Avatar Url="@participant.AvatarUrl" />
               </div>
               <ul class="dropdown-menu" aria-labelledby="@participantContextMenuId">
-                @if (this.ParticipantId == this.ModeratorId)
+                @if (this.Session.ModeratorIds.Contains(this.ParticipantId))
                 {
+                  if (this.Session.ModeratorIds.Contains(participant.Id))
+                  {
+                    <li>
+                      <button class="dropdown-item d-flex align-items-center"
+                              @onclick="@(async () => await this.SessionService.RemoveModerator(this.Session.Id, participant.Id))">
+                        <img class="me-2" src="img/kick_icon.svg" alt="Leave" />
+                        Отменить модератора
+                      </button>
+                    </li>
+                  }
+                  else
+                  {
+                    <li>
+                      <button class="dropdown-item d-flex align-items-center"
+                              @onclick="@(async () => await this.SessionService.AddModerator(this.Session.Id, participant.Id))">
+                        <img class="me-2" src="img/kick_icon.svg" alt="Leave" />
+                        Сделать модератором
+                      </button>
+                    </li>
+                  }
                   <li>
                     <button class="dropdown-item d-flex align-items-center"
-                            @onclick="@(async () => await this.Service.KickAsync(this.SessionId, participant.Id))">
+                            @onclick="@(async () => await this.Service.KickAsync(this.Session.Id, participant.Id))">
                       <img class="me-2" src="img/kick_icon.svg" alt="Leave" />
                       Исключить
                     </button>
@@ -37,7 +57,7 @@
                 {
                   <li>
                     <button class="dropdown-item d-flex align-items-center"
-                            @onclick="@(async () => { await this.Service.LeaveAsync(this.SessionId, this.ParticipantId); })">
+                            @onclick="@(async () => { await this.Service.LeaveAsync(this.Session.Id, this.ParticipantId); })">
                       <img class="me-2" src="img/door_icon.svg" alt="Leave" />
                       Покинуть сессию
                     </button>
@@ -50,7 +70,7 @@
         <div>
           <div class="d-flex align-items-center">
             <h6 class="my-0 me-2">@(string.IsNullOrEmpty(participant.Name) ? "Безымянный" : participant.Name)</h6>
-            @if (participant.Id == this.ModeratorId)
+            @if (this.Session.ModeratorIds.Contains(participant.Id))
             {
               <img src="img/crown_icon.svg" alt="Host" />
             }
@@ -67,7 +87,7 @@
           }
         </div>
       </div>
-      @if (participant.Id == this.ParticipantId || this.SessionState == SessionProcessingState.Stopped || this.SessionState == SessionProcessingState.Finished)
+      @if (participant.Id == this.ParticipantId || this.Session.ProcessingState == SessionProcessingState.Stopped || this.Session.ProcessingState == SessionProcessingState.Finished)
       {
         <h3 class="text-muted"><strong>@participant.Vote.Value</strong></h3>
       }
@@ -86,12 +106,8 @@
   [Parameter]
   public Guid ParticipantId { get; set; }
 
-  [Parameter]
-  public Guid ModeratorId { get; set; }
+  [CascadingParameter]
+  public SessionInfo Session { get; set; }
 
-  [Parameter]
-  public Guid SessionId { get; set; }
-
-  [Parameter]
-  public SessionProcessingState SessionState { get; set; }
+  @inject SessionService SessionService
 }
