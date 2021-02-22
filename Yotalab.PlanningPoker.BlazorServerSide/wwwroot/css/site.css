@@ -212,3 +212,10 @@ app {
 .avatar:hover {
   border: 1px solid lightskyblue;
 }
+
+.alert .validation-summary-errors > ul, li {
+  display: block;
+  margin-bottom: 0;
+  padding-left: 0;
+  text-align: left;
+}

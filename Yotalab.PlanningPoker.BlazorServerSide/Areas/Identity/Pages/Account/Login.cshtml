@@ -10,17 +10,22 @@
     <component type="@typeof(Yotalab.PlanningPoker.BlazorServerSide.Shared.Logotype)" render-mode="ServerPrerendered" />
   </div>
   <h1 class="h3 mb-3 fw-normal">Входите пожалуйста</h1>
-  <div asp-validation-summary="All" class="text-danger"></div>
-  <label asp-for="Input.Email" class="visually-hidden">Логин (e-mail)</label>
-  <input asp-for="Input.Email" class="form-control" placeholder="Логин (e-mail)" required="" autofocus="">
+  @if (this.Model.ModelState.ErrorCount > 0)
+  {
+    <div class="alert alert-danger">
+      <div asp-validation-summary="All" class="text-danger"></div>
+    </div>
+  }
   <span asp-validation-for="Input.Email" class="text-danger"></span>
+  <label asp-for="Input.Email" class="visually-hidden"></label>
+  <input asp-for="Input.Email" class="form-control" placeholder="@this.Html.DisplayNameFor(model => model.Input.Email)" required="" autofocus="">
 
-  <label asp-for="Input.Password" class="visually-hidden">Пароль</label>
-  <input asp-for="Input.Password" class="form-control" placeholder="Пароль" required="">
   <span asp-validation-for="Input.Password" class="text-danger"></span>
+  <label asp-for="Input.Password" class="visually-hidden"></label>
+  <input asp-for="Input.Password" class="form-control" placeholder="@this.Html.DisplayNameFor(model => model.Input.Password)" required="">
   <div class="checkbox mb-3 text-start">
     <label>
-      <input type="checkbox" value="remember-me"> Запомнить меня
+      <input type="checkbox" value="remember-me"> @this.Html.DisplayNameFor(model => model.Input.RememberMe)
     </label>
   </div>
   <button class="w-100 btn btn-primary" type="submit">Войти</button>

@@ -9,19 +9,7 @@
     <component type="@typeof(Yotalab.PlanningPoker.BlazorServerSide.Shared.Logotype)" render-mode="ServerPrerendered" />
   </div>
   <h1 class="h3 mb-3 fw-normal">Подтверждение регистрации</h1>
-  @{
-    if (@Model.DisplayConfirmAccountLink)
-    {
-      <p>
-        Отправка ссылки для подтверждения на почту пока не поддерживается, щелкните
-        <a id="confirm-link" href="@Model.EmailConfirmationUrl">подтвердить регистрацию</a>
-      </p>
-    }
-    else
-    {
-      <p>
-        На вашу почту отправлено письмо для подтверждения регистрации.
-      </p>
-    }
-  }
+  <p>
+    На вашу почту отправлено письмо для подтверждения регистрации.
+  </p>
 </div>
