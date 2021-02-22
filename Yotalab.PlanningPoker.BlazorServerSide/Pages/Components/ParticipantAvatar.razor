@@ -16,6 +16,7 @@
           ItemTemplate =
           @<button class="dropdown-item d-flex align-items-center"
                    @onclick="@(async () => await this.SessionService.RemoveModerator(this.Session.Id, this.Participant.Id))">
+            <img class="me-2" src="img/crown_cross_out_icon.svg" alt="Host" />
             Отменить модератора
           </button>
         });
