@@ -33,6 +33,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
             options.Password.RequireNonAlphanumeric = false;
             options.SignIn.RequireConfirmedAccount = true;
           })
+          .AddErrorDescriber<OverrideIdentityErrorDescriber>()
           .AddEntityFrameworkStores<ApplicationDbContext>();
 
         services.ConfigureApplicationCookie(options =>
