@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +18,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
 {
   public class IdentityHostingStartup : IHostingStartup
   {
+
     public void Configure(IWebHostBuilder builder)
     {
       builder.ConfigureServices((context, services) =>
@@ -35,6 +39,14 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
           })
           .AddErrorDescriber<OverrideIdentityErrorDescriber>()
           .AddEntityFrameworkStores<ApplicationDbContext>();
+
+        services
+          .AddAuthentication()
+          .AddMicrosoftAccount(options =>
+          {
+            options.ClientId = context.Configuration["Authentication:Microsoft:ClientId"];
+            options.ClientSecret = context.Configuration["Authentication:Microsoft:ClientSecret"];
+          });
 
         services.ConfigureApplicationCookie(options =>
         {

@@ -28,17 +28,24 @@
       <input type="checkbox" value="remember-me"> @this.Html.DisplayNameFor(model => model.Input.RememberMe)
     </label>
   </div>
-  <button class="w-100 btn btn-primary" type="submit">Войти</button>
-
-  <div class="form-group mt-3">
-    <p>
-      <a class="me-3" asp-page="./ForgotPassword">Забыли пароль?</a>
-      <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Зарегистрироваться</a>
-    </p>
-  </div>
-
-  <p class="mt-5 mb-3 text-muted">© Yotalab 2021</p>
+  <button class="w-100 btn btn-primary mb-3" type="submit">Войти</button>
 </form>
+
+<form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+  @foreach (var provider in Model.ExternalLogins)
+  {
+    <button type="submit" class="btn btn-light w-100 mb-1" name="provider" value="@provider.Name" title="Войти с аккаунтом @provider.DisplayName">Войти с аккаунтом @provider.DisplayName</button>
+  }
+</form>
+
+<div class="form-group mt-3">
+  <p>
+    <a class="me-3" asp-page="./ForgotPassword">Забыли пароль?</a>
+    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Зарегистрироваться</a>
+  </p>
+</div>
+
+<p class="mt-5 mb-3 text-muted">© Yotalab 2021</p>
 
 @section Scripts {
   <partial name="_ValidationScriptsPartial" />
