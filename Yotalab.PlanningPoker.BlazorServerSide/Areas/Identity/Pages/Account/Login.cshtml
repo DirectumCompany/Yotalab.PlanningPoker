@@ -34,7 +34,9 @@
 <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
   @foreach (var provider in Model.ExternalLogins)
   {
-    <button type="submit" class="btn btn-light w-100 mb-1" name="provider" value="@provider.Name" title="Войти с аккаунтом @provider.DisplayName">Войти с аккаунтом @provider.DisplayName</button>
+    <button type="submit" class="btn btn-light w-100 mb-1 d-flex justify-content-center align-items-center" name="provider" value="@provider.Name" title="Войти с аккаунтом @provider.DisplayName">
+      <img class="me-2" src="img/@(provider.Name.ToLower()).svg" alt="@provider.Name">Войти с аккаунтом @provider.DisplayName
+    </button>
   }
 </form>
 

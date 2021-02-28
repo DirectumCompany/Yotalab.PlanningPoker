@@ -114,7 +114,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages.Account
           _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
           await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
 
-          await this.participantsService.ChangeInfo(Guid.Parse(user.Id), info.Principal.Identity.Name, null);
+          var avatarUrl = info.Principal.FindFirstValue("avatar");
+          await this.participantsService.ChangeInfo(Guid.Parse(user.Id), info.Principal.Identity.Name, avatarUrl);
 
           return LocalRedirect(returnUrl);
         }
