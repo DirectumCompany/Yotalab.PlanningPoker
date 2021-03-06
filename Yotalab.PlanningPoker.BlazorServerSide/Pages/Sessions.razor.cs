@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yotalab.PlanningPoker.BlazorServerSide.Pages.Components;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
+using Yotalab.PlanningPoker.BlazorServerSide.Services.Args;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
@@ -10,7 +11,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
   public partial class Sessions : AuthorizedOwningComponentBase<SessionService>
   {
     private Guid participantId;
-    private string newSessionName;
     private List<SessionInfo> sessions;
 
     protected override async Task OnInitializedAsync()
@@ -22,14 +22,14 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
       this.sessions = new List<SessionInfo>(await this.Service.ListAsync(this.participantId));
     }
 
-    private async Task CreateSessionAsync()
+    private async Task CreateSessionAsync(ChangeSessionOptionsArgs args)
     {
-      if (string.IsNullOrWhiteSpace(this.newSessionName))
+      if (string.IsNullOrWhiteSpace(args.Name))
         return;
 
-      var result = await this.Service.CreateAsync(this.newSessionName, this.participantId);
+      var result = await this.Service.CreateAsync(args.Name, this.participantId);
       this.sessions.Add(result);
-      this.newSessionName = string.Empty;
+      this.StateHasChanged();
     }
   }
 }

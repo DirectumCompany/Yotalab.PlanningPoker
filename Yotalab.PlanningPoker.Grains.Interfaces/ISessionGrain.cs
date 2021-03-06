@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Orleans;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
+using Yotalab.PlanningPoker.Grains.Interfaces.Models.Args;
 
 namespace Yotalab.PlanningPoker.Grains.Interfaces
 {
@@ -77,5 +78,12 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
     /// <param name="participantId">Идентификатор участника.</param>
     /// <returns>Задача на исключение из сессии.</returns>
     Task Kick(Guid participantId);
+
+    /// <summary>
+    /// Изменить информацию о сессии.
+    /// </summary>
+    /// <param name="args">Аргументы изменения информации о сессии.</param>
+    /// <returns>Задача на изменение настроек сессии.</returns>
+    Task ChangeInfo(ChangeSessionInfoArgs args);
   }
 }

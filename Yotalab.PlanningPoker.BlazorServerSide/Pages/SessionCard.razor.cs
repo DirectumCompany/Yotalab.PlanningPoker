@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Orleans.Streams;
 using Yotalab.PlanningPoker.BlazorServerSide.Pages.Components;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
+using Yotalab.PlanningPoker.BlazorServerSide.Services.Args;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications;
@@ -23,6 +24,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     private StreamSubscriptionHandle<ParticipantsChangedNotification> participantsChangedSubscription;
     private StreamSubscriptionHandle<VoteNotification> voteSubscription;
     private StreamSubscriptionHandle<ParticipantChangedNotification> participantChangedSubscription;
+    private StreamSubscriptionHandle<SessionInfoChangedNotification> sessionInfoChangedSubscription;
 
     [Parameter]
     public Guid SessionId { get; set; }
@@ -37,6 +39,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
       this.voteSubscription = await this.Service.SubscribeAsync<VoteNotification>(this.SessionId, notification => this.InvokeAsync(() => this.HandleVoteNotification(notification)));
       this.participantChangedSubscription = await this.ScopedServices.GetRequiredService<ParticipantsService>()
         .SubscribeAsync(this.TryRefreshParticipantChanges);
+      this.sessionInfoChangedSubscription = await this.Service.SubscribeAsync<SessionInfoChangedNotification>(this.SessionId, _ => this.InvokeAsync(this.HandleNotification));
     }
 
     private Task TryRefreshParticipantChanges(ParticipantChangedNotification arg)
@@ -80,6 +83,11 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
       return Task.CompletedTask;
     }
 
+    private Task ConfirmSessionOptionChangesAsync(ChangeSessionOptionsArgs args)
+    {
+      return this.Service.EditOptionsAsync(args);
+    }
+
     protected override void Dispose(bool disposing)
     {
       base.Dispose(disposing);
@@ -94,6 +102,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
           this.participantsChangedSubscription?.UnsubscribeAsync();
           this.voteSubscription?.UnsubscribeAsync();
           this.participantChangedSubscription?.UnsubscribeAsync();
+          this.sessionInfoChangedSubscription?.UnsubscribeAsync();
         }
         catch
         {

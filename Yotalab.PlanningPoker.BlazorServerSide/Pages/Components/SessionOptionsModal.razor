@@ -1,0 +1,62 @@
+﻿@using Yotalab.PlanningPoker.BlazorServerSide.Services.Args
+@using Yotalab.PlanningPoker.Grains.Interfaces.Models
+
+<div class="modal fade" id="@this.Id" tabindex="-1" aria-labelledby="sessionOptionsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sessionOptionsModalLabel">@this.Title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="session-name" class="col-form-label">Имя:</label>
+            <input @bind="this.sessionName" type="text" class="form-control" id="session-name">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="this.ConfirmAsync">
+          Подтвердить
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Отмена
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@code {
+  private string sessionName;
+
+  [Parameter]
+  public string Id { get; set; }
+
+  [Parameter]
+  public string Title { get; set; }
+
+  [Parameter]
+  public SessionInfo Session { get; set; }
+
+  [Parameter]
+  public Func<ChangeSessionOptionsArgs, Task> OnConfirm { get; set; }
+
+  protected override async Task OnInitializedAsync()
+  {
+    await base.OnInitializedAsync();
+    this.sessionName = this.Session?.Name;
+  }
+
+  private Task ConfirmAsync()
+  {
+    var args = new ChangeSessionOptionsArgs()
+    {
+      SessionId = this.Session == default ? Guid.NewGuid() : this.Session.Id,
+      Name = sessionName
+    };
+
+    return this.OnConfirm?.Invoke(args);
+  }
+}

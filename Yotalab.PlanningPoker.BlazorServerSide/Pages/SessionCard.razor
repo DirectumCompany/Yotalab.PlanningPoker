@@ -3,13 +3,15 @@
 @inherits AuthorizedOwningComponentBase<SessionService>
 @if (this.session != null)
 {
-  <h1 class="text-center">@this.session.Name</h1>
-
+  <div class="d-flex flex-row justify-content-center">
+    <h1 class="text-center">@this.session.Name</h1>
+    <img class="btn h-100" src="img/edit_icon.svg" data-bs-toggle="modal" data-bs-target="#sessionOptionsModal" />
+  </div>
   @if (this.userNotJoinedToSession)
   {
     <JoinPrompt Title="@($"Вы не являетесь участником сессии '{this.session.Name}'")"
                 SessionId="this.SessionId"
-                ParticipantId="this.ParticipantId"/>
+                ParticipantId="this.ParticipantId" />
   }
   else
   {
@@ -48,6 +50,8 @@
         }
       </div>
     </div>
+
+    <SessionOptionsModal Id="sessionOptionsModal" Title="Настройки сессия" Session="@this.session" OnConfirm="@this.ConfirmSessionOptionChangesAsync" />
   }
 }
 else

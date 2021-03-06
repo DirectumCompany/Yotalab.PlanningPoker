@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Streams;
+using Yotalab.PlanningPoker.BlazorServerSide.Services.Args;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO;
 using Yotalab.PlanningPoker.Grains.Interfaces;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
+using Yotalab.PlanningPoker.Grains.Interfaces.Models.Args;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Services
 {
@@ -100,6 +102,17 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       var participantGrain = this.client.GetGrain<IParticipantGrain>(participantId);
       var sessionsGrainList = await participantGrain.Sessions();
       return sessionsGrainList.Any(s => s.GetPrimaryKey() == sessionId);
+    }
+
+    public Task EditOptionsAsync(ChangeSessionOptionsArgs args)
+    {
+      var sessionGrain = this.client.GetGrain<ISessionGrain>(args.SessionId);
+      var changeInfoArgs = new ChangeSessionInfoArgs()
+      {
+        Name = args.Name
+      };
+
+      return sessionGrain.ChangeInfo(changeInfoArgs);
     }
 
     public async Task<IReadOnlyCollection<ParticipantVote>> Votes(Guid sessionId)
