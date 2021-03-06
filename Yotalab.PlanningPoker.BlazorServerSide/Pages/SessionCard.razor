@@ -1,5 +1,6 @@
 ﻿@page "/sessions/{sessionId:guid}"
 @using Grains.Interfaces.Models
+@inject IJSRuntime JS
 @inherits AuthorizedOwningComponentBase<SessionService>
 @if (this.session != null)
 {
