@@ -24,9 +24,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
 
     private async Task CreateSessionAsync(ChangeSessionOptionsArgs args)
     {
-      if (string.IsNullOrWhiteSpace(args.Name))
-        return;
-
       var result = await this.Service.CreateAsync(args.Name, this.participantId);
       this.sessions.Add(result);
       this.StateHasChanged();

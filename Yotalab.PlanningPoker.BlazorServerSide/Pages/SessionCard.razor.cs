@@ -27,9 +27,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     private StreamSubscriptionHandle<ParticipantChangedNotification> participantChangedSubscription;
     private StreamSubscriptionHandle<SessionInfoChangedNotification> sessionInfoChangedSubscription;
 
-    [Inject]
-    public IJSRuntime JS { get; set; }
-
     [Parameter]
     public Guid SessionId { get; set; }
 
@@ -89,9 +86,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
 
     private Task ConfirmSessionOptionChangesAsync(ChangeSessionOptionsArgs args)
     {
-      if (string.IsNullOrWhiteSpace(args.Name))
-        return this.JS.InvokeVoidAsync("alert", "Имя сессии не может быть пустым!").AsTask();
-
       return this.Service.EditOptionsAsync(args);
     }
 
