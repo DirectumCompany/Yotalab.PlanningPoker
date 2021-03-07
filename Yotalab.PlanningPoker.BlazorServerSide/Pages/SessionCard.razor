@@ -6,7 +6,10 @@
 {
   <div class="d-flex flex-row justify-content-center">
     <h1 class="text-center">@this.session.Name</h1>
-    <img class="btn h-100" src="img/edit_icon.svg" data-bs-toggle="modal" data-bs-target="#sessionOptionsModal" />
+    @if (this.ParticipantId == this.session.ModeratorId)
+    {
+      <img class="btn h-100" src="img/edit_icon.svg" data-bs-toggle="modal" data-bs-target="#sessionOptionsModal" />
+    }
   </div>
   @if (this.userNotJoinedToSession)
   {
