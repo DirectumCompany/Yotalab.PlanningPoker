@@ -27,6 +27,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     private StreamSubscriptionHandle<ParticipantChangedNotification> participantChangedSubscription;
     private StreamSubscriptionHandle<SessionInfoChangedNotification> sessionInfoChangedSubscription;
 
+    [Inject]
+    public IJSRuntime JS { get; set; }
+
     [Parameter]
     public Guid SessionId { get; set; }
 

@@ -1,11 +1,10 @@
 ﻿@page "/sessions/{sessionId:guid}"
 @using Grains.Interfaces.Models
-@inject IJSRuntime JS
 @inherits AuthorizedOwningComponentBase<SessionService>
 @if (this.session != null)
 {
-  <div class="d-flex flex-row justify-content-center">
-    <h1 class="text-center">@this.session.Name</h1>
+  <div class="d-flex flex-row justify-content-center align-items-center mb-2">
+    <h1 class="text-center m-0">@this.session.Name</h1>
     @if (this.ParticipantId == this.session.ModeratorId)
     {
       <img class="btn h-100" src="img/edit_icon.svg" data-bs-toggle="modal" data-bs-target="#sessionOptionsModal" />
