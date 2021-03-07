@@ -3,7 +3,7 @@
 
 <div class="alert @alertClass d-flex justify-content-between align-items-center py-2" role="alert">
   <strong class="ms-2">@sessionStatus</strong>
-  @if (this.ParticipantId == this.ModeratorId)
+  @if (this.Session.ModeratorIds.Contains(this.ParticipantId))
   {
     <button type="button" class="btn btn-sm @buttonStyle"
             disabled="@this.isSessionStateChanging"
@@ -16,16 +16,10 @@
 
 @code {
   [Parameter]
-  public Guid SessionId { get; set; }
-
-  [Parameter]
-  public Guid ModeratorId { get; set; }
-
-  [Parameter]
   public Guid ParticipantId { get; set; }
 
-  [Parameter]
-  public SessionProcessingState SessionState { get; set; }
+  [CascadingParameter]
+  public SessionInfo Session { get; set; }
 
   private string buttonText;
   private string buttonStyle;
@@ -44,7 +38,7 @@
     this.requestedState = SessionProcessingState.Started;
     this.alertClass = "alert-secondary";
 
-    if (this.SessionState == SessionProcessingState.Started)
+    if (this.Session.ProcessingState == SessionProcessingState.Started)
     {
       this.buttonText = "Остановить";
       this.buttonStyle = "btn-warning";
@@ -52,7 +46,7 @@
       this.requestedState = SessionProcessingState.Stopped;
       this.alertClass = "alert-primary";
     }
-    else if (this.SessionState == SessionProcessingState.Stopped)
+    else if (this.Session.ProcessingState == SessionProcessingState.Stopped)
     {
       this.buttonText = "Завершить";
       this.buttonStyle = "btn-success";
@@ -60,7 +54,7 @@
       this.requestedState = SessionProcessingState.Finished;
       this.alertClass = "alert-warning";
     }
-    else if (this.SessionState == SessionProcessingState.Finished)
+    else if (this.Session.ProcessingState == SessionProcessingState.Finished)
     {
       this.buttonText = "Обнулить";
       this.buttonStyle = "btn-secondary";
@@ -76,13 +70,13 @@
     {
       this.isSessionStateChanging = true;
       if (requestedState == SessionProcessingState.Initial)
-        await this.Service.ResetAsync(this.SessionId, this.ParticipantId);
+        await this.Service.ResetAsync(this.Session.Id, this.ParticipantId);
       else if (requestedState == SessionProcessingState.Started)
-        await this.Service.StartAsync(this.SessionId, this.ParticipantId);
+        await this.Service.StartAsync(this.Session.Id, this.ParticipantId);
       else if (requestedState == SessionProcessingState.Stopped)
-        await this.Service.StopAsync(this.SessionId, this.ParticipantId);
+        await this.Service.StopAsync(this.Session.Id, this.ParticipantId);
       else if (requestedState == SessionProcessingState.Finished)
-        await this.Service.FinishAsync(this.SessionId, this.ParticipantId);
+        await this.Service.FinishAsync(this.Session.Id, this.ParticipantId);
 
       // Небольшая задержка, иначе можно успеть быстро клянуть 2 раза и перескочить через состояние.
       await Task.Delay(100);

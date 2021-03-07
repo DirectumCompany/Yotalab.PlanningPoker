@@ -7,26 +7,30 @@
 
 @if (this.participantInfo != null)
 {
-  <div class="dropdown">
-    <div id="profileLinkMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      <div class="d-flex align-items-center">
-        <Avatar ClassNames="avatar avatar--small me-2" Url="@this.participantInfo.AvatarUrl" />
-        <span class="text-muted fw-bold">@this.displayName</span>
-      </div>
-    </div>
-    <ul class="dropdown-menu" aria-labelledby="profileLinkMenu">
-      <li>
-        <button class="dropdown-item" @onclick="this.RaiseClickOnChangeNameLinkAsync">
-          Изменить имя
-        </button>
-      </li>
-      <li>
-        <form method="post" action="Identity/Account/LogOut">
-          <button type="submit" class="dropdown-item">Выйти</button>
-        </form>
-      </li>
-    </ul>
-  </div>
+  var dropDownMenuItems = new List<DropDownMenuItem>()
+  {
+    new DropDownMenuItem()
+    {
+      ItemTemplate =
+      @<button class="dropdown-item" @onclick="this.RaiseClickOnChangeNameLinkAsync">
+        Изменить имя
+      </button>
+    },
+    new DropDownMenuItem()
+    {
+      ItemTemplate =
+      @<form method="post" action="Identity/Account/LogOut">
+        <button type="submit" class="dropdown-item">Выйти</button>
+      </form>
+    }
+  };
+
+  <DropDownMenu ButtonId="profileLinkMenu" Items="dropDownMenuItems">
+    <ButtonTemplate>
+      <Avatar ClassNames="avatar avatar--small me-2" Url="@this.participantInfo.AvatarUrl" />
+      <span class="text-muted fw-bold">@this.displayName</span>
+    </ButtonTemplate>
+  </DropDownMenu>
 
   <ParticipantChangeNameLink Id="@this.participantChangeNameLinkId"
                              ParticipantInfo="this.participantInfo"

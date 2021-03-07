@@ -1,0 +1,27 @@
+﻿<div class="dropdown">
+  <div id="@this.ButtonId" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    @this.ButtonTemplate
+  </div>
+  <ul class="dropdown-menu" aria-labelledby="@this.ButtonId">
+    @if (this.Items != null)
+    {
+      foreach (var item in this.Items)
+      {
+        <li class="@item.ItemContainerClassName">
+          @item.ItemTemplate
+        </li>
+      }
+    }
+  </ul>
+</div>
+
+@code {
+  [Parameter]
+  public string ButtonId { get; set; }
+
+  [Parameter]
+  public RenderFragment ButtonTemplate { get; set; }
+
+  [Parameter]
+  public IEnumerable<DropDownMenuItem> Items { get; set; }
+}

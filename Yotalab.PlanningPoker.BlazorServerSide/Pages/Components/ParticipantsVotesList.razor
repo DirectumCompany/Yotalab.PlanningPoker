@@ -1,56 +1,18 @@
 ﻿@using Grains.Interfaces.Models
 @using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO
 
-@inject ParticipantsService Service
-
 <ul class="list-group mb-3">
   @foreach (var participant in this.PaticipantVotes.OrderByDescending(p => p.Id == this.ParticipantId))
   {
     <li @key="participant.Id" class="list-group-item d-flex justify-content-between lh-sm@(participant.Id == this.ParticipantId ? " list-group-item-secondary" : string.Empty)">
       <div class="d-flex align-items-center">
         <div class="me-3">
-
-          @if (participant.Id == this.ModeratorId || (participant.Id != this.ParticipantId && this.ParticipantId != this.ModeratorId))
-          {
-            // Контекстного меню нет для модератора и на участнике, если текущий пользователь не модератор.
-            <Avatar Url="@participant.AvatarUrl" />
-          }
-          else
-          {
-            var participantContextMenuId = $"avatarContextMenu-{participant.Id}";
-            <div class="dropdown">
-              <div id="@participantContextMenuId" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <Avatar Url="@participant.AvatarUrl" />
-              </div>
-              <ul class="dropdown-menu" aria-labelledby="@participantContextMenuId">
-                @if (this.ParticipantId == this.ModeratorId)
-                {
-                  <li>
-                    <button class="dropdown-item d-flex align-items-center"
-                            @onclick="@(async () => await this.Service.KickAsync(this.SessionId, participant.Id))">
-                      <img class="me-2" src="img/kick_icon.svg" alt="Leave" />
-                      Исключить
-                    </button>
-                  </li>
-                }
-                else
-                {
-                  <li>
-                    <button class="dropdown-item d-flex align-items-center"
-                            @onclick="@(async () => { await this.Service.LeaveAsync(this.SessionId, this.ParticipantId); })">
-                      <img class="me-2" src="img/door_icon.svg" alt="Leave" />
-                      Покинуть сессию
-                    </button>
-                  </li>
-                }
-              </ul>
-            </div>
-          }
+          <ParticipantAvatar Participant="participant" ParticipantId="this.ParticipantId" />
         </div>
         <div>
           <div class="d-flex align-items-center">
             <h6 class="my-0 me-2">@(string.IsNullOrEmpty(participant.Name) ? "Безымянный" : participant.Name)</h6>
-            @if (participant.Id == this.ModeratorId)
+            @if (this.Session.ModeratorIds.Contains(participant.Id))
             {
               <img src="img/crown_icon.svg" alt="Host" />
             }
@@ -67,7 +29,7 @@
           }
         </div>
       </div>
-      @if (participant.Id == this.ParticipantId || this.SessionState == SessionProcessingState.Stopped || this.SessionState == SessionProcessingState.Finished)
+      @if (participant.Id == this.ParticipantId || this.Session.ProcessingState == SessionProcessingState.Stopped || this.Session.ProcessingState == SessionProcessingState.Finished)
       {
         <h3 class="text-muted"><strong>@participant.Vote.Value</strong></h3>
       }
@@ -86,12 +48,9 @@
   [Parameter]
   public Guid ParticipantId { get; set; }
 
-  [Parameter]
-  public Guid ModeratorId { get; set; }
+  [CascadingParameter]
+  public SessionInfo Session { get; set; }
 
-  [Parameter]
-  public Guid SessionId { get; set; }
-
-  [Parameter]
-  public SessionProcessingState SessionState { get; set; }
+  @inject ParticipantsService Service
+  @inject SessionService SessionService
 }

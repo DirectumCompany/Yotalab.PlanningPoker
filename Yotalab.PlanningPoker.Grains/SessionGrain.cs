@@ -42,7 +42,7 @@ namespace Yotalab.PlanningPoker.Grains
     {
       var moderatorId = moderator.GetPrimaryKey();
       this.grainState.State.Name = name;
-      this.grainState.State.ModeratorId = moderatorId;
+      this.grainState.State.ModeratorIds.Add(moderatorId);
       this.grainState.State.ProcessingState = SessionProcessingState.Initial;
       return this.grainState.WriteStateAsync();
     }
@@ -63,27 +63,41 @@ namespace Yotalab.PlanningPoker.Grains
 
       this.grainState.State.ParticipantVotes.Remove(participantId);
 
+      // После удаления участника, удалим его из модераторов, если он там был.
+      if (this.grainState.State.ModeratorIds.Contains(participantId))
+      {
+        this.grainState.State.ModeratorIds.Remove(participantId);
+        if (this.grainState.State.ModeratorIds.Count == 0)
+        {
+          // Назначим первого попавшего пользователя модератором.
+          var firstParticipantId = this.grainState.State.ParticipantVotes.Keys.FirstOrDefault();
+          if (firstParticipantId != default)
+            this.grainState.State.ModeratorIds.Add(firstParticipantId);
+        }
+      }
+
       this.NotifyParticipantExit(participantId);
 
       return this.grainState.WriteStateAsync();
     }
 
-    public async Task Kick(Guid participantId)
+    public Task Kick(Guid participantId, Guid initiatorId)
     {
-      if (!this.grainState.State.ParticipantVotes.ContainsKey(participantId))
-        return;
+      if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
+        throw new InvalidOperationException($"Only moderator can kick participant. Initiator: {initiatorId}");
 
-      this.grainState.State.ParticipantVotes.Remove(participantId);
+      if (!this.grainState.State.ParticipantVotes.ContainsKey(participantId))
+        return Task.CompletedTask;
 
       var participantGrain = this.GrainFactory.GetGrain<IParticipantGrain>(participantId);
-      await participantGrain.Leave(this.GetPrimaryKey());
-
-      this.NotifyParticipantExit(participantId);
-      await this.grainState.WriteStateAsync();
+      return participantGrain.Leave(this.GetPrimaryKey());
     }
 
     public Task FinishAsync(Guid initiatorId)
     {
+      if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
+        throw new InvalidOperationException($"Only moderator can change session processing state. Initiator: {initiatorId}");
+
       var processingState = this.grainState.State.ProcessingState;
       if (processingState != SessionProcessingState.Stopped && processingState != SessionProcessingState.Started)
         throw new InvalidOperationException($"Cannot finish not started session. Session processing state: {processingState}");
@@ -98,6 +112,9 @@ namespace Yotalab.PlanningPoker.Grains
 
     public Task ResetAsync(Guid initiatorId)
     {
+      if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
+        throw new InvalidOperationException($"Only moderator can change session processing state. Initiator: {initiatorId}");
+
       var processingState = this.grainState.State.ProcessingState;
       if (processingState != SessionProcessingState.Finished)
         throw new InvalidOperationException($"Cannot reset not finished session. Session processing state: {processingState}");
@@ -112,6 +129,9 @@ namespace Yotalab.PlanningPoker.Grains
 
     public Task StartAsync(Guid initiatorId)
     {
+      if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
+        throw new InvalidOperationException($"Only moderator can change session processing state. Initiator: {initiatorId}");
+
       var processingState = this.grainState.State.ProcessingState;
       if (processingState != SessionProcessingState.Initial)
         throw new InvalidOperationException($"Cannot start not initial session. Session processing state: {processingState}");
@@ -130,6 +150,9 @@ namespace Yotalab.PlanningPoker.Grains
 
     public Task StopAsync(Guid initiatorId)
     {
+      if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
+        throw new InvalidOperationException($"Only moderator can change session processing state. Initiator: {initiatorId}");
+
       var processingState = this.grainState.State.ProcessingState;
       if (processingState != SessionProcessingState.Started)
         throw new InvalidOperationException($"Cannot stop not started session. Session processing state: {processingState}");
@@ -153,6 +176,30 @@ namespace Yotalab.PlanningPoker.Grains
         .ToImmutableArray());
     }
 
+    public Task AddModerator(Guid participantId)
+    {
+      if (!this.grainState.State.ParticipantVotes.ContainsKey(participantId))
+        throw new InvalidOperationException($"Can not add moderator. Participant {participantId} not joined to session {this.GetPrimaryKey()}");
+
+      this.grainState.State.ModeratorIds.Add(participantId);
+
+      this.NotifyModeratorsChanged(new HashSet<Guid>() { participantId }, new HashSet<Guid>());
+
+      return this.grainState.WriteStateAsync();
+    }
+
+    public Task RemoveModerator(Guid participantId)
+    {
+      if (this.grainState.State.ModeratorIds.Count == 1)
+        throw new InvalidOperationException($"Can not remove single moderator. Session {this.GetPrimaryKey()}, Moderator {this.grainState.State.ModeratorIds.First()}");
+
+      this.grainState.State.ModeratorIds.Remove(participantId);
+
+      this.NotifyModeratorsChanged(new HashSet<Guid>(), new HashSet<Guid>() { participantId });
+
+      return this.grainState.WriteStateAsync();
+    }
+
     #endregion
 
     #region Базовый класс
@@ -161,6 +208,13 @@ namespace Yotalab.PlanningPoker.Grains
     {
       if (this.grainState.State.ParticipantVotes == null)
         this.grainState.State.ParticipantVotes = new Dictionary<Guid, Vote>();
+
+      if (this.grainState.State.ModeratorIds == null)
+      {
+        this.grainState.State.ModeratorIds = new HashSet<Guid>();
+        if (this.grainState.State.ModeratorId != default)
+          this.grainState.State.ModeratorIds.Add(this.grainState.State.ModeratorId);
+      }
 
       return base.OnActivateAsync();
     }
@@ -190,6 +244,14 @@ namespace Yotalab.PlanningPoker.Grains
       var sessionId = this.GetPrimaryKey();
       this.GetStreamProvider("SMS").GetStream<ParticipantsChangedNotification>(sessionId, typeof(ParticipantsChangedNotification).FullName)
         .OnNextAsync(new ParticipantsChangedNotification(sessionId, new HashSet<Guid>(), new HashSet<Guid>() { participantId }))
+        .Ignore();
+    }
+
+    private void NotifyModeratorsChanged(HashSet<Guid> addedModerators, HashSet<Guid> removedModerator)
+    {
+      var sessionId = this.GetPrimaryKey();
+      this.GetStreamProvider("SMS").GetStream<ParticipantsChangedNotification>(sessionId, typeof(ParticipantsChangedNotification).FullName)
+        .OnNextAsync(new ParticipantsChangedNotification(sessionId, new HashSet<Guid>(), new HashSet<Guid>(), addedModerators, removedModerator))
         .Ignore();
     }
 
@@ -225,6 +287,7 @@ namespace Yotalab.PlanningPoker.Grains
       {
         Id = this.GetPrimaryKey(),
         ModeratorId = this.grainState.State.ModeratorId,
+        ModeratorIds = this.grainState.State.ModeratorIds.ToImmutableArray(),
         Name = this.grainState.State.Name,
         ProcessingState = this.grainState.State.ProcessingState,
         ParticipantsCount = this.grainState.State.ParticipantVotes.Keys.Count
@@ -238,7 +301,10 @@ namespace Yotalab.PlanningPoker.Grains
   {
     public string Name { get; set; }
 
+    [Obsolete("Поле будет удалено")]
     public Guid ModeratorId { get; set; }
+
+    public HashSet<Guid> ModeratorIds { get; set; }
 
     public SessionProcessingState ProcessingState { get; set; }
 
