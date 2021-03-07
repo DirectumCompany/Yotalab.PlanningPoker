@@ -23,7 +23,7 @@
                 }
               </div>
               <div>
-                @if (this.ParticipantId == session.ModeratorId)
+                @if (session.ModeratorIds.Contains(this.ParticipantId))
                 {
                   <span class="badge bg-primary me-2">Вы модератор</span>
                 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using Orleans.Concurrency;
 
 namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
@@ -27,7 +28,13 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
     /// <summary>
     /// Получить или установить идентификатор модератора сессии.
     /// </summary>
+    [Obsolete("Поле будет удалено")]
     public Guid ModeratorId { get; set; }
+
+    /// <summary>
+    /// Получить или установить список модераторов сессии.
+    /// </summary>
+    public ImmutableArray<Guid> ModeratorIds { get; set; }
 
     /// <summary>
     /// Получить или установить количество участников сессии планирования.

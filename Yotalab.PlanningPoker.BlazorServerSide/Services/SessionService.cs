@@ -121,6 +121,18 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       return await sessionGrain.ParticipantVotes();
     }
 
+    public Task AddModerator(Guid sessionId, Guid participantId)
+    {
+      var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
+      return sessionGrain.AddModerator(participantId);
+    }
+
+    public Task RemoveModerator(Guid sessionId, Guid participantId)
+    {
+      var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
+      return sessionGrain.RemoveModerator(participantId);
+    }
+
     public Task<StreamSubscriptionHandle<T>> SubscribeAsync<T>(Guid sessionId, Func<T, Task> action) =>
         this.client.GetStreamProvider("SMS")
             .GetStream<T>(sessionId, typeof(T).FullName)
