@@ -50,8 +50,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages.Account
 
     public class InputModel
     {
-      [Required]
-      [EmailAddress]
+      [Required(ErrorMessage = "The Email field is required")]
+      [EmailAddress(ErrorMessage = "The {0} field is not a valid e-mail address")]
+      [Display(Name = "Email")]
       public string Email { get; set; }
     }
 
@@ -149,6 +150,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages.Account
           result = await _userManager.AddLoginAsync(user, info);
           if (result.Succeeded)
           {
+            var avatarUrl = info.Principal.FindFirstValue("avatar");
+            await this.participantsService.ChangeInfo(Guid.Parse(user.Id), info.Principal.Identity.Name, avatarUrl);
+
             _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
 
             var userId = await _userManager.GetUserIdAsync(user);
