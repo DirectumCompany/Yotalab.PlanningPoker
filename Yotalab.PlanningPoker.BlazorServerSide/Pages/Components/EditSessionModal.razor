@@ -6,9 +6,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="sessionOptionsModalLabel">@this.Title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
+        @if (this.error != null)
+        {
+          <div class="alert alert-danger" role="alert">@this.error</div>
+        }
         <form>
           <div class="mb-3">
             <label for="session-name" class="col-form-label">Имя:</label>
@@ -17,7 +21,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="this.ConfirmAsync">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="@(this.IsValid ? "modal" : string.Empty)" @onclick="this.ConfirmAsync">
           Подтвердить
         </button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -30,9 +34,7 @@
 
 @code {
   private string sessionName;
-
-  [Inject]
-  public IJSRuntime JS { get; set; }
+  private string error;
 
   [Parameter]
   public string Id { get; set; }
@@ -44,7 +46,15 @@
   public SessionInfo Session { get; set; }
 
   [Parameter]
-  public Func<ChangeSessionOptionsArgs, Task> OnConfirm { get; set; }
+  public EventCallback<EditSessionArgs> OnConfirm { get; set; }
+
+  private bool IsValid
+  {
+    get
+    {
+      return !string.IsNullOrWhiteSpace(this.sessionName);
+    }
+  }
 
   protected override async Task OnInitializedAsync()
   {
@@ -55,14 +65,17 @@
   private Task ConfirmAsync()
   {
     if (string.IsNullOrWhiteSpace(this.sessionName))
-      return this.JS.InvokeVoidAsync("alert", "Имя сессии не может быть пустым!").AsTask();
+    {
+      this.error = "Имя сессии не может быть пустым!";
+      return Task.CompletedTask;
+    }
 
-    var args = new ChangeSessionOptionsArgs()
+    var args = new EditSessionArgs()
     {
       SessionId = this.Session == default ? Guid.NewGuid() : this.Session.Id,
       Name = this.sessionName
     };
 
-    return this.OnConfirm?.Invoke(args);
+    return this.OnConfirm.InvokeAsync(args);
   }
 }

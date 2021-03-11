@@ -2,7 +2,7 @@
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Services.Args
 {
-  public class ChangeSessionOptionsArgs
+  public class EditSessionArgs
   {
     public Guid SessionId { get; set; }
 

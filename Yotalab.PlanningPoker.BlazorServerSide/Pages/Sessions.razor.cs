@@ -22,11 +22,10 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
       this.sessions = new List<SessionInfo>(await this.Service.ListAsync(this.participantId));
     }
 
-    private async Task CreateSessionAsync(ChangeSessionOptionsArgs args)
+    private async Task CreateSessionAsync(EditSessionArgs args)
     {
       var result = await this.Service.CreateAsync(args.Name, this.participantId);
       this.sessions.Add(result);
-      this.StateHasChanged();
     }
   }
 }

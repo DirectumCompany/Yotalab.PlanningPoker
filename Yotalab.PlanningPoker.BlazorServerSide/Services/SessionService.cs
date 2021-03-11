@@ -104,7 +104,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       return sessionsGrainList.Any(s => s.GetPrimaryKey() == sessionId);
     }
 
-    public Task EditOptionsAsync(ChangeSessionOptionsArgs args)
+    public Task EditSessionAsync(EditSessionArgs args)
     {
       var sessionGrain = this.client.GetGrain<ISessionGrain>(args.SessionId);
       var changeInfoArgs = new ChangeSessionInfoArgs()

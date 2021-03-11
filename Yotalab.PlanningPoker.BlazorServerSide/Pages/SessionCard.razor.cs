@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.JSInterop;
 using Orleans.Streams;
 using System;
 using System.Collections.Generic;
@@ -84,9 +83,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
       return Task.CompletedTask;
     }
 
-    private Task ConfirmSessionOptionChangesAsync(ChangeSessionOptionsArgs args)
+    private Task HandleEditSessionConfirmAsync(EditSessionArgs args)
     {
-      return this.Service.EditOptionsAsync(args);
+      return this.Service.EditSessionAsync(args);
     }
 
     protected override void Dispose(bool disposing)

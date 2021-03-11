@@ -3,13 +3,16 @@
 @inherits AuthorizedOwningComponentBase<SessionService>
 @if (this.session != null)
 {
-  <div class="d-flex flex-row justify-content-center align-items-center mb-2">
-    <h1 class="text-center m-0">@this.session.Name</h1>
-    @if (this.session.ModeratorIds.Contains(this.ParticipantId))
-    {
-      <img class="btn h-100" src="img/edit_icon.svg" data-bs-toggle="modal" data-bs-target="#sessionOptionsModal" />
-    }
-  </div>
+<div class="d-flex flex-row justify-content-center align-items-center mb-2">
+  <h1 class="text-center mb-0 mx-2">@this.session.Name</h1>
+  @if (this.session.ModeratorIds.Contains(this.ParticipantId))
+  {
+    <button class="btn h-100" data-bs-toggle="modal" data-bs-target="#sessionOptionsModal">
+      <span class="oi oi-pencil text-warning"></span>
+    </button>
+    <EditSessionModal Id="sessionOptionsModal" Title="Изменение сессии" Session="@this.session" OnConfirm="@this.HandleEditSessionConfirmAsync" />
+  }
+</div>
   <CascadingValue Value="@this.session">
 
     @if (this.userNotJoinedToSession)
@@ -51,7 +54,7 @@
       </div>
     }
   </CascadingValue>
-  <SessionOptionsModal Id="sessionOptionsModal" Title="Настройки сессия" Session="@this.session" OnConfirm="@this.ConfirmSessionOptionChangesAsync" />}
+}
 else
 {
   <div class="d-flex justify-content-center">
