@@ -14,11 +14,11 @@
         dropDownItems.Add(new DropDownMenuItem()
         {
           ItemTemplate =
-          @<button class="dropdown-item d-flex align-items-center"
-                   @onclick="@(async () => await this.SessionService.RemoveModerator(this.Session.Id, this.Participant.Id))">
-            <img class="me-2" src="img/crown_cross_out_icon.svg" alt="Host" />
-            Отменить модератора
-          </button>
+        @<button class="dropdown-item d-flex align-items-center"
+                 @onclick="@(async () => await this.SessionService.RemoveModerator(this.Session.Id, this.Participant.Id))">
+          <img class="me-2" src="img/crown_cross_out_icon.svg" alt="Host" />
+          Отменить модератора
+        </button>
         });
       }
       else
@@ -26,11 +26,11 @@
         dropDownItems.Add(new DropDownMenuItem()
         {
           ItemTemplate =
-          @<button class="dropdown-item d-flex align-items-center"
-                   @onclick="@(async () => await this.SessionService.AddModerator(this.Session.Id, this.Participant.Id))">
-            <img class="me-2" src="img/crown_icon.svg" alt="Host" />
-            Сделать модератором
-          </button>
+        @<button class="dropdown-item d-flex align-items-center"
+                 @onclick="@(async () => await this.SessionService.AddModerator(this.Session.Id, this.Participant.Id))">
+          <img class="me-2" src="img/crown_icon.svg" alt="Host" />
+          Сделать модератором
+        </button>
         });
       }
 
@@ -51,11 +51,11 @@
         dropDownItems.Add(new DropDownMenuItem()
         {
           ItemTemplate =
-          @<button class="dropdown-item d-flex align-items-center"
-                   @onclick="@(async () => { await this.Service.LeaveAsync(this.Session.Id, this.ParticipantId); })">
-            <img class="me-2" src="img/door_icon.svg" alt="Leave" />
-            Покинуть сессию
-          </button>
+        @<button class="dropdown-item d-flex align-items-center"
+                 @onclick="@(async () => { await this.Service.LeaveAsync(this.Session.Id, this.ParticipantId); })">
+          <img class="me-2" src="img/door_icon.svg" alt="Leave" />
+          Покинуть сессию
+        </button>
         });
       }
     }
