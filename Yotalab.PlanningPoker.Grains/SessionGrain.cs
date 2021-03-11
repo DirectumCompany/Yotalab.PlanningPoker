@@ -1,10 +1,10 @@
-﻿using Orleans;
-using Orleans.Runtime;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using Orleans;
+using Orleans.Runtime;
 using Yotalab.PlanningPoker.Grains.Interfaces;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models.Args;
@@ -206,7 +206,7 @@ namespace Yotalab.PlanningPoker.Grains
       this.grainState.State.Name = args.Name;
 
       this.NotifySessionInfoChanged();
-      
+
       return this.grainState.WriteStateAsync();
     }
 

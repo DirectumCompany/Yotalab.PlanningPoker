@@ -12,7 +12,7 @@ using Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications;
 namespace Yotalab.PlanningPoker.Grains
 {
   /// <summary>
-  ///  Грейн представляет собой участника сессии планирования.
+  /// Грейн представляет собой участника сессии планирования.
   /// </summary>
   public class ParticipantGrain : Grain, IParticipantGrain
   {
@@ -30,7 +30,7 @@ namespace Yotalab.PlanningPoker.Grains
       this.grainState = grainState;
     }
 
-    #region IParticipantGrain    
+    #region IParticipantGrain
 
     public Task<ParticipantInfo> GetAsync()
     {

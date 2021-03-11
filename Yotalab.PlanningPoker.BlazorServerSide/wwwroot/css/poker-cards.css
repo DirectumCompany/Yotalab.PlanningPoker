@@ -41,9 +41,9 @@
     background: #ffe4c442;
   }
 
-  .poker-card--heart {
-    color: #e44145;
-  }
+.poker-card--heart {
+  color: #e44145;
+}
 
   .poker-card--heart:before,
   .poker-card--heart:after {
@@ -64,7 +64,7 @@
 }
 
   .poker-card--selected:hover {
-    background: #fbd3a3!important;
+    background: #fbd3a3 !important;
   }
 
 .poker-card__inner {

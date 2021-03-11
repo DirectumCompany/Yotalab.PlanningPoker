@@ -1,5 +1,5 @@
-﻿using Orleans.Concurrency;
-using System;
+﻿using System;
+using Orleans.Concurrency;
 
 namespace Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications
 {
