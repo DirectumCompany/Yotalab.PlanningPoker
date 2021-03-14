@@ -16,12 +16,12 @@
         <form>
           <div class="mb-3">
             <label for="session-name" class="col-form-label">Имя:</label>
-            <input @bind="this.sessionName" type="text" class="form-control" id="session-name">
+            <input @bind="@this.sessionName" @bind:event="oninput" @onkeydown="this.ValidateName" type="text" class="form-control" id="session-name">
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="@(this.IsValid ? "modal" : string.Empty)" @onclick="this.ConfirmAsync">
+        <button type="button" class="btn btn-primary" disabled="@(this.error != null)" data-bs-dismiss="modal" @onclick="this.ConfirmAsync">
           Подтвердить
         </button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -48,28 +48,25 @@
   [Parameter]
   public EventCallback<EditSessionArgs> OnConfirm { get; set; }
 
-  private bool IsValid
-  {
-    get
-    {
-      return !string.IsNullOrWhiteSpace(this.sessionName);
-    }
-  }
-
   protected override async Task OnInitializedAsync()
   {
     await base.OnInitializedAsync();
     this.sessionName = this.Session?.Name;
+    await this.ValidateName();
+  }
+
+  private Task ValidateName()
+  {
+    if (string.IsNullOrWhiteSpace(this.sessionName))
+      this.error = "Имя сессии не может быть пустым!";
+    else
+      this.error = null;
+
+    return Task.CompletedTask;
   }
 
   private Task ConfirmAsync()
   {
-    if (string.IsNullOrWhiteSpace(this.sessionName))
-    {
-      this.error = "Имя сессии не может быть пустым!";
-      return Task.CompletedTask;
-    }
-
     var args = new EditSessionArgs()
     {
       SessionId = this.Session == default ? Guid.NewGuid() : this.Session.Id,
