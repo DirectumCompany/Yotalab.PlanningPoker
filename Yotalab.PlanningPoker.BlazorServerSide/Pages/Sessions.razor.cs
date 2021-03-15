@@ -12,6 +12,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
   {
     private Guid participantId;
     private List<SessionInfo> sessions;
+    private EditSessionArgs newSessionArgs;
 
     protected override async Task OnInitializedAsync()
     {
@@ -26,6 +27,14 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     {
       var result = await this.Service.CreateAsync(args.Name, this.participantId);
       this.sessions.Add(result);
+    }
+
+    private void OnShowCreationModal()
+    {
+      this.newSessionArgs = new EditSessionArgs()
+      {
+        Name = "Новая сессия"
+      };
     }
   }
 }

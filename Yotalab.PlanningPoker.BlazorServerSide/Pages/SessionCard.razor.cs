@@ -16,6 +16,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
 {
   public partial class SessionCard : AuthorizedOwningComponentBase<SessionService>, IAsyncDisposable
   {
+    private EditSessionArgs editSessionArgs;
     private Vote participantVote;
     private SessionInfo session;
     private IReadOnlyCollection<ParticipantInfoDTO> participantVotes;
@@ -86,6 +87,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     private Task HandleEditSessionConfirmAsync(EditSessionArgs args)
     {
       return this.Service.EditSessionAsync(args);
+    }
+
+    private void OnShowEditModal()
+    {
+      this.editSessionArgs = new EditSessionArgs()
+      {
+        Name = this.session?.Name,
+        SessionId = this.SessionId
+      };
     }
 
     public async ValueTask DisposeAsync()

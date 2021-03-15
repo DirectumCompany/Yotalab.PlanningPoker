@@ -42,11 +42,11 @@
     </div>
 
     <div class="float-end p-4 pe-3">
-      <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#newSessionModal">Новая сессия</button>
+      <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#newSessionModal" @onclick="this.OnShowCreationModal">Новая сессия</button>
     </div>
   </div>
 
-  <EditSessionModal Id="newSessionModal" Title="Новая сессия" Session="@null" OnConfirm="@this.CreateSessionAsync" />
+  <EditSessionModal Id="newSessionModal" Title="Новая сессия" EditArgs="this.newSessionArgs" OnConfirm="@this.CreateSessionAsync" />
 }
 else
 {

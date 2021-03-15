@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Services.Args
 {
@@ -15,6 +16,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services.Args
     /// <summary>
     /// Имя сессии.
     /// </summary>
+    [Required(ErrorMessage = "Имя сессии не может быть пустым!")]
     public string Name { get; set; }
   }
 }

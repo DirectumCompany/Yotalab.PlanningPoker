@@ -7,10 +7,10 @@
     <h1 class="text-center mb-0 mx-2">@this.session.Name</h1>
     @if (this.session.ModeratorIds.Contains(this.ParticipantId))
     {
-      <button class="btn h-100" data-bs-toggle="modal" data-bs-target="#sessionOptionsModal">
+      <button class="btn h-100" data-bs-toggle="modal" data-bs-target="#sessionOptionsModal" @onclick="this.OnShowEditModal">
         <span class="oi oi-pencil text-warning"></span>
       </button>
-      <EditSessionModal Id="sessionOptionsModal" Title="Изменение сессии" Session="@this.session" OnConfirm="@this.HandleEditSessionConfirmAsync" />
+      <EditSessionModal Id="sessionOptionsModal" EditArgs="this.editSessionArgs" Title="Изменение сессии" OnConfirm="@this.HandleEditSessionConfirmAsync" />
     }
   </div>
   <CascadingValue Value="@this.session">
