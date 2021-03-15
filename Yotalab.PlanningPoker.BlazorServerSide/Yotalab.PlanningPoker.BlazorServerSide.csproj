@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>aspnet-Yotalab.PlanningPoker.BlazorServerSide-96E73655-0B5E-4E5E-A58F-DBC782C828E0</UserSecretsId>
     <ServerGarbageCollection>false</ServerGarbageCollection>
   </PropertyGroup>

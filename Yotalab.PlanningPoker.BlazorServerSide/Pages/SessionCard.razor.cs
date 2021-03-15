@@ -13,7 +13,7 @@ using Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
 {
-  public partial class SessionCard : AuthorizedOwningComponentBase<SessionService>
+  public partial class SessionCard : AuthorizedOwningComponentBase<SessionService>, IAsyncDisposable
   {
     private Vote participantVote;
     private SessionInfo session;
@@ -80,25 +80,18 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
       return Task.CompletedTask;
     }
 
-    protected override void Dispose(bool disposing)
+    public async ValueTask DisposeAsync()
     {
-      base.Dispose(disposing);
-      if (this.IsDisposed)
-        return;
-
-      if (disposing)
+      try
       {
-        try
-        {
-          this.sessionProcessingSubscription?.UnsubscribeAsync();
-          this.participantsChangedSubscription?.UnsubscribeAsync();
-          this.voteSubscription?.UnsubscribeAsync();
-          this.participantChangedSubscription?.UnsubscribeAsync();
-        }
-        catch
-        {
-          // Игнорируем.
-        }
+        await this.sessionProcessingSubscription?.UnsubscribeAsync();
+        await this.participantsChangedSubscription?.UnsubscribeAsync();
+        await this.voteSubscription?.UnsubscribeAsync();
+        await this.participantChangedSubscription?.UnsubscribeAsync();
+      }
+      catch
+      {
+        // Игнорируем.
       }
     }
   }
