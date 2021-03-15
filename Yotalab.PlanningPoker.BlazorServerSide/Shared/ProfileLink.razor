@@ -2,26 +2,27 @@
 @using Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications
 @using Orleans.Streams
 @inherits AuthorizedOwningComponentBase<ParticipantsService>
+@implements IAsyncDisposable
 
 @inject JSInteropFunctions JSFunctions
 
 @if (this.participantInfo != null)
 {
   var dropDownMenuItems = new List<DropDownMenuItem>()
-  {
+{
     new DropDownMenuItem()
     {
       ItemTemplate =
-      @<button class="dropdown-item" @onclick="this.RaiseClickOnChangeNameLinkAsync">
-        Изменить имя
-      </button>
+@<button class="dropdown-item" @onclick="this.RaiseClickOnChangeNameLinkAsync">
+  Изменить имя
+</button>
     },
     new DropDownMenuItem()
     {
       ItemTemplate =
-      @<form method="post" action="Identity/Account/LogOut">
-        <button type="submit" class="dropdown-item">Выйти</button>
-      </form>
+@<form method="post" action="Identity/Account/LogOut">
+  <button type="submit" class="dropdown-item">Выйти</button>
+</form>
     }
   };
 
@@ -79,22 +80,15 @@
     await this.JSFunctions.ClickElementById(this.participantChangeNameLinkId);
   }
 
-  protected override void Dispose(bool disposing)
+  public async ValueTask DisposeAsync()
   {
-    base.Dispose(disposing);
-    if (this.IsDisposed)
-      return;
-
-    if (disposing)
+    try
     {
-      try
-      {
-        this.participantChangedSubscription?.UnsubscribeAsync();
-      }
-      catch
-      {
-        // Игнорируем
-      }
+      await this.participantChangedSubscription?.UnsubscribeAsync();
+    }
+    catch
+    {
+      // Игнорируем
     }
   }
 }
