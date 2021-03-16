@@ -1,12 +1,13 @@
-﻿using Orleans;
-using Orleans.Runtime;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using Orleans;
+using Orleans.Runtime;
 using Yotalab.PlanningPoker.Grains.Interfaces;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
+using Yotalab.PlanningPoker.Grains.Interfaces.Models.Args;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications;
 
 namespace Yotalab.PlanningPoker.Grains
@@ -200,6 +201,15 @@ namespace Yotalab.PlanningPoker.Grains
       return this.grainState.WriteStateAsync();
     }
 
+    public Task ChangeInfo(ChangeSessionInfoArgs args)
+    {
+      this.grainState.State.Name = args.Name;
+
+      this.NotifySessionInfoChanged();
+
+      return this.grainState.WriteStateAsync();
+    }
+
     #endregion
 
     #region Базовый класс
@@ -260,6 +270,14 @@ namespace Yotalab.PlanningPoker.Grains
       var sessionId = this.GetPrimaryKey();
       this.GetStreamProvider("SMS").GetStream<VoteNotification>(sessionId, typeof(VoteNotification).FullName)
         .OnNextAsync(new VoteNotification(sessionId, participantId, vote))
+        .Ignore();
+    }
+
+    private void NotifySessionInfoChanged()
+    {
+      var sessionId = this.GetPrimaryKey();
+      this.GetStreamProvider("SMS").GetStream<SessionInfoChangedNotification>(sessionId, typeof(SessionInfoChangedNotification).FullName)
+        .OnNextAsync(new SessionInfoChangedNotification(sessionId))
         .Ignore();
     }
 

@@ -3,15 +3,23 @@
 @inherits AuthorizedOwningComponentBase<SessionService>
 @if (this.session != null)
 {
-  <h1 class="text-center">@this.session.Name</h1>
-
+  <div class="d-flex flex-row justify-content-center align-items-center mb-2">
+    <h1 class="text-center mb-0 mx-2">@this.session.Name</h1>
+    @if (this.session.ModeratorIds.Contains(this.ParticipantId))
+    {
+      <button class="btn h-100" data-bs-toggle="modal" data-bs-target="#sessionOptionsModal" @onclick="this.OnShowEditModal">
+        <span class="oi oi-pencil text-warning"></span>
+      </button>
+      <EditSessionModal Id="sessionOptionsModal" EditArgs="this.editSessionArgs" Title="Изменение сессии" OnConfirm="@this.HandleEditSessionConfirmAsync" />
+    }
+  </div>
   <CascadingValue Value="@this.session">
 
     @if (this.userNotJoinedToSession)
     {
       <JoinPrompt Title="@($"Вы не являетесь участником сессии '{this.session.Name}'")"
                   SessionId="this.SessionId"
-                  ParticipantId="this.ParticipantId"/>
+                  ParticipantId="this.ParticipantId" />
     }
     else
     {

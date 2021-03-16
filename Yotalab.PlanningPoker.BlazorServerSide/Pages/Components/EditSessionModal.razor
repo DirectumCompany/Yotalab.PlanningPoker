@@ -1,0 +1,35 @@
+﻿<div class="modal fade" id="@this.Id" tabindex="-1" aria-labelledby="sessionOptionsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sessionOptionsModalLabel">@this.Title</h5>
+        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
+      </div>
+      @if (this.editContext != null)
+      {
+        <EditForm EditContext="@this.editContext">
+          <div class="modal-body">
+            <DataAnnotationsValidator />
+            <div class="mb-3">
+              <label for="session-name" class="col-form-label">Имя:</label>
+              <InputTextOnInput @bind-Value="@this.EditArgs.Name" class="form-control" />
+              <ValidationMessage For="@(() => this.EditArgs.Name)" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit"
+                    class="btn btn-primary"
+                    disabled="@this.formInvalid"
+                    data-bs-dismiss="@(!this.formInvalid ? "modal" : string.Empty)"
+                    @onclick="@(async () => await this.ConfirmAsync())">
+              Подтвердить
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Отмена
+            </button>
+          </div>
+        </EditForm>
+      }
+    </div>
+  </div>
+</div>
