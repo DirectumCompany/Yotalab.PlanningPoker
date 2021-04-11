@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using System;
+using System.IO;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -6,10 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-using System;
-using System.IO;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Yotalab.PlanningPoker.BlazorServerSide.Data;
 
 [assembly: HostingStartup(typeof(Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.IdentityHostingStartup))]
@@ -40,26 +38,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
 
         services
           .AddAuthentication()
-          .AddMicrosoftAccount(options =>
-          {
-            options.ClientId = context.Configuration["Authentication:Microsoft:ClientId"];
-            options.ClientSecret = context.Configuration["Authentication:Microsoft:ClientSecret"];
-          })
-          .AddGoogle(options =>
-          {
-            options.ClientId = context.Configuration["Authentication:Google:ClientId"];
-            options.ClientSecret = context.Configuration["Authentication:Google:ClientSecret"];
-            options.Events = new Microsoft.AspNetCore.Authentication.OAuth.OAuthEvents
-            {
-              OnCreatingTicket = c =>
-              {
-                var identity = (ClaimsIdentity)c.Principal.Identity;
-                var avatar = c.User.GetProperty("picture").GetString();
-                identity.AddClaim(new Claim("avatar", avatar));
-                return Task.FromResult(0);
-              }
-            };
-          });
+          .TryConfigureMicrosoftAccount(context.Configuration)
+          .TryConfigureGoogleAccount(context.Configuration);
 
         services.ConfigureApplicationCookie(options =>
         {
