@@ -46,7 +46,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
       if (string.IsNullOrWhiteSpace(googleAccountClientId) || string.IsNullOrWhiteSpace(googleAccountClientSecret))
         return authencticationBuilder;
 
-      return authencticationBuilder.AddMicrosoftAccount(options =>
+      return authencticationBuilder.AddGoogle(options =>
       {
         options.ClientId = googleAccountClientId;
         options.ClientSecret = googleAccountClientSecret;
