@@ -29,6 +29,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
       {
         options.ClientId = microsoftAccountClientId;
         options.ClientSecret = microsoftAccountClientSecret;
+        options.AccessDeniedPath = "/Login";
       });
     }
 

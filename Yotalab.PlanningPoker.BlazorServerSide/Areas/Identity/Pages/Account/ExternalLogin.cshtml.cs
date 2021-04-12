@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages.Account
@@ -125,7 +126,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages.Account
       foreach (var error in identityResult.Errors)
         _logger.LogError(error.Description);
 
-      this.ErrorMessage = "Ошибка входа с помощью внешнего аккаунта.";
+      this.ErrorMessage = string.Join(Environment.NewLine, identityResult.Errors.Select(e => e.Description));
       return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
     }
 

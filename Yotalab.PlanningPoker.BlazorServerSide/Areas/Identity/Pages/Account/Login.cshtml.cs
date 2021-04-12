@@ -65,7 +65,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages.Account
       // Clear the existing external cookie to ensure a clean login process
       await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-      ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+      this.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
       ReturnUrl = returnUrl;
     }
@@ -96,10 +96,10 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages.Account
         else
         {
           ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-          return Page();
         }
       }
 
+      this.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
       // If we got this far, something failed, redisplay form
       return Page();
     }
