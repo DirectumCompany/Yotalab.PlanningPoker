@@ -210,6 +210,21 @@ namespace Yotalab.PlanningPoker.Grains
       return this.grainState.WriteStateAsync();
     }
 
+    public async Task Remove(Guid initiatorId)
+    {
+      if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
+        throw new InvalidOperationException($"Only moderator can change session processing state. Initiator: {initiatorId}");
+
+      await Task.WhenAll(this.grainState.State.ParticipantVotes.Keys.Select(participantId =>
+      {
+        var participantGrain = this.GrainFactory.GetGrain<IParticipantGrain>(participantId);
+        var sessionId = this.GetPrimaryKey();
+        return participantGrain.Leave(sessionId);
+      }));
+
+      await this.grainState.ClearStateAsync();
+    }
+
     #endregion
 
     #region Базовый класс

@@ -32,11 +32,14 @@
                 <span class="badge bg-success">участников: @session.ParticipantsCount</span>
               </div>
               <div class="ms-2">
-                @{ 
+                @{
                   var sessionContextMenuItems = new List<DropDownMenuItem>();
                   sessionContextMenuItems.Add(new DropDownMenuItem()
                   {
-                    ItemTemplate = @<button class="dropdown-item"><span class="oi oi-x text-danger me-2"></span>Удалить</button>
+                    ItemTemplate =
+                  @<button class="dropdown-item" @onclick="@(() => this.RemoveSessionAsync(session.Id))">
+                    <span class="oi oi-x text-danger me-2"></span>Удалить
+                  </button>
                   });
                 }
 
