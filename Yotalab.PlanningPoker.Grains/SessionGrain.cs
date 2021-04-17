@@ -62,24 +62,24 @@ namespace Yotalab.PlanningPoker.Grains
       if (!this.grainState.State.ParticipantVotes.ContainsKey(participantId))
         return Task.CompletedTask;
 
-      this.grainState.State.ParticipantVotes.Remove(participantId);
+        this.grainState.State.ParticipantVotes.Remove(participantId);
 
-      // После удаления участника, удалим его из модераторов, если он там был.
-      if (this.grainState.State.ModeratorIds.Contains(participantId))
-      {
-        this.grainState.State.ModeratorIds.Remove(participantId);
-        if (this.grainState.State.ModeratorIds.Count == 0)
+        // После удаления участника, удалим его из модераторов, если он там был.
+        if (this.grainState.State.ModeratorIds.Contains(participantId))
         {
-          // Назначим первого попавшего пользователя модератором.
-          var firstParticipantId = this.grainState.State.ParticipantVotes.Keys.FirstOrDefault();
-          if (firstParticipantId != default)
-            this.grainState.State.ModeratorIds.Add(firstParticipantId);
+          this.grainState.State.ModeratorIds.Remove(participantId);
+          if (this.grainState.State.ModeratorIds.Count == 0)
+          {
+            // Назначим первого попавшего пользователя модератором.
+            var firstParticipantId = this.grainState.State.ParticipantVotes.Keys.FirstOrDefault();
+            if (firstParticipantId != default)
+              this.grainState.State.ModeratorIds.Add(firstParticipantId);
+          }
         }
-      }
 
-      this.NotifyParticipantExit(participantId);
+        this.NotifyParticipantExit(participantId);
 
-      return this.grainState.WriteStateAsync();
+        return this.grainState.WriteStateAsync();
     }
 
     public Task Kick(Guid participantId, Guid initiatorId)
@@ -215,12 +215,22 @@ namespace Yotalab.PlanningPoker.Grains
       if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
         throw new InvalidOperationException($"Only moderator can change session processing state. Initiator: {initiatorId}");
 
-      await Task.WhenAll(this.grainState.State.ParticipantVotes.Keys.Select(participantId =>
-      {
-        var participantGrain = this.GrainFactory.GetGrain<IParticipantGrain>(participantId);
-        var sessionId = this.GetPrimaryKey();
-        return participantGrain.Leave(sessionId);
-      }));
+      var sessionId = this.GetPrimaryKey();
+      var participants = this.grainState.State.ParticipantVotes.Keys
+        .Union(this.grainState.State.ModeratorIds)
+        .Distinct()
+        .Select(participantId => this.GrainFactory.GetGrain<IParticipantGrain>(participantId))
+        .ToList();
+
+      // Чистим участников сесии прямо тут,
+      // чтобы из метода Leave не вызывался полноценный Exit текущей сессии.
+      // Без этого падало InconsistentException,
+      // в причинах которой разобраться не получилось,
+      // больше времени на это тратить не хочется.
+      this.grainState.State.ParticipantVotes.Clear();
+      this.grainState.State.ModeratorIds.Clear();
+
+      await Task.WhenAll(participants.Select(participant => participant.Leave(sessionId)));
 
       await this.grainState.ClearStateAsync();
     }
