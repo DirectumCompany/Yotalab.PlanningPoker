@@ -36,6 +36,11 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
           .AddErrorDescriber<OverrideIdentityErrorDescriber>()
           .AddEntityFrameworkStores<ApplicationDbContext>();
 
+        services
+          .AddAuthentication()
+          .TryConfigureMicrosoftAccount(context.Configuration)
+          .TryConfigureGoogleAccount(context.Configuration);
+
         services.ConfigureApplicationCookie(options =>
         {
           options.ExpireTimeSpan = TimeSpan.FromHours(24);
