@@ -1,6 +1,7 @@
 ﻿@page "/"
 
 @inherits AuthorizedOwningComponentBase<SessionService>
+@inject NavigationManager NavigationManager
 
 <h1 class="text-center">Мои сессии</h1>
 
@@ -13,9 +14,10 @@
         {
           foreach (var session in this.sessions)
           {
-            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-               href="sessions/@(session.Id)">
-              <div>
+            <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+              <div class="flex-fill"
+                   style="cursor:pointer"
+                   @onclick="@(() => NavigationManager.NavigateTo($"sessions/{session.Id}"))">
                 @session.Name
                 @if (session.ProcessingState == Grains.Interfaces.Models.SessionProcessingState.Started)
                 {
@@ -29,7 +31,24 @@
                 }
                 <span class="badge bg-success">участников: @session.ParticipantsCount</span>
               </div>
-            </a>
+              <div class="ms-2">
+                @{ 
+                  var sessionContextMenuItems = new List<DropDownMenuItem>();
+                  sessionContextMenuItems.Add(new DropDownMenuItem()
+                  {
+                    ItemTemplate = @<button class="dropdown-item"><span class="oi oi-x text-danger me-2"></span>Удалить</button>
+                  });
+                }
+
+                <DropDownMenu Items="sessionContextMenuItems">
+                  <ButtonTemplate>
+                    <button class="btn btn-sm p-0 m-0 ps-1 pe-1">
+                      <span class="oi oi-ellipses"></span>
+                    </button>
+                  </ButtonTemplate>
+                </DropDownMenu>
+              </div>
+            </div>
           }
         }
         else
