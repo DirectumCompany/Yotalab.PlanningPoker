@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Hosting;
 using Serilog;
-using Serilog.Events;
 
 namespace Yotalab.PlanningPoker.Hosting
 {
@@ -13,16 +11,7 @@ namespace Yotalab.PlanningPoker.Hosting
     public static IHostBuilder UseOrleansSiloInProcess(this IHostBuilder hostBuilder)
     {
       return hostBuilder
-        .ConfigureLogging((context, builder) =>
-        {
-          builder.AddFilter("Orleans.Runtime.Management.ManagementGrain", LogLevel.Warning);
-          builder.AddFilter("Orleans.Runtime.SiloControl", LogLevel.Warning);
-          builder.AddSerilog(new LoggerConfiguration()
-              .ReadFrom.Configuration(context.Configuration)
-              .Filter.ByExcluding(e => e.Properties["SourceContext"].ToString() == @"""Orleans.Runtime.Management.ManagementGrain""" && e.Level < LogEventLevel.Warning)
-              .Filter.ByExcluding(e => e.Properties["SourceContext"].ToString() == @"""Orleans.Runtime.SiloControl""" && e.Level < LogEventLevel.Warning)
-              .CreateLogger());
-        })
+        .UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration))
         .UseOrleans((context, builder) =>
         {
           builder.ConfigureApplicationParts(manager => manager.AddFromApplicationBaseDirectory());
