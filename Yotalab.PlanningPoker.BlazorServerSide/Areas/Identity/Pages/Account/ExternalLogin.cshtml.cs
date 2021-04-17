@@ -95,7 +95,10 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages.Account
       this.ReturnUrl = returnUrl;
       this.ProviderDisplayName = info.ProviderDisplayName;
       if (!info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
-        return Page();
+      {
+        this.ErrorMessage = "Ошибка получения информации об аккаунте.";
+        return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+      }
 
       var email = info.Principal.FindFirstValue(ClaimTypes.Email);
       var user = new IdentityUser { UserName = email, Email = email, EmailConfirmed = true };
