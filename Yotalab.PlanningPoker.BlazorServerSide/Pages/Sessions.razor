@@ -38,8 +38,10 @@
                   sessionContextMenuItems.Add(new DropDownMenuItem()
                   {
                     ItemTemplate =
-                @<button class="dropdown-item" @onclick="@(() => this.RemoveSessionAsync(session.Id))">
-                  <span class="oi oi-x text-danger me-2"></span>Удалить
+                @<button class="dropdown-item"
+                         data-bs-toggle="modal" data-bs-target="#removeSessionModal"
+                         @onclick="@(() => this.ShowRemoveSessionConfirmation(session.Id))">
+                  <span class="oi oi-trash text-danger me-2"></span>Удалить
                 </button>
                   });
 
@@ -69,6 +71,7 @@
     </div>
   </div>
 
+  <RemoveSessionModal Id="removeSessionModal" Session="@this.sessionToDelete" OnConfirm="@this.RemoveSessionAsync" />
   <EditSessionModal Id="newSessionModal" Title="Новая сессия" EditArgs="this.newSessionArgs" OnConfirm="@this.CreateSessionAsync" />
 }
 else
