@@ -97,6 +97,12 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       return sessionGrain.ResetAsync(participantId);
     }
 
+    internal Task RestartAsync(Guid sessionId, Guid participantId)
+    {
+      var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
+      return sessionGrain.ResetAsync(participantId, true);
+    }
+
     public async Task<bool> ParticipantJoined(Guid sessionId, Guid participantId)
     {
       var participantGrain = this.client.GetGrain<IParticipantGrain>(participantId);

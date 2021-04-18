@@ -113,6 +113,11 @@ namespace Yotalab.PlanningPoker.Grains
 
     public Task ResetAsync(Guid initiatorId)
     {
+      return this.ResetAsync(initiatorId, false);
+    }
+
+    public Task ResetAsync(Guid initiatorId, bool startImmediately)
+    {
       if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
         throw new InvalidOperationException($"Only moderator can change session processing state. Initiator: {initiatorId}");
 
@@ -120,7 +125,7 @@ namespace Yotalab.PlanningPoker.Grains
       if (processingState != SessionProcessingState.Finished)
         throw new InvalidOperationException($"Cannot reset not finished session. Session processing state: {processingState}");
 
-      this.grainState.State.ProcessingState = SessionProcessingState.Initial;
+      this.grainState.State.ProcessingState = startImmediately ? SessionProcessingState.Started : SessionProcessingState.Initial;
       this.ResetParticipantVotes();
 
       this.NotifyProcessingStateChanged(this.grainState.State.ProcessingState);

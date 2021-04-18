@@ -5,12 +5,33 @@
   <strong class="ms-2">@sessionStatus</strong>
   @if (this.Session.ModeratorIds.Contains(this.ParticipantId))
   {
-    <button type="button" class="btn btn-sm @buttonStyle"
-            disabled="@this.isSessionStateChanging"
-            @onclick="@(async () => await this.ChangeSessionState(requestedState))"
-            @ondblclick:preventDefault="true" @ondblclick:stopPropagation="true">
-      @buttonText
-    </button>
+    @if (this.Session.ProcessingState == SessionProcessingState.Finished)
+    {
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-sm btn-secondary d-flex align-items-center"
+                title="Обнулить"
+                disabled="@this.isSessionStateChanging"
+                @onclick="@(async () => await this.ChangeSessionState(SessionProcessingState.Initial))"
+                @ondblclick:preventDefault="true" @ondblclick:stopPropagation="true">
+          <span class="oi oi-reload"></span>
+        </button>
+        <button type="button" class="btn btn-sm @buttonStyle"
+                disabled="@this.isSessionStateChanging"
+                @onclick="@(async () => await this.ChangeSessionState(requestedState, true))"
+                @ondblclick:preventDefault="true" @ondblclick:stopPropagation="true">
+          @buttonText
+        </button>
+      </div>
+    }
+    else
+    {
+      <button type="button" class="btn btn-sm @buttonStyle"
+              disabled="@this.isSessionStateChanging"
+              @onclick="@(async () => await this.ChangeSessionState(requestedState))"
+              @ondblclick:preventDefault="true" @ondblclick:stopPropagation="true">
+        @buttonText
+      </button>
+    }
   }
 </div>
 
@@ -56,15 +77,15 @@
     }
     else if (this.Session.ProcessingState == SessionProcessingState.Finished)
     {
-      this.buttonText = "Обнулить";
-      this.buttonStyle = "btn-secondary";
+      this.buttonText = "Перезапустить";
+      this.buttonStyle = "btn-primary";
       this.sessionStatus = "Голосование завершилось";
-      this.requestedState = SessionProcessingState.Initial;
+      this.requestedState = SessionProcessingState.Started;
       this.alertClass = "alert-success";
     }
   }
 
-  private async Task ChangeSessionState(SessionProcessingState requestedState)
+  private async Task ChangeSessionState(SessionProcessingState requestedState, bool isRestart = false)
   {
     try
     {
@@ -72,7 +93,12 @@
       if (requestedState == SessionProcessingState.Initial)
         await this.Service.ResetAsync(this.Session.Id, this.ParticipantId);
       else if (requestedState == SessionProcessingState.Started)
-        await this.Service.StartAsync(this.Session.Id, this.ParticipantId);
+      {
+        if (isRestart)
+          await this.Service.RestartAsync(this.Session.Id, this.ParticipantId);
+        else
+          await this.Service.StartAsync(this.Session.Id, this.ParticipantId);
+      }
       else if (requestedState == SessionProcessingState.Stopped)
         await this.Service.StopAsync(this.Session.Id, this.ParticipantId);
       else if (requestedState == SessionProcessingState.Finished)

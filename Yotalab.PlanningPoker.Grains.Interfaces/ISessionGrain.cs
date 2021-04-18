@@ -34,6 +34,14 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
     Task ResetAsync(Guid initiatorId);
 
     /// <summary>
+    /// Перевести сессию в начальное состояние.
+    /// </summary>
+    /// <param name="initiatorId">Инициатор исключения.</param>
+    /// <param name="startImmediately">После сброса сразу стартовать сессию.</param>
+    /// <returns>Задача на сброс и начало сессии.</returns>
+    Task ResetAsync(Guid initiatorId, bool startImmediately);
+
+    /// <summary>
     /// Начать сессию планирования.
     /// </summary>
     /// <param name="initiatorId">Инициатор исключения.</param>
