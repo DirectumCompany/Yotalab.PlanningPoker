@@ -21,6 +21,11 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
     public string Name { get; set; }
 
     /// <summary>
+    /// Получить или установить признак того, что сессия инициализирована.
+    /// </summary>
+    public bool IsInitialized { get; set; }
+
+    /// <summary>
     /// Получить или установить состояние сессии.
     /// </summary>
     public SessionProcessingState ProcessingState { get; set; }

@@ -1,20 +1,42 @@
-﻿@inject ParticipantsService Service
+﻿@using Yotalab.PlanningPoker.Grains.Interfaces.Models
+
+@inject NavigationManager NavigationManager
+@inject ParticipantsService Service
 
 <div class="alert alert-secondary mt-4" role="alert">
-  <strong class="me-2 align-middle">@Title</strong>
-  <button class="font-weight-bold btn btn-sm btn-primary"
-          @onclick="@(async () => await this.Service.JoinAsync(this.SessionId, this.ParticipantId))">
-    Присоединиться
-  </button>
+  <strong class="me-2 align-middle">@this.title</strong>
+  @if (this.sessionExists)
+  {
+    <button class="font-weight-bold btn btn-sm btn-success"
+            @onclick="@(async () => await this.Service.JoinAsync(this.Session.Id, this.ParticipantId))">
+      Присоединиться
+    </button>
+  }
+  else
+  {
+    <button class="font-weight-bold btn btn-sm btn-primary"
+            @onclick="@(() => this.NavigationManager.NavigateTo("/"))">
+      Вернуться к моим сессиям
+    </button>
+  }
 </div>
 
 @code {
-  [Parameter]
-  public string Title { get; set; }
+  private string title;
+  private bool sessionExists;
 
   [Parameter]
-  public Guid SessionId { get; set; }
+  public SessionInfo Session { get; set; }
 
   [Parameter]
   public Guid ParticipantId { get; set; }
+
+  protected override async Task OnParametersSetAsync()
+  {
+    await base.OnParametersSetAsync();
+    this.sessionExists = this.Session != null && this.Session.IsInitialized;
+    this.title = this.sessionExists ?
+      $"Вы не являетесь участником сессии '{this.Session.Name}'" :
+      "Сессии не существует";
+  }
 }

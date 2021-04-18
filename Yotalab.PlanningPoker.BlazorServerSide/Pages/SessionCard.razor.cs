@@ -75,9 +75,18 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     private async Task RefreshAsync()
     {
       this.session = await this.Service.GetAsync(this.SessionId);
-      this.participantVotes = await this.Service.ListParticipants(this.SessionId);
-      this.userNotJoinedToSession = !await this.Service.ParticipantJoined(this.SessionId, this.ParticipantId);
-      this.participantVote = this.participantVotes.SingleOrDefault(p => p.Id == this.ParticipantId)?.Vote;
+      if (session.IsInitialized)
+      {
+        this.participantVotes = await this.Service.ListParticipants(this.SessionId);
+        this.userNotJoinedToSession = !await this.Service.ParticipantJoined(this.SessionId, this.ParticipantId);
+        this.participantVote = this.participantVotes.SingleOrDefault(p => p.Id == this.ParticipantId)?.Vote;
+      }
+      else
+      {
+        this.participantVotes = new List<ParticipantInfoDTO>();
+        this.userNotJoinedToSession = true;
+        this.participantVote = Vote.Unset;
+      }
     }
 
     private async Task HandleNotification()

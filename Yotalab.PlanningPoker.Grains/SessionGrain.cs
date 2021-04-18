@@ -335,14 +335,28 @@ namespace Yotalab.PlanningPoker.Grains
 
     private SessionInfo ToInfo()
     {
+      if (this.grainState.RecordExists)
+      {
+        var hasModerators = this.grainState.State.ModeratorIds.Any();
+        var hasParticipants = this.grainState.State.ParticipantVotes.Any();
+        return new SessionInfo()
+        {
+          Id = this.GetPrimaryKey(),
+          // Косвенно определяем, что сессии существует по наличию в ней модераторов.
+          // Ситуации, когда в сессии нет модераторов быть не может для живой сессии,
+          //   иначе считаем такую сессию не инициализированной.
+          IsInitialized = hasModerators,
+          ModeratorId = this.grainState.State.ModeratorId,
+          ModeratorIds = hasModerators ? this.grainState.State.ModeratorIds.ToImmutableArray() : ImmutableArray<Guid>.Empty,
+          Name = this.grainState.State.Name,
+          ProcessingState = this.grainState.State.ProcessingState,
+          ParticipantsCount = hasParticipants ? this.grainState.State.ParticipantVotes.Keys.Count : 0
+        };
+      }
+
       return new SessionInfo()
       {
-        Id = this.GetPrimaryKey(),
-        ModeratorId = this.grainState.State.ModeratorId,
-        ModeratorIds = this.grainState.State.ModeratorIds.ToImmutableArray(),
-        Name = this.grainState.State.Name,
-        ProcessingState = this.grainState.State.ProcessingState,
-        ParticipantsCount = this.grainState.State.ParticipantVotes.Keys.Count
+        IsInitialized = false
       };
     }
 
