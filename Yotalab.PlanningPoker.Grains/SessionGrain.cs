@@ -62,24 +62,24 @@ namespace Yotalab.PlanningPoker.Grains
       if (!this.grainState.State.ParticipantVotes.ContainsKey(participantId))
         return Task.CompletedTask;
 
-        this.grainState.State.ParticipantVotes.Remove(participantId);
+      this.grainState.State.ParticipantVotes.Remove(participantId);
 
-        // После удаления участника, удалим его из модераторов, если он там был.
-        if (this.grainState.State.ModeratorIds.Contains(participantId))
+      // После удаления участника, удалим его из модераторов, если он там был.
+      if (this.grainState.State.ModeratorIds.Contains(participantId))
+      {
+        this.grainState.State.ModeratorIds.Remove(participantId);
+        if (this.grainState.State.ModeratorIds.Count == 0)
         {
-          this.grainState.State.ModeratorIds.Remove(participantId);
-          if (this.grainState.State.ModeratorIds.Count == 0)
-          {
-            // Назначим первого попавшего пользователя модератором.
-            var firstParticipantId = this.grainState.State.ParticipantVotes.Keys.FirstOrDefault();
-            if (firstParticipantId != default)
-              this.grainState.State.ModeratorIds.Add(firstParticipantId);
-          }
+          // Назначим первого попавшего пользователя модератором.
+          var firstParticipantId = this.grainState.State.ParticipantVotes.Keys.FirstOrDefault();
+          if (firstParticipantId != default)
+            this.grainState.State.ModeratorIds.Add(firstParticipantId);
         }
+      }
 
-        this.NotifyParticipantExit(participantId);
+      this.NotifyParticipantExit(participantId);
 
-        return this.grainState.WriteStateAsync();
+      return this.grainState.WriteStateAsync();
     }
 
     public Task Kick(Guid participantId, Guid initiatorId)
@@ -231,8 +231,9 @@ namespace Yotalab.PlanningPoker.Grains
       this.grainState.State.ModeratorIds.Clear();
 
       await Task.WhenAll(participants.Select(participant => participant.Leave(sessionId)));
-
       await this.grainState.ClearStateAsync();
+
+      this.NotifySessionRemoved();
     }
 
     #endregion
@@ -303,6 +304,14 @@ namespace Yotalab.PlanningPoker.Grains
       var sessionId = this.GetPrimaryKey();
       this.GetStreamProvider("SMS").GetStream<SessionInfoChangedNotification>(sessionId, typeof(SessionInfoChangedNotification).FullName)
         .OnNextAsync(new SessionInfoChangedNotification(sessionId))
+        .Ignore();
+    }
+
+    private void NotifySessionRemoved()
+    {
+      var sessionId = this.GetPrimaryKey();
+      this.GetStreamProvider("SMS").GetStream<SessionRemovedNotification>(sessionId, typeof(SessionRemovedNotification).FullName)
+        .OnNextAsync(new SessionRemovedNotification(sessionId))
         .Ignore();
     }
 
