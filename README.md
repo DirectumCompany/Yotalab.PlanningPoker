@@ -15,7 +15,3 @@ https://mariadb.org/download/ - строка подключения в \Yotalab.
 \Yotalab.PlanningPoker.Api\OrleansSql\MySQL-Main.sql - основные таблицы Orleans, выполнить в первую очередь
 
 \Yotalab.PlanningPoker.Api\OrleansSql\MySQL-Persistence.sql - хранилище состояния Grain
-
-# Демо версия
-https://u1201531.plsk.regruhosting.ru/
-
