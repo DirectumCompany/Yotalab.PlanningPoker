@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Yotalab.PlanningPoker.BlazorServerSide.Pages.Components;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
@@ -13,6 +14,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     private Guid participantId;
     private List<SessionInfo> sessions;
     private EditSessionArgs newSessionArgs;
+    private SessionInfo sessionToDelete;
 
     protected override async Task OnInitializedAsync()
     {
@@ -27,6 +29,25 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     {
       var result = await this.Service.CreateAsync(args.Name, this.participantId);
       this.sessions.Add(result);
+    }
+
+    private async Task RemoveSessionAsync(Guid sessionId)
+    {
+      try
+      {
+        var session = this.sessions.Single(s => s.Id == sessionId);
+        await this.Service.Remove(sessionId, this.participantId);
+        this.sessions.Remove(session);
+      }
+      finally
+      {
+        this.sessionToDelete = null;
+      }
+    }
+
+    private void ShowRemoveSessionConfirmation(Guid sessionId)
+    {
+      this.sessionToDelete = this.sessions.Single(s => s.Id == sessionId);
     }
 
     private void OnShowCreationModal()

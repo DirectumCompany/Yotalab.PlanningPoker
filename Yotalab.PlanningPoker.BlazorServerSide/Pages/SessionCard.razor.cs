@@ -26,21 +26,42 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     private StreamSubscriptionHandle<VoteNotification> voteSubscription;
     private StreamSubscriptionHandle<ParticipantChangedNotification> participantChangedSubscription;
     private StreamSubscriptionHandle<SessionInfoChangedNotification> sessionInfoChangedSubscription;
+    private StreamSubscriptionHandle<SessionRemovedNotification> sessionRemovedSubscription;
 
     [Parameter]
     public Guid SessionId { get; set; }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
       await base.OnInitializedAsync();
       await this.RefreshAsync();
 
-      this.sessionProcessingSubscription = await this.Service.SubscribeAsync<SessionProcessingNotification>(this.SessionId, notification => this.InvokeAsync(this.HandleNotification));
-      this.participantsChangedSubscription = await this.Service.SubscribeAsync<ParticipantsChangedNotification>(this.SessionId, notification => this.InvokeAsync(this.HandleNotification));
-      this.voteSubscription = await this.Service.SubscribeAsync<VoteNotification>(this.SessionId, notification => this.InvokeAsync(() => this.HandleVoteNotification(notification)));
+      // Обработка изменения состояния сессии (начало голосования, остановка, и т.п.).
+      this.sessionProcessingSubscription = await this.Service.SubscribeAsync<SessionProcessingNotification>(this.SessionId,
+        notification => this.InvokeAsync(this.HandleNotification));
+
+      // Обработка изменения участников (кого-то добавили, кого-то удалили и т.п.).
+      this.participantsChangedSubscription = await this.Service.SubscribeAsync<ParticipantsChangedNotification>(this.SessionId,
+        notification => this.InvokeAsync(this.HandleNotification));
+
+      // Обработка появления нового голоса.
+      this.voteSubscription = await this.Service.SubscribeAsync<VoteNotification>(this.SessionId,
+        notification => this.InvokeAsync(() => this.HandleVoteNotification(notification)));
+
+      // Обработка изменения одного из участников.
       this.participantChangedSubscription = await this.ScopedServices.GetRequiredService<ParticipantsService>()
         .SubscribeAsync(this.TryRefreshParticipantChanges);
-      this.sessionInfoChangedSubscription = await this.Service.SubscribeAsync<SessionInfoChangedNotification>(this.SessionId, _ => this.InvokeAsync(this.HandleNotification));
+
+      // Обработка изменения информации о сессии.
+      this.sessionInfoChangedSubscription = await this.Service.SubscribeAsync<SessionInfoChangedNotification>(this.SessionId,
+        _ => this.InvokeAsync(this.HandleNotification));
+
+      // Обработка удаления сессии.
+      this.sessionRemovedSubscription = await this.Service.SubscribeAsync<SessionRemovedNotification>(this.SessionId,
+        _ => this.InvokeAsync(() => this.NavigationManager.NavigateTo("/")));
     }
 
     private Task TryRefreshParticipantChanges(ParticipantChangedNotification arg)
@@ -54,14 +75,25 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     private async Task RefreshAsync()
     {
       this.session = await this.Service.GetAsync(this.SessionId);
-      this.participantVotes = await this.Service.ListParticipants(this.SessionId);
-      this.userNotJoinedToSession = !await this.Service.ParticipantJoined(this.SessionId, this.ParticipantId);
-      this.participantVote = this.participantVotes.SingleOrDefault(p => p.Id == this.ParticipantId)?.Vote;
+      if (session.IsInitialized)
+      {
+        this.participantVotes = await this.Service.ListParticipants(this.SessionId);
+        this.userNotJoinedToSession = !await this.Service.ParticipantJoined(this.SessionId, this.ParticipantId);
+        this.participantVote = this.participantVotes.SingleOrDefault(p => p.Id == this.ParticipantId)?.Vote;
+      }
+      else
+      {
+        this.participantVotes = new List<ParticipantInfoDTO>();
+        this.userNotJoinedToSession = true;
+        this.participantVote = Vote.Unset;
+      }
     }
 
     private async Task HandleNotification()
     {
       await this.RefreshAsync();
+      if (this.userNotJoinedToSession)
+        this.NavigationManager.NavigateTo("/");
       this.StateHasChanged();
     }
 
@@ -107,6 +139,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
         await this.voteSubscription?.UnsubscribeAsync();
         await this.participantChangedSubscription?.UnsubscribeAsync();
         await this.sessionInfoChangedSubscription?.UnsubscribeAsync();
+        await this.sessionRemovedSubscription?.UnsubscribeAsync();
       }
       catch
       {

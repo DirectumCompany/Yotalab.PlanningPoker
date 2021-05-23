@@ -73,25 +73,25 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       return result;
     }
 
-    internal Task StopAsync(Guid sessionId, Guid participantId)
+    public Task StopAsync(Guid sessionId, Guid participantId)
     {
       var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
       return sessionGrain.StopAsync(participantId);
     }
 
-    internal Task FinishAsync(Guid sessionId, Guid participantId)
+    public Task FinishAsync(Guid sessionId, Guid participantId)
     {
       var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
       return sessionGrain.FinishAsync(participantId);
     }
 
-    internal Task StartAsync(Guid sessionId, Guid participantId)
+    public Task StartAsync(Guid sessionId, Guid participantId)
     {
       var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
       return sessionGrain.StartAsync(participantId);
     }
 
-    internal Task ResetAsync(Guid sessionId, Guid participantId)
+    public Task ResetAsync(Guid sessionId, Guid participantId)
     {
       var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
       return sessionGrain.ResetAsync(participantId);
@@ -137,6 +137,12 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
     {
       var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
       return sessionGrain.RemoveModerator(participantId);
+    }
+
+    public Task Remove(Guid sessionId, Guid participantId)
+    {
+      var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
+      return sessionGrain.Remove(participantId);
     }
 
     public Task<StreamSubscriptionHandle<T>> SubscribeAsync<T>(Guid sessionId, Func<T, Task> action) =>

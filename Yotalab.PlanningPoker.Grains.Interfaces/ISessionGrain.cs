@@ -118,5 +118,12 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
     /// <param name="args">Аргументы изменения информации о сессии.</param>
     /// <returns>Задача на изменение настроек сессии.</returns>
     Task ChangeInfo(ChangeSessionInfoArgs args);
+
+    /// <summary>
+    /// Удалить сессию.
+    /// </summary>
+    /// <param name="initiatorId">Инициатор участника, удаляющего сессию.</param>
+    /// <returns>Задача на удаление сессии.</returns>
+    Task Remove(Guid initiatorId);
   }
 }

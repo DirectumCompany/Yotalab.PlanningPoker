@@ -1,0 +1,25 @@
+﻿<div class="modal fade" id="@this.Id" tabindex="-1" aria-labelledby="removeSessionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="removeSessionModalLabel"><span class="oi oi-warning text-danger me-2"></span> Удалить сессию</h5>
+        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        @if (this.Session != null)
+        {
+          <p>Сессию <b>"@this.Session.Name"</b> после удаления не восстановить.</p>
+        }
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Отменить
+        </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                @onclick="@(async () => await this.ConfirmAsync())">
+          Удалить
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

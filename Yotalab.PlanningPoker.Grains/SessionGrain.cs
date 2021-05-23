@@ -215,6 +215,32 @@ namespace Yotalab.PlanningPoker.Grains
       return this.grainState.WriteStateAsync();
     }
 
+    public async Task Remove(Guid initiatorId)
+    {
+      if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
+        throw new InvalidOperationException($"Only moderator can change session processing state. Initiator: {initiatorId}");
+
+      var sessionId = this.GetPrimaryKey();
+      var participants = this.grainState.State.ParticipantVotes.Keys
+        .Union(this.grainState.State.ModeratorIds)
+        .Distinct()
+        .Select(participantId => this.GrainFactory.GetGrain<IParticipantGrain>(participantId))
+        .ToList();
+
+      // Чистим участников сесии прямо тут,
+      // чтобы из метода Leave не вызывался полноценный Exit текущей сессии.
+      // Без этого падало InconsistentException,
+      // в причинах которой разобраться не получилось,
+      // больше времени на это тратить не хочется.
+      this.grainState.State.ParticipantVotes.Clear();
+      this.grainState.State.ModeratorIds.Clear();
+
+      await Task.WhenAll(participants.Select(participant => participant.Leave(sessionId)));
+      await this.grainState.ClearStateAsync();
+
+      this.NotifySessionRemoved();
+    }
+
     #endregion
 
     #region Базовый класс
@@ -286,6 +312,14 @@ namespace Yotalab.PlanningPoker.Grains
         .Ignore();
     }
 
+    private void NotifySessionRemoved()
+    {
+      var sessionId = this.GetPrimaryKey();
+      this.GetStreamProvider("SMS").GetStream<SessionRemovedNotification>(sessionId, typeof(SessionRemovedNotification).FullName)
+        .OnNextAsync(new SessionRemovedNotification(sessionId))
+        .Ignore();
+    }
+
     private void ResetParticipantVotes()
     {
       var keys = this.grainState.State.ParticipantVotes.Keys.ToList();
@@ -306,14 +340,28 @@ namespace Yotalab.PlanningPoker.Grains
 
     private SessionInfo ToInfo()
     {
+      if (this.grainState.RecordExists)
+      {
+        var hasModerators = this.grainState.State.ModeratorIds.Any();
+        var hasParticipants = this.grainState.State.ParticipantVotes.Any();
+        return new SessionInfo()
+        {
+          Id = this.GetPrimaryKey(),
+          // Косвенно определяем, что сессии существует по наличию в ней модераторов.
+          // Ситуации, когда в сессии нет модераторов быть не может для живой сессии,
+          //   иначе считаем такую сессию не инициализированной.
+          IsInitialized = hasModerators,
+          ModeratorId = this.grainState.State.ModeratorId,
+          ModeratorIds = hasModerators ? this.grainState.State.ModeratorIds.ToImmutableArray() : ImmutableArray<Guid>.Empty,
+          Name = this.grainState.State.Name,
+          ProcessingState = this.grainState.State.ProcessingState,
+          ParticipantsCount = hasParticipants ? this.grainState.State.ParticipantVotes.Keys.Count : 0
+        };
+      }
+
       return new SessionInfo()
       {
-        Id = this.GetPrimaryKey(),
-        ModeratorId = this.grainState.State.ModeratorId,
-        ModeratorIds = this.grainState.State.ModeratorIds.ToImmutableArray(),
-        Name = this.grainState.State.Name,
-        ProcessingState = this.grainState.State.ProcessingState,
-        ParticipantsCount = this.grainState.State.ParticipantVotes.Keys.Count
+        IsInitialized = false
       };
     }
 
