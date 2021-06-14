@@ -115,7 +115,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       var sessionGrain = this.client.GetGrain<ISessionGrain>(args.SessionId);
       var changeInfoArgs = new ChangeSessionInfoArgs()
       {
-        Name = args.Name
+        Name = args.Name,
+        AutoStop = args.AutoStop
       };
 
       return sessionGrain.ChangeInfo(changeInfoArgs);

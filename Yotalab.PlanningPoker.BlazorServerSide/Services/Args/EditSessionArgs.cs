@@ -18,5 +18,10 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services.Args
     /// </summary>
     [Required(ErrorMessage = "Имя сессии не может быть пустым!")]
     public string Name { get; set; }
+
+    /// <summary>
+    /// Получить или установить признак необходимости автоматически остановить голосование, когда все участники проголосовали.
+    /// </summary>
+    public bool AutoStop { get; set; }
   }
 }

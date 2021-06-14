@@ -126,6 +126,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
       this.editSessionArgs = new EditSessionArgs()
       {
         Name = this.session?.Name,
+        AutoStop = this.session?.AutoStop == true,
         SessionId = this.SessionId
       };
     }
