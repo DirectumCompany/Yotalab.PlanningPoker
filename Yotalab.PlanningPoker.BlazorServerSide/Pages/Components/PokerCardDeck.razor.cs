@@ -24,6 +24,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
     public Vote ParticipantVote { get; set; }
 
     [Parameter]
+    public Bulletin Bulletin { get; set; }
+
+    [Parameter]
     public bool CanVote { get; set; }
 
     protected override void OnParametersSet()

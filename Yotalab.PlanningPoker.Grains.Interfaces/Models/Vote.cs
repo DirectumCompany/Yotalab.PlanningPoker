@@ -33,9 +33,35 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
     public string Value { get; private set; }
 
     /// <summary>
+    /// Получить признак того, что голос отключен.
+    /// </summary>
+    public bool IsDisabled { get; private set; }
+
+    /// <summary>
     /// Получить признак того, что голос является числовой оценкой.
     /// </summary>
     public bool IsNumber => double.TryParse(this.Value, out _);
+
+    /// <summary>
+    /// Получить признак того, что голос не установлен.
+    /// </summary>
+    public bool IsUnset => Vote.Unset.Equals(this);
+
+    public Vote AsDisabled()
+    {
+      return new Vote(this.Value)
+      {
+        IsDisabled = true
+      };
+    }
+
+    public Vote AsEnabled()
+    {
+      return new Vote(this.Value)
+      {
+        IsDisabled = false
+      };
+    }
 
     /// <summary>
     /// Получить все возможные значения голосов.

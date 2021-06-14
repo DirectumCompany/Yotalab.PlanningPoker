@@ -39,6 +39,7 @@
             if (this.User != null)
             {
               <PokerCardDeck SessionId="this.SessionId"
+                             Bulletin="this.bulletin"
                              ParticipantId="this.ParticipantId"
                              ParticipantVote="this.participantVote"
                              CanVote="this.session.ProcessingState == SessionProcessingState.Started || this.session.ProcessingState == SessionProcessingState.Stopped" />

@@ -15,6 +15,20 @@
               <InputTextOnInput @bind-Value="@this.EditArgs.Name" class="form-control" />
               <ValidationMessage For="@(() => this.EditArgs.Name)" />
             </div>
+            <div class="d-flex flex-wrap justify-content-center">
+              @foreach (var bulletinItem in this.EditArgs.Bulletin)
+              {
+                var vote = bulletinItem.Vote;
+                if (vote.IsUnset)
+                  continue;
+
+                var voteChecked = !bulletinItem.IsDisabled;
+                <div class="shadow-sm me-4 mb-4 d-flex p-1 rounded" style="min-width:90px;cursor:pointer">
+                  <input id="@vote.Value" type="checkbox" @onchange="@((args) => this.HandleCheckVote(vote))" checked="@voteChecked" style="cursor:inherit" />
+                  <label class="flex-fill h1 text-center" for="@vote.Value" style="cursor:inherit">@vote.Value</label>
+                </div>
+              }
+            </div>
           </div>
           <div class="modal-footer">
             <button type="submit"

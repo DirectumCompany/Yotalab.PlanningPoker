@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.Args;
 using Yotalab.PlanningPoker.BlazorServerSide.Shared;
+using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
 {
@@ -53,6 +54,14 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
     {
       this.formInvalid = !this.editContext.Validate();
       StateHasChanged();
+    }
+
+    private void HandleCheckVote(Vote vote)
+    {
+      if (this.EditArgs.Bulletin.IsEnabled(vote))
+        this.EditArgs.Bulletin.Disable(vote);
+      else
+        this.EditArgs.Bulletin.Enable(vote);
     }
 
     private Task ConfirmAsync()
