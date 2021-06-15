@@ -35,15 +35,7 @@ namespace Yotalab.PlanningPoker.Grains
       this.grainState.State.ParticipantVotes[participantId] = vote;
       this.NotifyAcceptVote(participantId, vote);
 
-      // Попытаться автоматически оставновить сессию.
-      if (this.grainState.State.AutoStop && this.grainState.State.ParticipantVotes.All(v => !Vote.Unset.Equals(v.Value)))
-      {
-        if (processingState != SessionProcessingState.Started)
-          throw new InvalidOperationException($"Cannot autostop not started session. Session processing state: {processingState}");
-
-        this.grainState.State.ProcessingState = SessionProcessingState.Stopped;
-        this.NotifyProcessingStateChanged(this.grainState.State.ProcessingState);
-      }
+      this.TryAutostopSession();
 
       return this.grainState.WriteStateAsync();
     }
@@ -374,6 +366,22 @@ namespace Yotalab.PlanningPoker.Grains
       {
         IsInitialized = false
       };
+    }
+
+    /// <summary>
+    /// Попытаться автоматически оставновить сессию.
+    /// </summary>
+    private void TryAutostopSession()
+    {
+      var processingState = this.grainState.State.ProcessingState;
+      var allParticipantsVoted = this.grainState.State.ParticipantVotes.All(v => !Vote.Unset.Equals(v.Value));
+      var sessionNotStopped = processingState != SessionProcessingState.Stopped;
+      var autostopEnabled = this.grainState.State.AutoStop;
+      if (autostopEnabled && allParticipantsVoted && sessionNotStopped)
+      {
+        this.grainState.State.ProcessingState = SessionProcessingState.Stopped;
+        this.NotifyProcessingStateChanged(this.grainState.State.ProcessingState);
+      }
     }
 
     #endregion
