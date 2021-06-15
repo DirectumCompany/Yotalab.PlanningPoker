@@ -17,7 +17,9 @@
             </div>
             <div class="mb-3 form-check form-switch">
               <InputCheckbox id="session-autostop" @bind-Value="@this.EditArgs.AutoStop" class="form-check-input" />
-              <label class="form-check-label" for="session-autostop">Автостоп сессии</label>
+              <label class="form-check-label" for="session-autostop" title="Автоматически останавливать сессию и показывать голоса, &#013;когда все участники проголосовали">
+                Автостоп сессии
+              </label>
             </div>
           </div>
           <div class="modal-footer">
