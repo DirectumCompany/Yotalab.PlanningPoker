@@ -40,12 +40,13 @@ namespace Yotalab.PlanningPoker.Grains
       return this.grainState.WriteStateAsync();
     }
 
-    public Task CreateAsync(string name, IParticipantGrain moderator)
+    public Task CreateAsync(string name, IParticipantGrain moderator, bool autostop)
     {
       var moderatorId = moderator.GetPrimaryKey();
       this.grainState.State.Name = name;
       this.grainState.State.ModeratorIds.Add(moderatorId);
       this.grainState.State.ProcessingState = SessionProcessingState.Initial;
+      this.grainState.State.AutoStop = autostop;
       return this.grainState.WriteStateAsync();
     }
 

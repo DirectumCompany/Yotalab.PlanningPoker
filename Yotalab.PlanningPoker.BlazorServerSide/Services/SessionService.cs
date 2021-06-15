@@ -24,13 +24,13 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       this.client = client;
     }
 
-    public async Task<SessionInfo> CreateAsync(string name, Guid participantId)
+    public async Task<SessionInfo> CreateAsync(string name, Guid participantId, bool autostop)
     {
       var sessionId = Guid.NewGuid();
       var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
       var participantGrain = this.client.GetGrain<IParticipantGrain>(participantId);
 
-      await sessionGrain.CreateAsync(name, participantGrain);
+      await sessionGrain.CreateAsync(name, participantGrain, autostop);
       await participantGrain.Join(sessionId);
 
       return await sessionGrain.StatusAsync();
