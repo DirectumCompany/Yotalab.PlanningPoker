@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Services.Args
 {
@@ -23,5 +24,10 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services.Args
     /// Получить или установить признак необходимости автоматически остановить голосование, когда все участники проголосовали.
     /// </summary>
     public bool AutoStop { get; set; }
+
+    /// <summary>
+    /// Получить или установить бюллетень голосования.
+    /// </summary>
+    public Bulletin Bulletin { get; set; }
   }
 }

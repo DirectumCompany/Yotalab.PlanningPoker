@@ -40,13 +40,14 @@ namespace Yotalab.PlanningPoker.Grains
       return this.grainState.WriteStateAsync();
     }
 
-    public Task CreateAsync(string name, IParticipantGrain moderator, bool autostop)
+    public Task CreateAsync(string name, IParticipantGrain moderator, bool autostop, Bulletin bulletin)
     {
       var moderatorId = moderator.GetPrimaryKey();
       this.grainState.State.Name = name;
       this.grainState.State.ModeratorIds.Add(moderatorId);
       this.grainState.State.ProcessingState = SessionProcessingState.Initial;
       this.grainState.State.AutoStop = autostop;
+      this.grainState.State.Bulletin = bulletin;
       return this.grainState.WriteStateAsync();
     }
 
@@ -244,6 +245,30 @@ namespace Yotalab.PlanningPoker.Grains
       this.NotifySessionRemoved();
     }
 
+    public Task<Bulletin> GetBulletin()
+    {
+      return Task.FromResult(this.grainState.State.Bulletin);
+    }
+
+    public Task ChangeBulletin(Bulletin bulletine)
+    {
+      this.grainState.State.Bulletin = bulletine;
+      var votesKeys = this.grainState.State.ParticipantVotes.Keys;
+      foreach (var voteKey in votesKeys)
+      {
+        var vote = this.grainState.State.ParticipantVotes[voteKey];
+        if (!bulletine.IsEnabled(vote))
+        {
+          var isSessionFinished = this.grainState.State.ProcessingState == SessionProcessingState.Finished;
+          this.grainState.State.ParticipantVotes[voteKey] = isSessionFinished ? Vote.IDontKnown : Vote.Unset;
+        }
+      }
+
+      this.NotifySessionInfoChanged();
+
+      return this.grainState.WriteStateAsync();
+    }
+
     #endregion
 
     #region Базовый класс
@@ -259,6 +284,9 @@ namespace Yotalab.PlanningPoker.Grains
         if (this.grainState.State.ModeratorId != default)
           this.grainState.State.ModeratorIds.Add(this.grainState.State.ModeratorId);
       }
+
+      if (this.grainState.State.Bulletin == null)
+        this.grainState.State.Bulletin = Bulletin.Default();
 
       return base.OnActivateAsync();
     }
@@ -420,5 +448,10 @@ namespace Yotalab.PlanningPoker.Grains
     /// Получить или установить состояние голосов.
     /// </summary>
     public Dictionary<Guid, Vote> ParticipantVotes { get; set; }
+
+    /// <summary>
+    /// Получить или установить бюллетень голосования.
+    /// </summary>
+    public Bulletin Bulletin { get; set; }
   }
 }

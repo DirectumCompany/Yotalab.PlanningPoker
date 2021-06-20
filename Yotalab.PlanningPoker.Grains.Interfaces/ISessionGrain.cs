@@ -18,8 +18,9 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
     /// <param name="name">Имя сессии.</param>
     /// <param name="moderator">Модератор сессии.</param>
     /// <param name="autostop">Признак того, что сессия автоостанавливаемая.</param>
+    /// <param name="bulletin">Бюллетень голосования.</param>
     /// <returns>Задача на создание сессии.</returns>
-    Task CreateAsync(string name, IParticipantGrain moderator, bool autostop);
+    Task CreateAsync(string name, IParticipantGrain moderator, bool autostop, Bulletin bulletin);
 
     /// <summary>
     /// Получить статус сессии.
@@ -126,5 +127,18 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
     /// <param name="initiatorId">Инициатор участника, удаляющего сессию.</param>
     /// <returns>Задача на удаление сессии.</returns>
     Task Remove(Guid initiatorId);
+
+    /// <summary>
+    /// Получить бюллетень для голосования.
+    /// </summary>
+    /// <returns>Задача на получение бюллетени.</returns>
+    Task<Bulletin> GetBulletin();
+
+    /// <summary>
+    /// Изменить бюллетень.
+    /// </summary>
+    /// <param name="newBulletin">Новая бюллетень.</param>
+    /// <returns>Задача на изменение бюллетени.</returns>
+    Task ChangeBulletin(Bulletin newBulletin);
   }
 }

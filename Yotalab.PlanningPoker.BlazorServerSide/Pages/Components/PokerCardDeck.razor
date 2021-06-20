@@ -1,18 +1,21 @@
-﻿@using Yotalab.PlanningPoker.Grains.Interfaces.Models
-@inherits OwningComponentBase<ParticipantsService>
+﻿@inherits OwningComponentBase<ParticipantsService>
 
-<div class="row justify-content-md-center">
-  @foreach (var vote in Vote.GetAll())
-  {
-    if (Vote.Unset.Equals(vote))
-      continue;
+@if (this.Bulletin != null)
+{
+  <div class="row justify-content-md-center">
+    @foreach (var bulletinItem in this.Bulletin)
+    {
+      var vote = bulletinItem.Vote;
+      if (vote.IsUnset || bulletinItem.IsDisabled)
+        continue;
 
-    <div class="col-auto">
-      <PokerCard @key="vote.Value"
-                 SessionId="this.SessionId"
-                 Value="vote"
-                 Selected="@(this.selectedVote?.Equals(vote) == true)"
-                 OnSelectedChanged="this.HandleSelectedChanged" />
-    </div>
-  }
-</div>
+      <div class="col-auto">
+        <PokerCard @key="vote.Value"
+                   SessionId="this.SessionId"
+                   Value="vote"
+                   Selected="@(this.selectedVote?.Equals(vote) == true)"
+                   OnSelectedChanged="this.HandleSelectedChanged" />
+      </div>
+    }
+  </div>
+}

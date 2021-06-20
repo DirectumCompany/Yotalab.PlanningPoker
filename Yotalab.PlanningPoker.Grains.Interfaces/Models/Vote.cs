@@ -38,6 +38,11 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
     public bool IsNumber => double.TryParse(this.Value, out _);
 
     /// <summary>
+    /// Получить признак того, что голос не установлен.
+    /// </summary>
+    public bool IsUnset => Vote.Unset.Equals(this);
+
+    /// <summary>
     /// Получить все возможные значения голосов.
     /// </summary>
     /// <returns></returns>

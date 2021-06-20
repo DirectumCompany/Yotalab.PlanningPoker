@@ -24,13 +24,16 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       this.client = client;
     }
 
-    public async Task<SessionInfo> CreateAsync(string name, Guid participantId, bool autostop)
+    public async Task<SessionInfo> CreateAsync(string name, Guid participantId, bool autostop, Bulletin bulletin)
     {
+      if (bulletin == null)
+        throw new ArgumentNullException(nameof(bulletin));
+
       var sessionId = Guid.NewGuid();
       var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
       var participantGrain = this.client.GetGrain<IParticipantGrain>(participantId);
 
-      await sessionGrain.CreateAsync(name, participantGrain, autostop);
+      await sessionGrain.CreateAsync(name, participantGrain, autostop, bulletin);
       await participantGrain.Join(sessionId);
 
       return await sessionGrain.StatusAsync();
@@ -119,7 +122,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
         AutoStop = args.AutoStop
       };
 
-      return sessionGrain.ChangeInfo(changeInfoArgs);
+      return Task.WhenAll(
+        sessionGrain.ChangeInfo(changeInfoArgs),
+        sessionGrain.ChangeBulletin(args.Bulletin));
     }
 
     public async Task<IReadOnlyCollection<ParticipantVote>> Votes(Guid sessionId)
@@ -144,6 +149,18 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
     {
       var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
       return sessionGrain.Remove(participantId);
+    }
+
+    public Task<Bulletin> GetBulletin(Guid sessionId)
+    {
+      var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
+      return sessionGrain.GetBulletin();
+    }
+
+    public Task ChangeBulletin(Guid sessionId, Bulletin bulletin)
+    {
+      var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
+      return sessionGrain.ChangeBulletin(bulletin);
     }
 
     public Task<StreamSubscriptionHandle<T>> SubscribeAsync<T>(Guid sessionId, Func<T, Task> action) =>

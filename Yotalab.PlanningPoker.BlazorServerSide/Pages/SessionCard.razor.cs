@@ -19,6 +19,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     private EditSessionArgs editSessionArgs;
     private Vote participantVote;
     private SessionInfo session;
+    private Bulletin bulletin;
     private IReadOnlyCollection<ParticipantInfoDTO> participantVotes;
     private bool userNotJoinedToSession = false;
     private StreamSubscriptionHandle<SessionProcessingNotification> sessionProcessingSubscription;
@@ -80,6 +81,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
         this.participantVotes = await this.Service.ListParticipants(this.SessionId);
         this.userNotJoinedToSession = !await this.Service.ParticipantJoined(this.SessionId, this.ParticipantId);
         this.participantVote = this.participantVotes.SingleOrDefault(p => p.Id == this.ParticipantId)?.Vote;
+        this.bulletin = await this.Service.GetBulletin(this.SessionId);
       }
       else
       {
@@ -126,8 +128,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
       this.editSessionArgs = new EditSessionArgs()
       {
         Name = this.session?.Name,
+        SessionId = this.SessionId,
         AutoStop = this.session?.AutoStop == true,
-        SessionId = this.SessionId
+        Bulletin = new Bulletin(this.bulletin)
       };
     }
 
