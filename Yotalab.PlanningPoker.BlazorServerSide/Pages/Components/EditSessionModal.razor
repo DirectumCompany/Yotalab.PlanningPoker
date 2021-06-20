@@ -12,8 +12,15 @@
             <DataAnnotationsValidator />
             <div class="mb-3">
               <label for="session-name" class="col-form-label">Имя:</label>
-              <InputTextOnInput @bind-Value="@this.EditArgs.Name" class="form-control" />
+              <InputTextOnInput id="session-name" @bind-Value="@this.EditArgs.Name" class="form-control" />
               <ValidationMessage For="@(() => this.EditArgs.Name)" />
+            </div>
+            <div class="mb-3 form-check form-switch">
+              @{ var autostopTitle = $"Автоматически останавливать сессию и показывать голоса,{Environment.NewLine}когда все участники проголосовали"; }
+              <InputCheckbox id="session-autostop" @bind-Value="@this.EditArgs.AutoStop" class="form-check-input" title="@autostopTitle" />
+              <label class="form-check-label" for="session-autostop" title="@autostopTitle">
+                Автостоп сессии
+              </label>
             </div>
             <div class="d-flex flex-wrap justify-content-center">
               @foreach (var bulletinItem in this.EditArgs.Bulletin)

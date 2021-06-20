@@ -24,7 +24,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       this.client = client;
     }
 
-    public async Task<SessionInfo> CreateAsync(string name, Guid participantId, Bulletin bulletin)
+    public async Task<SessionInfo> CreateAsync(string name, Guid participantId, bool autostop, Bulletin bulletin)
     {
       if (bulletin == null)
         throw new ArgumentNullException(nameof(bulletin));
@@ -33,7 +33,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
       var participantGrain = this.client.GetGrain<IParticipantGrain>(participantId);
 
-      await sessionGrain.CreateAsync(name, participantGrain, bulletin);
+      await sessionGrain.CreateAsync(name, participantGrain, autostop, bulletin);
       await participantGrain.Join(sessionId);
 
       return await sessionGrain.StatusAsync();
@@ -118,7 +118,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       var sessionGrain = this.client.GetGrain<ISessionGrain>(args.SessionId);
       var changeInfoArgs = new ChangeSessionInfoArgs()
       {
-        Name = args.Name
+        Name = args.Name,
+        AutoStop = args.AutoStop
       };
 
       return Task.WhenAll(

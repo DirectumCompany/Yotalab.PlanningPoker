@@ -33,18 +33,20 @@ namespace Yotalab.PlanningPoker.Grains
         throw new InvalidOperationException($"Cannot accept vore for not started session. Session processing state: {processingState}");
 
       this.grainState.State.ParticipantVotes[participantId] = vote;
-
       this.NotifyAcceptVote(participantId, vote);
+
+      this.TryAutostopSession();
 
       return this.grainState.WriteStateAsync();
     }
 
-    public Task CreateAsync(string name, IParticipantGrain moderator, Bulletin bulletin)
+    public Task CreateAsync(string name, IParticipantGrain moderator, bool autostop, Bulletin bulletin)
     {
       var moderatorId = moderator.GetPrimaryKey();
       this.grainState.State.Name = name;
       this.grainState.State.ModeratorIds.Add(moderatorId);
       this.grainState.State.ProcessingState = SessionProcessingState.Initial;
+      this.grainState.State.AutoStop = autostop;
       this.grainState.State.Bulletin = bulletin;
       return this.grainState.WriteStateAsync();
     }
@@ -210,6 +212,7 @@ namespace Yotalab.PlanningPoker.Grains
     public Task ChangeInfo(ChangeSessionInfoArgs args)
     {
       this.grainState.State.Name = args.Name;
+      this.grainState.State.AutoStop = args.AutoStop;
 
       this.NotifySessionInfoChanged();
 
@@ -269,9 +272,15 @@ namespace Yotalab.PlanningPoker.Grains
 
     public override Task OnActivateAsync()
     {
-      var moderatorId = this.grainState.State.ModeratorId;
-      if (moderatorId != default && !this.grainState.State.ModeratorIds.Contains(moderatorId))
-        this.grainState.State.ModeratorIds.Add(moderatorId);
+      if (this.grainState.State.ParticipantVotes == null)
+        this.grainState.State.ParticipantVotes = new Dictionary<Guid, Vote>();
+
+      if (this.grainState.State.ModeratorIds == null)
+      {
+        this.grainState.State.ModeratorIds = new HashSet<Guid>();
+        if (this.grainState.State.ModeratorId != default)
+          this.grainState.State.ModeratorIds.Add(this.grainState.State.ModeratorId);
+      }
 
       if (this.grainState.State.Bulletin == null)
         this.grainState.State.Bulletin = Bulletin.Default();
@@ -373,6 +382,7 @@ namespace Yotalab.PlanningPoker.Grains
           ModeratorId = this.grainState.State.ModeratorId,
           ModeratorIds = hasModerators ? this.grainState.State.ModeratorIds.ToImmutableArray() : ImmutableArray<Guid>.Empty,
           Name = this.grainState.State.Name,
+          AutoStop = this.grainState.State.AutoStop,
           ProcessingState = this.grainState.State.ProcessingState,
           ParticipantsCount = hasParticipants ? this.grainState.State.ParticipantVotes.Keys.Count : 0
         };
@@ -384,28 +394,61 @@ namespace Yotalab.PlanningPoker.Grains
       };
     }
 
+    /// <summary>
+    /// Попытаться автоматически оставновить сессию.
+    /// </summary>
+    private void TryAutostopSession()
+    {
+      var processingState = this.grainState.State.ProcessingState;
+      var allParticipantsVoted = this.grainState.State.ParticipantVotes.All(v => !Vote.Unset.Equals(v.Value));
+      var sessionNotStopped = processingState != SessionProcessingState.Stopped;
+      var autostopEnabled = this.grainState.State.AutoStop;
+      if (autostopEnabled && allParticipantsVoted && sessionNotStopped)
+      {
+        this.grainState.State.ProcessingState = SessionProcessingState.Stopped;
+        this.NotifyProcessingStateChanged(this.grainState.State.ProcessingState);
+      }
+    }
+
     #endregion
   }
 
+  /// <summary>
+  /// Состояние сессии.
+  /// </summary>
   public class SessionGrainState
   {
+    /// <summary>
+    /// Получить или установить имя сессии.
+    /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// Получить или установить признак необходимости автоматически остановить голосование, когда все участники проголосовали.
+    /// </summary>
+    public bool AutoStop { get; set; }
 
     [Obsolete("Поле будет удалено")]
     public Guid ModeratorId { get; set; }
 
+    /// <summary>
+    /// Получить или установить список модераторов сессии.
+    /// </summary>
     public HashSet<Guid> ModeratorIds { get; set; }
 
+    /// <summary>
+    /// Получить или установить состояние голосования.
+    /// </summary>
     public SessionProcessingState ProcessingState { get; set; }
 
+    /// <summary>
+    /// Получить или установить состояние голосов.
+    /// </summary>
     public Dictionary<Guid, Vote> ParticipantVotes { get; set; }
 
+    /// <summary>
+    /// Получить или установить бюллетень голосования.
+    /// </summary>
     public Bulletin Bulletin { get; set; }
-
-    public SessionGrainState()
-    {
-      this.ModeratorIds = new HashSet<Guid>();
-      this.ParticipantVotes = new Dictionary<Guid, Vote>();
-    }
   }
 }

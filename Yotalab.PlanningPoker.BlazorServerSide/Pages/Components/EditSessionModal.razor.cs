@@ -10,7 +10,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
 {
   public partial class EditSessionModal : ComponentBase, IDisposable
   {
-    private bool formInvalid = true;
+    private bool formInvalid;
     private EditContext editContext;
 
     [Parameter]
@@ -25,12 +25,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
     [Parameter]
     public EventCallback<EditSessionArgs> OnConfirm { get; set; }
 
-    protected override void OnAfterRender(bool firstRender)
-    {
-      base.OnAfterRender(firstRender);
-      this.editContext?.NotifyFieldChanged(FieldIdentifier.Create(() => this.EditArgs.Name));
-    }
-
     protected override void OnParametersSet()
     {
       base.OnParametersSet();
@@ -43,6 +37,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
         this.editContext = new EditContext(this.EditArgs);
         this.editContext.SetFieldCssClassProvider(new Bootstrap5FieldClassProvider());
         this.editContext.OnFieldChanged += this.HandleFieldChanged;
+        this.formInvalid = !this.editContext.Validate();
       }
       else
       {

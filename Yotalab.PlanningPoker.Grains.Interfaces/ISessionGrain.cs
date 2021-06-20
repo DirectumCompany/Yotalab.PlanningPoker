@@ -17,9 +17,10 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
     /// </summary>
     /// <param name="name">Имя сессии.</param>
     /// <param name="moderator">Модератор сессии.</param>
+    /// <param name="autostop">Признак того, что сессия автоостанавливаемая.</param>
     /// <param name="bulletin">Бюллетень голосования.</param>
     /// <returns>Задача на создание сессии.</returns>
-    Task CreateAsync(string name, IParticipantGrain moderator, Bulletin bulletin);
+    Task CreateAsync(string name, IParticipantGrain moderator, bool autostop, Bulletin bulletin);
 
     /// <summary>
     /// Получить статус сессии.

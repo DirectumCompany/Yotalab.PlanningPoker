@@ -27,7 +27,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
 
     private async Task CreateSessionAsync(EditSessionArgs args)
     {
-      var result = await this.Service.CreateAsync(args.Name, this.participantId, args.Bulletin);
+      var result = await this.Service.CreateAsync(args.Name, this.participantId, args.AutoStop, args.Bulletin);
       this.sessions.Add(result);
     }
 

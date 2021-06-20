@@ -129,6 +129,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
       {
         Name = this.session?.Name,
         SessionId = this.SessionId,
+        AutoStop = this.session?.AutoStop == true,
         Bulletin = new Bulletin(this.bulletin)
       };
     }
