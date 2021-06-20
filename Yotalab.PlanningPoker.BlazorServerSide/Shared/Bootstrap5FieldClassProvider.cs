@@ -7,11 +7,22 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Shared
   {
     public override string GetFieldCssClass(EditContext editContext, in FieldIdentifier fieldIdentifier)
     {
-      if (!editContext.IsModified())
+      if (!editContext.IsModified(fieldIdentifier))
         return string.Empty;
 
-      var isValid = !editContext.GetValidationMessages(fieldIdentifier).Any();
-      return isValid ? "is-valid" : "is-invalid";
+      var propertyInfo = fieldIdentifier.Model?.GetType().GetProperty(fieldIdentifier.FieldName);
+      if (propertyInfo != null && propertyInfo.PropertyType == typeof(bool))
+        return string.Empty;
+
+      var cssClassName = base.GetFieldCssClass(editContext, in fieldIdentifier);
+      cssClassName = string.Join(' ', cssClassName.Split(' ').Select(token => token switch
+      {
+        "valid" => "is-valid",
+        "invalid" => "is-invalid",
+        _ => token
+      }));
+
+      return cssClassName;
     }
   }
 }

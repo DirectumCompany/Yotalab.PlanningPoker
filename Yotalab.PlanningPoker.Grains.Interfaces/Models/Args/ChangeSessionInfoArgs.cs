@@ -6,8 +6,13 @@
   public class ChangeSessionInfoArgs
   {
     /// <summary>
-    /// Имя сессии.
+    /// Получить или установить имя сессии.
     /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// Получить или установить признак необходимости автоматически остановить голосование, когда все участники проголосовали.
+    /// </summary>
+    public bool AutoStop { get; set; }
   }
 }

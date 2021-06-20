@@ -21,6 +21,11 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
     public string Name { get; set; }
 
     /// <summary>
+    /// Получить или установить признак необходимости автоматически остановить голосование, когда все участники проголосовали.
+    /// </summary>
+    public bool AutoStop { get; set; }
+
+    /// <summary>
     /// Получить или установить признак того, что сессия инициализирована.
     /// </summary>
     public bool IsInitialized { get; set; }
