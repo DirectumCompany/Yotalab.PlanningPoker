@@ -258,7 +258,10 @@ namespace Yotalab.PlanningPoker.Grains
       {
         var vote = this.grainState.State.ParticipantVotes[voteKey];
         if (!bulletine.IsEnabled(vote))
-          this.grainState.State.ParticipantVotes[voteKey] = Vote.Unset;
+        {
+          var isSessionFinished = this.grainState.State.ProcessingState == SessionProcessingState.Finished;
+          this.grainState.State.ParticipantVotes[voteKey] = isSessionFinished ? Vote.IDontKnown : Vote.Unset;
+        }
       }
 
       this.NotifySessionInfoChanged();

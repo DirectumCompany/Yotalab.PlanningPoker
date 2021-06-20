@@ -1,6 +1,6 @@
 ﻿@using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO
 
-<RadzenChart>
+<RadzenChart @ref="chart">
   <RadzenDonutSeries Data="@this.chartData" CategoryProperty="Vote" ValueProperty="ParticipantCount" Radius="150" InnerRadius="140">
     <TitleTemplate>
       <div class="rz-donut-content">
@@ -12,6 +12,7 @@
 </RadzenChart>
 
 @code {
+  private RadzenChart chart;
   private List<DataItem> chartData = new List<DataItem>();
 
   private double average;
@@ -38,6 +39,8 @@
         ParticipantCount = voteCount
       });
     }
+
+    this.chart?.Reload();
   }
 
   private string FormatPercents(double percents)
