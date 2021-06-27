@@ -1,45 +1,52 @@
 ﻿@using Grains.Interfaces.Models
 @using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO
 
-<ul class="list-group mb-3">
-  @foreach (var participant in this.PaticipantVotes.OrderByDescending(p => p.Id == this.ParticipantId))
-  {
-    <li @key="participant.Id" class="list-group-item d-flex justify-content-between lh-sm@(participant.Id == this.ParticipantId ? " list-group-item-secondary" : string.Empty)">
-      <div class="d-flex align-items-center">
-        <div class="me-3">
-          <ParticipantAvatar Participant="participant" ParticipantId="this.ParticipantId" />
-        </div>
-        <div>
+<MudPaper>
+  <MudList Dense="true" Style="padding-top: 0;padding-bottom: 0;">
+    <MudListSubheader>
+      <span class="text-muted me-2">Участники: @this.PaticipantVotes.Count()</span>
+    </MudListSubheader>
+    @foreach (var participant in this.PaticipantVotes.OrderByDescending(p => p.Id == this.ParticipantId))
+    {
+      <MudListItem>
+        <div class="d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center">
-            <h6 class="my-0 me-2">@(string.IsNullOrEmpty(participant.Name) ? "Безымянный" : participant.Name)</h6>
-            @if (this.Session.ModeratorIds.Contains(participant.Id))
-            {
-              <img src="img/crown_icon.svg" alt="Host" />
-            }
+            <div class="me-3">
+              <ParticipantAvatar Participant="participant" ParticipantId="this.ParticipantId" />
+            </div>
+            <div>
+              <div class="d-flex align-items-center">
+                <h6 class="my-0 me-2">@(string.IsNullOrEmpty(participant.Name) ? "Безымянный" : participant.Name)</h6>
+                @if (this.Session.ModeratorIds.Contains(participant.Id))
+                {
+                  <img src="img/crown_icon.svg" alt="Host" />
+                }
+              </div>
+              @if (participant.Id == this.ParticipantId)
+              {
+                <ParticipantChangeNameLink ParticipantInfo="@participant.ToInfo()"
+                                           Title="Изменить имя"
+                                           ClassNames="btn btn-link p-0 m-0 btn-sm small">
+                  <TitleTemplate>
+                    <small>@context</small>
+                  </TitleTemplate>
+                </ParticipantChangeNameLink>
+              }
+            </div>
           </div>
-          @if (participant.Id == this.ParticipantId)
+          @if (participant.Id == this.ParticipantId || this.Session.ProcessingState == SessionProcessingState.Stopped || this.Session.ProcessingState == SessionProcessingState.Finished)
           {
-            <ParticipantChangeNameLink ParticipantInfo="@participant.ToInfo()"
-                                       Title="Изменить имя"
-                                       ClassNames="btn btn-link p-0 m-0 btn-sm small">
-              <TitleTemplate>
-                <small>@context</small>
-              </TitleTemplate>
-            </ParticipantChangeNameLink>
+            <h3 class="text-muted"><strong>@participant.Vote.Value</strong></h3>
+          }
+          else
+          {
+            <h3>@(!Vote.Unset.Equals(participant.Vote) ? "👌" : string.Empty)</h3>
           }
         </div>
-      </div>
-      @if (participant.Id == this.ParticipantId || this.Session.ProcessingState == SessionProcessingState.Stopped || this.Session.ProcessingState == SessionProcessingState.Finished)
-      {
-        <h3 class="text-muted"><strong>@participant.Vote.Value</strong></h3>
-      }
-      else
-      {
-        <h3>@(!Vote.Unset.Equals(participant.Vote) ? "👌" : string.Empty)</h3>
-      }
-    </li>
-  }
-</ul>
+      </MudListItem>
+    }
+  </MudList>
+</MudPaper>
 
 @code {
   [Parameter]

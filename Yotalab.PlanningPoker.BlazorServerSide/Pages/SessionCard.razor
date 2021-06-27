@@ -25,11 +25,6 @@
         <div class="col-md-5 col-lg-4 order-md-last mt-4">
           <SessionStatusPrompt ParticipantId="this.ParticipantId" />
 
-          <h4 class="d-flex align-items-center mb-3">
-            <span class="text-muted me-2">Участники</span>
-            <MudChip Color="Color.Default"><strong>@this.session.ParticipantsCount</strong></MudChip>
-          </h4>
-
           <ParticipantsVotesList PaticipantVotes="this.participantVotes"
                                  ParticipantId="this.ParticipantId" />
         </div>
