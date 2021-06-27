@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using MudBlazor.Services;
 using Radzen;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.Mailing;
@@ -60,6 +61,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       services.AddSingleton<SessionService>();
       services.AddSingleton<ParticipantsService>();
       services.AddScoped<JSInteropFunctions>();
+      services.AddMudServices();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
