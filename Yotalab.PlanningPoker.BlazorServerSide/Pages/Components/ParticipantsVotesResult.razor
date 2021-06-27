@@ -1,17 +1,20 @@
 ﻿@using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO
 
-<!-- TODO: Это надо нарисовать в центре графика -->
-<div style="text-align:center">
-  <div class="text-muted">Участников: @this.PaticipantVotes.Count()</div>
-  <div><h2>Среднее: @this.FormatAverage(this.average)</h2></div>
-</div>
+<div style="position:relative">
+  <MudOverlay Visible="true" Absolute="true" Style="pointer-events: none; bottom: 70px; left: -20px;">
+    <div style="text-align:center">
+      <div class="text-muted">Участников: @this.PaticipantVotes.Count()</div>
+      <div><h2>Среднее: @this.FormatAverage(this.average)</h2></div>
+    </div>
+  </MudOverlay>
 
-<MudChart ChartType="ChartType.Donut"
-          Class="mud-chart-legend-bottom-verticaler"
-          Height="50%" Width="50%"
-          InputData="@this.chartData.Select(d => d.ParticipantCount).ToArray()"
-          InputLabels="@this.chartData.Select(d => d.Vote).ToArray()"
-          LegendPosition="@Position.Right" />
+  <MudChart ChartType="ChartType.Donut"
+            Class="mud-chart-legend-bottom-verticaler"
+            Height="50%" Width="50%"
+            InputData="@this.chartData.Select(d => d.ParticipantCount).ToArray()"
+            InputLabels="@this.chartData.Select(d => d.Vote).ToArray()"
+            LegendPosition="@Position.Bottom" />
+</div>
 
 @code {
   private List<ChartDataItem> chartData = new List<ChartDataItem>();
