@@ -3,71 +3,72 @@
 @inherits AuthorizedOwningComponentBase<SessionService>
 @inject NavigationManager NavigationManager
 
-<h1 class="text-center">Мои сессии</h1>
-
+<MudText Typo="Typo.h4" Align="Align.Center">Мои сессии</MudText>
+<div class="mt-2"></div>
 @if (this.sessions != null)
 {
   <div class="w-75 m-auto">
-    <div>
-      <div class="list-group">
-        @if (this.sessions.Count > 0)
-        {
-          foreach (var session in this.sessions)
-          {
-            <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-              <div class="flex-fill"
-                   style="cursor:pointer"
-                   @onclick="@(() => NavigationManager.NavigateTo($"sessions/{session.Id}"))">
-                @session.Name
-                @if (session.ProcessingState == Grains.Interfaces.Models.SessionProcessingState.Started)
-                {
-                  <span class="badge bg-danger ms-2">Голосование идет</span>
-                }
-              </div>
-              <div>
-                @if (session.ModeratorIds.Contains(this.ParticipantId))
-                {
-                  <span class="badge bg-primary me-2">Вы модератор</span>
-                }
-                <span class="badge bg-success">участников: @session.ParticipantsCount</span>
-              </div>
-              <div class="ms-2">
-                @if (session.ModeratorIds.Contains(this.ParticipantId))
-                {
-                  var sessionContextMenuItems = new List<DropDownMenuItem>();
-                  sessionContextMenuItems.Add(new DropDownMenuItem()
+    <MudPaper>
+      @if (this.sessions.Count > 0)
+      {
+        <MudTable Items="this.sessions" Hover="true" Breakpoint="Breakpoint.Sm" Dense="true">
+          <RowTemplate>
+            <MudTd>
+              <div class="d-flex align-items-center">
+                <div class="flex-fill"
+                     style="cursor:pointer"
+                     @onclick="@(() => NavigationManager.NavigateTo($"sessions/{context.Id}"))">
+                  @context.Name
+                  @if (context.ProcessingState == Grains.Interfaces.Models.SessionProcessingState.Started)
                   {
-                    ItemTemplate =
-                @<button class="dropdown-item"
-                         data-bs-toggle="modal" data-bs-target="#removeSessionModal"
-                         @onclick="@(() => this.ShowRemoveSessionConfirmation(session.Id))">
-                  <span class="oi oi-trash text-danger me-2"></span>Удалить
-                </button>
-                  });
-
-                  <DropDownMenu Items="sessionContextMenuItems">
-                    <ButtonTemplate>
-                      <button class="btn btn-sm p-0 m-0 ps-1 pe-1">
-                        <span class="oi oi-ellipses"></span>
+                    <MudChip Label="true" Style="cursor:pointer" Class="ms-2" Color="Color.Error" Size="Size.Small">Голосование идет</MudChip>
+                  }
+                </div>
+                <div>
+                  @if (context.ModeratorIds.Contains(this.ParticipantId))
+                  {
+                    <MudChip Label="true" Style="cursor:pointer" Class="me-2" Color="Color.Primary" Size="Size.Small">Вы модератор</MudChip>
+                  }
+                  <MudChip Label="true" Style="cursor:pointer" Color="Color.Success" Size="Size.Small">участников: @context.ParticipantsCount</MudChip>
+                </div>
+                <div class="ms-2">
+                  @if (context.ModeratorIds.Contains(this.ParticipantId))
+                  {
+                    var sessionContextMenuItems = new List<DropDownMenuItem>();
+                    sessionContextMenuItems.Add(new DropDownMenuItem()
+                    {
+                      ItemTemplate =
+                      @<button class="dropdown-item"
+                               data-bs-toggle="modal" data-bs-target="#removeSessionModal"
+                               @onclick="@(() => this.ShowRemoveSessionConfirmation(context.Id))">
+                        <span class="oi oi-trash text-danger me-2"></span>Удалить
                       </button>
-                    </ButtonTemplate>
-                  </DropDownMenu>
-                }
+                    });
+
+                    <DropDownMenu Items="sessionContextMenuItems">
+                      <ButtonTemplate>
+                        <button class="btn btn-sm p-0 m-0 ps-1 pe-1">
+                          <span class="oi oi-ellipses"></span>
+                        </button>
+                      </ButtonTemplate>
+                    </DropDownMenu>
+                  }
+                </div>
               </div>
-            </div>
-          }
-        }
-        else
-        {
-          <div class="list-group-item list-group-item-action">
-            <strong>Сессий нет</strong>
-          </div>
-        }
-      </div>
-    </div>
+            </MudTd>
+          </RowTemplate>
+        </MudTable>
+      }
+      else
+      {
+        <MudList Clickable="true">
+          <MudListItem Text="Сессий нет" />
+        </MudList>
+      }
+    </MudPaper>
 
     <div class="float-end p-4 pe-3">
-      <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#newSessionModal" @onclick="this.OnShowCreationModal">Новая сессия</button>
+      <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" data-bs-toggle="modal" data-bs-target="#newSessionModal" @onclick="this.OnShowCreationModal" />
     </div>
   </div>
 
