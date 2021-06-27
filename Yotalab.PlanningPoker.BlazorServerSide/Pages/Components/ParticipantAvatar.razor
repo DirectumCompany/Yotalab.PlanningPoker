@@ -86,13 +86,13 @@
     var participantContextMenuId = $"avatarContextMenu-{this.Participant.Id}";
     <DropDownMenu ButtonId="@participantContextMenuId" Items="dropDownItems">
       <ButtonTemplate>
-        <Avatar Url="@this.Participant.AvatarUrl" />
+        <MudAvatar Image="@this.Participant.AvatarUrl" />
       </ButtonTemplate>
     </DropDownMenu>
   }
   else
   {
-    <Avatar Url="@this.Participant.AvatarUrl" />
+    <MudAvatar Image="@this.Participant.AvatarUrl" />
   }
 }
 

@@ -28,7 +28,7 @@
 
   <DropDownMenu ButtonId="profileLinkMenu" Items="dropDownMenuItems">
     <ButtonTemplate>
-      <Avatar ClassNames="avatar avatar--small me-2" Url="@this.participantInfo.AvatarUrl" />
+      <MudAvatar Class="avatar avatar--small me-2" Image="@this.participantInfo.AvatarUrl" Size="Size.Small" />
       <span class="text-muted fw-bold">@this.displayName</span>
     </ButtonTemplate>
   </DropDownMenu>
