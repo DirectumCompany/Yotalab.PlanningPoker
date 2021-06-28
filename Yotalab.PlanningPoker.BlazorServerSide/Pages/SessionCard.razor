@@ -1,6 +1,9 @@
 ﻿@page "/sessions/{sessionId:guid}"
 @using Grains.Interfaces.Models
+
 @inherits AuthorizedOwningComponentBase<SessionService>
+
+
 @if (this.session != null)
 {
   @if (this.userNotJoinedToSession || !this.session.IsInitialized)
@@ -14,10 +17,7 @@
       <MudText Class="mb-0 mx-2" Typo="Typo.h4" Align="Align.Center">@this.session.Name</MudText>
       @if (this.session.ModeratorIds.Contains(this.ParticipantId))
       {
-        <button class="btn h-100" data-bs-toggle="modal" data-bs-target="#sessionOptionsModal" @onclick="this.OnShowEditModal">
-          <span class="oi oi-pencil text-warning"></span>
-        </button>
-        <EditSessionModal Id="sessionOptionsModal" EditArgs="this.editSessionArgs" Title="Изменение сессии" OnConfirm="@this.HandleEditSessionConfirmAsync" />
+        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" OnClick="this.OnShowEditModal" aria-label="edit"></MudIconButton>
       }
     </div>
     <CascadingValue Value="@this.session">

@@ -1,0 +1,35 @@
+﻿<MudDialog>
+  <TitleContent>
+    <h5>@this.Title</h5>
+  </TitleContent>
+  <DialogContent>
+    <form>
+      <div class="mb-3 d-flex justify-content-center">
+        @foreach (var avatar in AvatarCollection)
+        {
+          var avatarClassName = string.Equals(this.newAvatarUrl, avatar, StringComparison.OrdinalIgnoreCase) ?
+            "avatar avatar--selected" : null;
+          <div class="me-3" style="cursor:pointer" @onclick="@(() => this.SelectAvatar(avatar))">
+            <MudAvatar Class="@avatarClassName" Image="@avatar" Size="Size.Large" />
+          </div>
+        }
+      </div>
+      <div class="mb-3">
+        <MudTextField @bind-Value="this.newName" Label="Имя" />
+      </div>
+    </form>
+  </DialogContent>
+  <DialogActions>
+    <MudButton Color="Color.Primary"
+               Variant="Variant.Filled"
+               Disabled="@(this.ParticipantInfo == null)"
+               @onclick="@(async () => await this.Submit())">
+      Сохранить
+    </MudButton>
+    <MudButton Color="Color.Default"
+               Variant="Variant.Filled"
+               OnClick="this.Cancel">
+      Отменить
+    </MudButton>
+  </DialogActions>
+</MudDialog>

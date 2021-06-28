@@ -39,7 +39,6 @@
                     {
                       ItemTemplate =
                       @<button class="dropdown-item"
-                               data-bs-toggle="modal" data-bs-target="#removeSessionModal"
                                @onclick="@(() => this.ShowRemoveSessionConfirmation(context.Id))">
                         <span class="oi oi-trash text-danger me-2"></span>Удалить
                       </button>
@@ -68,12 +67,9 @@
     </MudPaper>
 
     <div class="float-end p-4 pe-3">
-      <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" data-bs-toggle="modal" data-bs-target="#newSessionModal" @onclick="this.OnShowCreationModal" />
+      <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" @onclick="this.OnShowCreationModal" />
     </div>
   </div>
-
-  <RemoveSessionModal Id="removeSessionModal" Session="@this.sessionToDelete" OnConfirm="@this.RemoveSessionAsync" />
-  <EditSessionModal Id="newSessionModal" Title="Новая сессия" EditArgs="this.newSessionArgs" OnConfirm="@this.CreateSessionAsync" />
 }
 else
 {

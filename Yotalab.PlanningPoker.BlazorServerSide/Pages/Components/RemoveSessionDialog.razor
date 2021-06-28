@@ -1,0 +1,26 @@
+﻿<MudDialog>
+  <TitleContent>
+    <h5>
+      <MudIcon Style="margin-top: -5px" Icon="@Icons.Filled.Dangerous" Color="Color.Error" />
+      Удалить сессию
+    </h5>
+  </TitleContent>
+  <DialogContent>
+    @if (this.Session != null)
+    {
+      <p>Сессию <b>"@this.Session.Name"</b> после удаления не восстановить.</p>
+    }
+  </DialogContent>
+  <DialogActions>
+    <MudButton Color="Color.Default"
+               Variant="Variant.Filled"
+               OnClick="this.Cancel">
+      Отменить
+    </MudButton>
+    <MudButton Color="Color.Error"
+               Variant="Variant.Filled"
+               @onclick="@(async () => await this.ConfirmAsync())">
+      Удалить
+    </MudButton>
+  </DialogActions>
+</MudDialog>

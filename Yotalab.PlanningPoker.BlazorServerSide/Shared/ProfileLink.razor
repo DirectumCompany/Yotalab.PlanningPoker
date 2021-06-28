@@ -5,6 +5,7 @@
 @implements IAsyncDisposable
 
 @inject JSInteropFunctions JSFunctions
+@inject IDialogService DialogService
 
 @if (this.participantInfo != null)
 {
@@ -13,7 +14,7 @@
     new DropDownMenuItem()
     {
       ItemTemplate =
-@<button class="dropdown-item" @onclick="this.RaiseClickOnChangeNameLinkAsync">
+@<button class="dropdown-item" @onclick="@(() => EditParticipantInfoDialog.Show(this.DialogService, this.participantInfo))">
   Изменить имя
 </button>
     },
@@ -32,17 +33,11 @@
       <span class="text-muted fw-bold">@this.displayName</span>
     </ButtonTemplate>
   </DropDownMenu>
-
-  <ParticipantChangeNameLink Id="@this.participantChangeNameLinkId"
-                             ParticipantInfo="this.participantInfo"
-                             ClassNames="visually-hidden">
-  </ParticipantChangeNameLink>
 }
 
 @code {
   private ParticipantInfo participantInfo;
   private string displayName;
-  private string participantChangeNameLinkId = "profileChangeNameGlobalButton";
   private StreamSubscriptionHandle<ParticipantChangedNotification> participantChangedSubscription;
 
   protected override async Task OnInitializedAsync()
@@ -70,14 +65,6 @@
   private void RefreshDisplayName(ParticipantInfo info)
   {
     this.displayName = string.IsNullOrWhiteSpace(info?.Name) ? "Безымянный" : info.Name;
-  }
-
-  private async Task RaiseClickOnChangeNameLinkAsync()
-  {
-    // Bootstrap не может простой разметкой показать модалку из скрытой области.
-    // Если добавить ParticipantChangeNameLink в контекстное меню, то он окажется в скрытой области.
-    // Нужно вынести модалку за контекстное меню и тогда можно щелкнуть по кнопке js-ом.
-    await this.JSFunctions.ClickElementById(this.participantChangeNameLinkId);
   }
 
   public async ValueTask DisposeAsync()

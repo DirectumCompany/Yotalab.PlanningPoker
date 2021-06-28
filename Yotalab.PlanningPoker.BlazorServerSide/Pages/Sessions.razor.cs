@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Yotalab.PlanningPoker.BlazorServerSide.Pages.Components;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.Args;
@@ -15,6 +17,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     private List<SessionInfo> sessions;
     private EditSessionArgs newSessionArgs;
     private SessionInfo sessionToDelete;
+
+    [Inject]
+    private IDialogService DialogService { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -48,6 +53,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     private void ShowRemoveSessionConfirmation(Guid sessionId)
     {
       this.sessionToDelete = this.sessions.Single(s => s.Id == sessionId);
+      var onConfirm = new EventCallbackFactory().Create<Guid>(this, async () => await this.RemoveSessionAsync(sessionId));
+      RemoveSessionDialog.Show(this.DialogService, this.sessionToDelete, onConfirm);
     }
 
     private void OnShowCreationModal()
@@ -57,6 +64,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
         Name = "Новая сессия",
         Bulletin = Bulletin.Default()
       };
+
+      var onConfirm = new EventCallbackFactory().Create<EditSessionArgs>(this, this.CreateSessionAsync);
+      EditSessionDialog.Show(this.DialogService, "Новая сессия", this.newSessionArgs, onConfirm);
     }
   }
 }
