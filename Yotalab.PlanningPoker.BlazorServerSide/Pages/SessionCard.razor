@@ -10,16 +10,16 @@
   }
   else
   {
-<div class="d-flex flex-row justify-content-center align-items-center mb-2">
-  <MudText Class="mb-0 mx-2" Typo="Typo.h4" Align="Align.Center">@this.session.Name</MudText>
-  @if (this.session.ModeratorIds.Contains(this.ParticipantId))
-  {
-    <button class="btn h-100" data-bs-toggle="modal" data-bs-target="#sessionOptionsModal" @onclick="this.OnShowEditModal">
-      <span class="oi oi-pencil text-warning"></span>
-    </button>
-    <EditSessionModal Id="sessionOptionsModal" EditArgs="this.editSessionArgs" Title="Изменение сессии" OnConfirm="@this.HandleEditSessionConfirmAsync" />
-  }
-</div>
+    <div class="d-flex flex-row justify-content-center align-items-center mb-2">
+      <MudText Class="mb-0 mx-2" Typo="Typo.h4" Align="Align.Center">@this.session.Name</MudText>
+      @if (this.session.ModeratorIds.Contains(this.ParticipantId))
+      {
+        <button class="btn h-100" data-bs-toggle="modal" data-bs-target="#sessionOptionsModal" @onclick="this.OnShowEditModal">
+          <span class="oi oi-pencil text-warning"></span>
+        </button>
+        <EditSessionModal Id="sessionOptionsModal" EditArgs="this.editSessionArgs" Title="Изменение сессии" OnConfirm="@this.HandleEditSessionConfirmAsync" />
+      }
+    </div>
     <CascadingValue Value="@this.session">
       <div class="row g-3">
         <div class="col-md-5 col-lg-4 order-md-last mt-4">
