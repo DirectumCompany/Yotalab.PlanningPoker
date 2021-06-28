@@ -13,12 +13,10 @@
       {
         <MudTable Items="this.sessions" Hover="true" Breakpoint="Breakpoint.Sm" Dense="true">
           <RowTemplate>
-            <MudTd>
+            <MudTd @onclick="@(() => NavigationManager.NavigateTo($"sessions/{context.Id}"))" Style="cursor:pointer">
               <div class="d-flex align-items-center">
-                <div class="flex-fill"
-                     style="cursor:pointer"
-                     @onclick="@(() => NavigationManager.NavigateTo($"sessions/{context.Id}"))">
-                  @context.Name
+                <div class="flex-fill d-flex align-items-center">
+                  <MudText>@context.Name</MudText>
                   @if (context.ProcessingState == Grains.Interfaces.Models.SessionProcessingState.Started)
                   {
                     <MudChip Label="true" Style="cursor:pointer" Class="ms-2" Color="Color.Error" Size="Size.Small">Голосование идет</MudChip>
@@ -34,23 +32,14 @@
                 <div class="ms-2">
                   @if (context.ModeratorIds.Contains(this.ParticipantId))
                   {
-                    var sessionContextMenuItems = new List<DropDownMenuItem>();
-                    sessionContextMenuItems.Add(new DropDownMenuItem()
-                    {
-                      ItemTemplate =
-                      @<button class="dropdown-item"
-                               @onclick="@(() => this.ShowRemoveSessionConfirmation(context.Id))">
-                        <span class="oi oi-trash text-danger me-2"></span>Удалить
-                      </button>
-                    });
-
-                    <DropDownMenu Items="sessionContextMenuItems">
-                      <ButtonTemplate>
-                        <button class="btn btn-sm p-0 m-0 ps-1 pe-1">
-                          <span class="oi oi-ellipses"></span>
-                        </button>
-                      </ButtonTemplate>
-                    </DropDownMenu>
+                    <MudMenu Icon="@Icons.Material.Filled.MoreVert" Direction="Direction.Bottom" OffsetY="true">
+                      <MudMenuItem OnClick="@(() => this.ShowRemoveSessionConfirmation(context.Id))">
+                        <div class="d-flex align-items-center">
+                          <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" />
+                          <MudText Style="margin-bottom:-1px">Удалить</MudText>
+                        </div>
+                      </MudMenuItem>
+                    </MudMenu>
                   }
                 </div>
               </div>

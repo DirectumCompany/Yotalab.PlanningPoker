@@ -9,30 +9,18 @@
 
 @if (this.participantInfo != null)
 {
-  var dropDownMenuItems = new List<DropDownMenuItem>()
-{
-    new DropDownMenuItem()
-    {
-      ItemTemplate =
-@<button class="dropdown-item" @onclick="@(() => EditParticipantInfoDialog.Show(this.DialogService, this.participantInfo))">
-  Изменить имя
-</button>
-    },
-    new DropDownMenuItem()
-    {
-      ItemTemplate =
-@<form method="post" action="Identity/Account/LogOut">
-  <button type="submit" class="dropdown-item">Выйти</button>
-</form>
-    }
-  };
-
-  <DropDownMenu ButtonId="profileLinkMenu" Items="dropDownMenuItems">
-    <ButtonTemplate>
-      <MudAvatar Class="avatar avatar--small me-2" Image="@this.participantInfo.AvatarUrl" Size="Size.Small" />
-      <span class="text-muted fw-bold">@this.displayName</span>
-    </ButtonTemplate>
-  </DropDownMenu>
+  <MudMenu ButtonType="MudBlazor.ButtonType.Submit" Direction="Direction.Bottom" OffsetY="true">
+    <ActivatorContent>
+      <div class="d-flex align-items-center">
+        <MudAvatar Class="mr-2" Image="@this.participantInfo.AvatarUrl" Size="Size.Small" />
+        <MudText>@this.displayName</MudText>
+      </div>
+    </ActivatorContent>
+    <ChildContent>
+      <MudMenuItem OnClick="@(() => EditParticipantInfoDialog.Show(this.DialogService, this.participantInfo))">Изменить имя</MudMenuItem>
+      <MudMenuItem Link="Identity/Account/LogOut" Target="_self">Выйти</MudMenuItem>
+    </ChildContent>
+  </MudMenu>
 }
 
 @code {

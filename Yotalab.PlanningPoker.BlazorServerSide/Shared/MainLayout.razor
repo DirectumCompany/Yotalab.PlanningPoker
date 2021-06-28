@@ -2,13 +2,12 @@
 
 <AuthorizeView>
   <Authorized>
-    <div class="main bg-light">
+    <MudLayout Class="m-auto" Style="width:75%">
       <NavMenu />
-      <RadzenNotification />
-      <div class="container content">
+      <MudMainContent Class="pt-0">
         @Body
-      </div>
-    </div>
+      </MudMainContent>
+    </MudLayout>
   </Authorized>
   <NotAuthorized>
     <Welcome />
