@@ -3,8 +3,8 @@
 
 <MudPaper>
   <MudList Dense="true" Style="padding-top: 0;padding-bottom: 0;">
-    <MudListSubheader>
-      <span class="text-muted me-2">Участники: @this.PaticipantVotes.Count()</span>
+    <MudListSubheader Class="ml-n2 mb-n4">
+      <b><span class="text-muted me-2">Участники (@this.PaticipantVotes.Count())</span></b>
     </MudListSubheader>
     @foreach (var participant in this.PaticipantVotes.OrderByDescending(p => p.Id == this.ParticipantId))
     {
