@@ -219,3 +219,7 @@ app {
   padding-left: 0;
   text-align: left;
 }
+
+.mud-alert.mud-alert-width-100 > .mud-alert-message {
+  width: 100%
+}
