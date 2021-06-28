@@ -19,7 +19,7 @@
                 <h6 class="my-0 me-2">@(string.IsNullOrEmpty(participant.Name) ? "Безымянный" : participant.Name)</h6>
                 @if (this.Session.ModeratorIds.Contains(participant.Id))
                 {
-                  <img src="img/crown_icon.svg" alt="Host" />
+                  <MudIcon Icon="@Icons.Material.Filled.LocalPolice" Color="Color.Warning"/>
                 }
               </div>
               @if (participant.Id == this.ParticipantId)
@@ -36,11 +36,11 @@
           </div>
           @if (participant.Id == this.ParticipantId || this.Session.ProcessingState == SessionProcessingState.Stopped || this.Session.ProcessingState == SessionProcessingState.Finished)
           {
-            <h3 class="text-muted"><strong>@participant.Vote.Value</strong></h3>
+            <h4 class="text-muted"><strong>@participant.Vote.Value</strong></h4>
           }
           else
           {
-            <h3>@(!Vote.Unset.Equals(participant.Vote) ? "👌" : string.Empty)</h3>
+            <h4>@(!Vote.Unset.Equals(participant.Vote) ? "👌" : string.Empty)</h4>
           }
         </div>
       </MudListItem>
