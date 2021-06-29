@@ -7,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
-using Radzen;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.Mailing;
 
@@ -57,7 +56,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
         });
       }
 
-      services.AddScoped<NotificationService>();
       services.AddSingleton<SessionService>();
       services.AddSingleton<ParticipantsService>();
       services.AddScoped<JSInteropFunctions>();
