@@ -9,9 +9,9 @@
         {
           var avatarClassName = string.Equals(this.newAvatarUrl, avatar, StringComparison.OrdinalIgnoreCase) ?
             "avatar avatar--selected" : null;
-          <div class="me-3" style="cursor:pointer" @onclick="@(() => this.SelectAvatar(avatar))">
-            <MudAvatar Class="@avatarClassName" Image="@avatar" Size="Size.Large" />
-          </div>
+        <div class="me-3" style="cursor:pointer" @onclick="@(() => this.SelectAvatar(avatar))">
+          <Avatar ClassNames="@avatarClassName" Url="@avatar" IsLarge="true" />
+        </div>
         }
       </div>
       <div class="mb-3">

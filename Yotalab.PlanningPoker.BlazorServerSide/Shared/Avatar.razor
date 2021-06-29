@@ -1,23 +1,26 @@
-﻿<img id="@this.Id" class="@this.imgClassName" src="@this.imgSrc" alt="Avatar">
+﻿<MudAvatar Class="@this.ClassNames" Image="@this.imgSrc" Size="@this.imgSize" />
 
 @code {
-  [Parameter]
-  public string Id { get; set; }
-
   [Parameter]
   public string Url { get; set; }
 
   [Parameter]
   public string ClassNames { get; set; }
 
-  private string imgClassName;
+  [Parameter]
+  public bool IsSmall { get; set; }
+
+  [Parameter]
+  public bool IsLarge { get; set; }
+
   private string imgSrc;
+  private Size imgSize;
   private const string DefaultAvatar = "img/default_avatar.png";
 
   protected override void OnParametersSet()
   {
     base.OnParametersSet();
-    this.imgClassName = this.ClassNames ?? "avatar";
     this.imgSrc = this.Url ?? DefaultAvatar;
+    this.imgSize = this.IsLarge ? Size.Large : this.IsSmall ? Size.Small : Size.Medium;
   }
 }
