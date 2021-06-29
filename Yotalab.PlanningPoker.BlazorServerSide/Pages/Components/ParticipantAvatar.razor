@@ -2,63 +2,19 @@
 @using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO
 
 @{
-  var dropDownItems = new List<DropDownMenuItem>();
-  var menuItems = new List<MudMenuItem>();
-  var dropDownMenuItemClass = "dropdown-item d-flex align-items-center justify-start";
-  // Строим меню модератора.
+  var hasMenu = false;
   if (this.Session.ModeratorIds.Contains(this.ParticipantId))
   {
     // Меню на другом участнике сессии.
     if (this.ParticipantId != this.Participant.Id)
     {
-      if (this.Session.ModeratorIds.Contains(this.Participant.Id))
-      {
-        dropDownItems.Add(new DropDownMenuItem()
-        {
-          ItemTemplate =
-        @<button class="@dropDownMenuItemClass"
-                 @onclick="@(async () => await this.SessionService.RemoveModerator(this.Session.Id, this.Participant.Id))">
-          <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.RemoveModerator" Color="Color.Default" />
-          Отменить модератора
-        </button>
-        });
-      }
-      else
-      {
-        dropDownItems.Add(new DropDownMenuItem()
-        {
-          ItemTemplate =
-        @<button class="@dropDownMenuItemClass"
-                 @onclick="@(async () => await this.SessionService.AddModerator(this.Session.Id, this.Participant.Id))">
-          <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.AddModerator" Color="Color.Warning" />
-          Сделать модератором
-        </button>
-        });
-      }
-
-      dropDownItems.Add(new DropDownMenuItem()
-      {
-        ItemTemplate =
-        @<button class="@dropDownMenuItemClass"
-                 @onclick="@(async () => await this.Service.KickAsync(this.Session.Id, this.Participant.Id, this.ParticipantId))">
-          <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.PersonRemove" Color="Color.Error" />
-          Исключить
-        </button>
-      });
+      hasMenu = true;
     }
     else // Меню на себе.
     {
       if (this.Session.ModeratorIds.Length > 1)
       {
-        dropDownItems.Add(new DropDownMenuItem()
-        {
-          ItemTemplate =
-        @<button class="@dropDownMenuItemClass"
-                 @onclick="@(async () => { await this.Service.LeaveAsync(this.Session.Id, this.ParticipantId); })">
-          <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.Close" Color="Color.Error" />
-          Покинуть сессию
-        </button>
-        });
+        hasMenu = true;
       }
     }
   }
@@ -67,15 +23,7 @@
     // Меню на себе.
     if (this.ParticipantId == this.Participant.Id)
     {
-      dropDownItems.Add(new DropDownMenuItem()
-      {
-        ItemTemplate =
-        @<button class="@dropDownMenuItemClass"
-                 @onclick="@(async () => { await this.Service.LeaveAsync(this.Session.Id, this.ParticipantId); })">
-          <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.Close" Color="Color.Error" />
-          Покинуть сессию
-        </button>
-      });
+      hasMenu = true;
     }
     else // Меню на другом участнике сессии.
     {
@@ -83,15 +31,8 @@
     }
   }
 
-  if (dropDownItems.Count > 0)
+  if (hasMenu)
   {
-    var participantContextMenuId = $"avatarContextMenu-{this.Participant.Id}";
-    <!--<DropDownMenu ButtonId="@participantContextMenuId" Items="dropDownItems">
-      <ButtonTemplate>
-        <MudAvatar Image="@this.Participant.AvatarUrl" />
-      </ButtonTemplate>
-    </DropDownMenu>-->
-
     <MudMenu Direction="Direction.Bottom" OffsetY="true">
       <ActivatorContent>
         <Avatar Url="@this.Participant.AvatarUrl" />
