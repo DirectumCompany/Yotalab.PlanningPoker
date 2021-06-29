@@ -7,57 +7,55 @@
 <div class="mt-2"></div>
 @if (this.sessions != null)
 {
-  <div class="w-75 m-auto">
-    <MudPaper>
-      @if (this.sessions.Count > 0)
-      {
-        <MudTable Items="this.sessions" Hover="true" Breakpoint="Breakpoint.Sm" Dense="true">
-          <RowTemplate>
-            <MudTd @onclick="@(() => NavigationManager.NavigateTo($"sessions/{context.Id}"))" Style="cursor:pointer">
-              <div class="d-flex align-items-center">
-                <div class="flex-fill d-flex align-items-center">
-                  <MudText>@context.Name</MudText>
-                  @if (context.ProcessingState == Grains.Interfaces.Models.SessionProcessingState.Started)
-                  {
-                    <MudChip Label="true" Style="cursor:pointer" Class="ms-2" Color="Color.Error" Size="Size.Small">Голосование идет</MudChip>
-                  }
-                </div>
-                <div>
-                  @if (context.ModeratorIds.Contains(this.ParticipantId))
-                  {
-                    <MudChip Label="true" Style="cursor:pointer" Class="me-2" Color="Color.Primary" Size="Size.Small">Вы модератор</MudChip>
-                  }
-                  <MudChip Label="true" Style="cursor:pointer" Color="Color.Success" Size="Size.Small">участников: @context.ParticipantsCount</MudChip>
-                </div>
-                <div class="ms-2">
-                  @if (context.ModeratorIds.Contains(this.ParticipantId))
-                  {
-                    <DropDownMenu Icon="@Icons.Material.Filled.MoreVert">
-                      <MudMenuItem OnClick="@(() => this.ShowRemoveSessionConfirmation(context.Id))">
-                        <div class="d-flex align-items-center">
-                          <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" />
-                          <MudText Style="margin-bottom:-1px">Удалить</MudText>
-                        </div>
-                      </MudMenuItem>
-                    </DropDownMenu>
-                  }
-                </div>
+  <MudPaper>
+    @if (this.sessions.Count > 0)
+    {
+      <MudTable Items="this.sessions" Hover="true" Breakpoint="Breakpoint.Sm" Dense="true">
+        <RowTemplate>
+          <MudTd @onclick="@(() => NavigationManager.NavigateTo($"sessions/{context.Id}"))" Style="cursor:pointer">
+            <div class="d-flex align-items-center">
+              <div class="flex-fill d-flex align-items-center">
+                <MudText>@context.Name</MudText>
+                @if (context.ProcessingState == Grains.Interfaces.Models.SessionProcessingState.Started)
+                {
+                  <MudChip Label="true" Style="cursor:pointer" Class="ms-2" Color="Color.Error" Size="Size.Small">Голосование идет</MudChip>
+                }
               </div>
-            </MudTd>
-          </RowTemplate>
-        </MudTable>
-      }
-      else
-      {
-        <MudList Clickable="true">
-          <MudListItem Text="Сессий нет" />
-        </MudList>
-      }
-    </MudPaper>
+              <div>
+                @if (context.ModeratorIds.Contains(this.ParticipantId))
+                {
+                  <MudChip Label="true" Style="cursor:pointer" Class="me-2" Color="Color.Primary" Size="Size.Small">Вы модератор</MudChip>
+                }
+                <MudChip Label="true" Style="cursor:pointer" Color="Color.Success" Size="Size.Small">участников: @context.ParticipantsCount</MudChip>
+              </div>
+              <div class="ms-2">
+                @if (context.ModeratorIds.Contains(this.ParticipantId))
+                {
+                  <DropDownMenu Icon="@Icons.Material.Filled.MoreVert">
+                    <MudMenuItem OnClick="@(() => this.ShowRemoveSessionConfirmation(context.Id))">
+                      <div class="d-flex align-items-center">
+                        <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" />
+                        <MudText Style="margin-bottom:-1px">Удалить</MudText>
+                      </div>
+                    </MudMenuItem>
+                  </DropDownMenu>
+                }
+              </div>
+            </div>
+          </MudTd>
+        </RowTemplate>
+      </MudTable>
+    }
+    else
+    {
+      <MudList Clickable="true">
+        <MudListItem Text="Сессий нет" />
+      </MudList>
+    }
+  </MudPaper>
 
-    <div class="float-end p-4 pe-3">
-      <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" @onclick="this.OnShowCreationModal" />
-    </div>
+  <div class="float-end p-4 pe-3">
+    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" @onclick="this.OnShowCreationModal" />
   </div>
 }
 else
