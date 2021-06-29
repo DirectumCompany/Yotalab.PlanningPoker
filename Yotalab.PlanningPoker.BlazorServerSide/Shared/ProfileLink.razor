@@ -9,18 +9,18 @@
 
 @if (this.participantInfo != null)
 {
-  <MudMenu ButtonType="MudBlazor.ButtonType.Submit" Direction="Direction.Bottom" OffsetY="true">
-    <ActivatorContent>
+  <DropDownMenu>
+    <ButtonTemplate>
       <div class="d-flex align-items-center">
         <Avatar ClassNames="mr-2" Url="@this.participantInfo.AvatarUrl" IsSmall="true" />
         <MudText>@this.displayName</MudText>
       </div>
-    </ActivatorContent>
+    </ButtonTemplate>
     <ChildContent>
       <MudMenuItem OnClick="@(() => EditParticipantInfoDialog.Show(this.DialogService, this.participantInfo))">Изменить имя</MudMenuItem>
       <MudMenuItem Link="Identity/Account/LogOut" Target="_self">Выйти</MudMenuItem>
     </ChildContent>
-  </MudMenu>
+  </DropDownMenu>
 }
 
 @code {

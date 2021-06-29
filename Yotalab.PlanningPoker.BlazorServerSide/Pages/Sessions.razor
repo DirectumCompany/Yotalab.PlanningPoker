@@ -32,14 +32,14 @@
                 <div class="ms-2">
                   @if (context.ModeratorIds.Contains(this.ParticipantId))
                   {
-                    <MudMenu Icon="@Icons.Material.Filled.MoreVert" Direction="Direction.Bottom" OffsetY="true">
+                    <DropDownMenu Icon="@Icons.Material.Filled.MoreVert">
                       <MudMenuItem OnClick="@(() => this.ShowRemoveSessionConfirmation(context.Id))">
                         <div class="d-flex align-items-center">
                           <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" />
                           <MudText Style="margin-bottom:-1px">Удалить</MudText>
                         </div>
                       </MudMenuItem>
-                    </MudMenu>
+                    </DropDownMenu>
                   }
                 </div>
               </div>
