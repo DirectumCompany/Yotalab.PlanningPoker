@@ -29,12 +29,13 @@
                            CheckedChanged="@((args) => this.HandleCheckVote(vote))"
                            Color="Color.Primary">
               </MudCheckBox>
-              <label class="flex-fill h1 text-center"
-                     for="@vote.Value"
-                     style="cursor:inherit"
-                     @onclick="@((args) => this.HandleCheckVote(vote))">
+              <MudText @onclick="@((args) => this.HandleCheckVote(vote))"
+                       Typo="Typo.h4"
+                       Align="Align.Center"
+                       Class="flex-fill p-2"
+                       Style="cursor:inherit">
                 @vote.Value
-              </label>
+              </MudText>
             </MudPaper>
           }
         </div>
