@@ -235,3 +235,8 @@ app {
 .flex-fill {
   flex: 1 1 auto !important;
 }
+
+.mud-dialog-top-center {
+  align-self: flex-start;
+  margin-top: 32px;
+}
