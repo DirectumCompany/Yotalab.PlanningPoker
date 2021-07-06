@@ -19,9 +19,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
     public string Id { get; set; }
 
     [Parameter]
-    public string Title { get; set; }
-
-    [Parameter]
     public EditSessionArgs EditArgs { get; set; }
 
     [Parameter]
@@ -30,7 +27,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
     public static void Show(IDialogService dialogService, string title, EditSessionArgs editArgs, EventCallback<EditSessionArgs> onConfirm)
     {
       var parameters = new DialogParameters();
-      parameters.Add(nameof(Title), title);
       parameters.Add(nameof(EditArgs), editArgs);
       parameters.Add(nameof(OnConfirm), onConfirm);
 

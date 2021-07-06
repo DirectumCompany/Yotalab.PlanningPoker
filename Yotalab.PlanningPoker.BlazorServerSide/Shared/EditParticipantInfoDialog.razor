@@ -1,15 +1,12 @@
 ﻿<MudDialog Class="mud-dialog-top-center">
-  <TitleContent>
-    <h5>@this.Title</h5>
-  </TitleContent>
   <DialogContent>
     <form>
-      <div class="mb-3 d-flex justify-content-center">
+      <div class="mb-3 d-flex justify-center">
         @foreach (var avatar in AvatarCollection)
         {
           var avatarClassName = string.Equals(this.newAvatarUrl, avatar, StringComparison.OrdinalIgnoreCase) ?
             "avatar avatar--selected" : null;
-        <div class="me-3" style="cursor:pointer" @onclick="@(() => this.SelectAvatar(avatar))">
+        <div class="mr-3" style="cursor:pointer" @onclick="@(() => this.SelectAvatar(avatar))">
           <Avatar ClassNames="@avatarClassName" Url="@avatar" IsLarge="true" />
         </div>
         }

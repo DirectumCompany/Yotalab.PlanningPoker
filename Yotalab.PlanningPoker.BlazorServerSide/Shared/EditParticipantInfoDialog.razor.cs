@@ -14,9 +14,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Shared
     [Parameter]
     public ParticipantInfo ParticipantInfo { get; set; }
 
-    [Parameter]
-    public string Title { get; set; }
-
     private const string DefaultAvatar = "img/default_avatar.png";
 
     private static List<string> AvatarCollection = new List<string>()
@@ -38,7 +35,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Shared
     public static void Show(IDialogService dialogService, ParticipantInfo participantInfo)
     {
       var parameters = new DialogParameters();
-      parameters.Add(nameof(Title), "Изменить имя");
       parameters.Add(nameof(ParticipantInfo), participantInfo);
 
       var options = new DialogOptions()
