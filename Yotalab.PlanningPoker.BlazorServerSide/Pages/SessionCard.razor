@@ -13,7 +13,7 @@
   }
   else
   {
-    <div class="d-flex flex-row justify-content-center align-items-center mb-2">
+    <div class="d-flex flex-row justify-center align-center mb-2">
       <MudText Class="mb-0 mx-2" Typo="Typo.h4" Align="Align.Center">@this.session.Name</MudText>
       @if (this.session.ModeratorIds.Contains(this.ParticipantId))
       {
@@ -21,14 +21,9 @@
       }
     </div>
     <CascadingValue Value="@this.session">
-      <div class="row g-3">
-        <div class="col-md-5 col-lg-4 order-md-last mt-4">
-          <SessionStatusPrompt ParticipantId="this.ParticipantId" />
-
-          <ParticipantsVotesList PaticipantVotes="this.participantVotes"
-                                 ParticipantId="this.ParticipantId" />
-        </div>
-        <div class="col-md-7 col-lg-8">
+      <MudGrid>
+        <MudItem md="7" lg="8">
+          <!--<div class="col-md-7 col-lg-8">-->
           @if (this.session.ProcessingState != SessionProcessingState.Finished)
           {
             if (this.User != null)
@@ -44,14 +39,22 @@
           {
             <ParticipantsVotesResult PaticipantVotes="this.participantVotes" />
           }
-        </div>
-      </div>
+        </MudItem>
+        <!-- <div class="row g-3"> -->
+        <MudItem md="5" lg="4">
+          <!--<div class="col-md-5 col-lg-4 order-md-last mt-4">-->
+          <SessionStatusPrompt ParticipantId="this.ParticipantId" />
+
+          <ParticipantsVotesList PaticipantVotes="this.participantVotes"
+                                 ParticipantId="this.ParticipantId" />
+        </MudItem>
+      </MudGrid>
     </CascadingValue>
   }
 }
 else
 {
-  <div class="d-flex justify-content-center">
+  <div class="d-flex justify-center">
     <div class="spinner-grow text-info" role="status">
       <span class="visually-hidden">Загрузка...</span>
     </div>

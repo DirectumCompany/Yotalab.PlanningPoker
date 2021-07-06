@@ -33,10 +33,11 @@
 
 @if (this.Model.ExternalLogins != null)
 {
-  <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal d-flex justify-content-around">
+  <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal d-flex 
+        around">
     @foreach (var provider in Model.ExternalLogins)
     {
-      <button type="submit" class="btn btn-light d-flex align-items-center" name="provider" value="@provider.Name" title="Войти с аккаунтом @provider.DisplayName">
+      <button type="submit" class="btn btn-light d-flex align-center" name="provider" value="@provider.Name" title="Войти с аккаунтом @provider.DisplayName">
         <img class="me-2" src="img/@(provider.Name.ToLower()).svg" alt="@provider.Name"><span>@provider.DisplayName</span>
       </button>
     }

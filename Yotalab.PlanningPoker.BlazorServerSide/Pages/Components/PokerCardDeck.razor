@@ -2,20 +2,20 @@
 
 @if (this.Bulletin != null)
 {
-  <div class="row justify-content-md-center">
+  <MudGrid Class="justify-md-center">
     @foreach (var bulletinItem in this.Bulletin)
     {
       var vote = bulletinItem.Vote;
       if (vote.IsUnset || bulletinItem.IsDisabled)
         continue;
 
-      <div class="col-auto">
+      <MudItem Class="d-flex flex-grow-0 flex-shrink-0 px-4 py-3" Style="width:auto">
         <PokerCard @key="vote.Value"
                    SessionId="this.SessionId"
                    Value="vote"
                    Selected="@(this.selectedVote?.Equals(vote) == true)"
                    OnSelectedChanged="this.HandleSelectedChanged" />
-      </div>
+      </MudItem>
     }
-  </div>
+  </MudGrid>
 }

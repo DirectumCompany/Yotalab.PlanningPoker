@@ -4,29 +4,29 @@
 <MudPaper>
   <MudList Dense="true" Style="padding-top: 0;padding-bottom: 0;">
     <MudListSubheader Class="ml-n2 mb-n4">
-      <b><span class="text-muted me-2">Участники (@this.PaticipantVotes.Count())</span></b>
+      <b><span class="text-muted mr-2">Участники (@this.PaticipantVotes.Count())</span></b>
     </MudListSubheader>
     @foreach (var participant in this.PaticipantVotes.OrderByDescending(p => p.Id == this.ParticipantId))
     {
       <MudListItem>
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="d-flex align-items-center">
-            <div class="me-3">
+        <div class="d-flex align-center justify-space-between">
+          <div class="d-flex align-center">
+            <div class="mr-3">
               <ParticipantAvatar Participant="participant" ParticipantId="this.ParticipantId" />
             </div>
             <div>
-              <div class="d-flex align-items-center">
-                <h6 class="my-0 me-2">@(string.IsNullOrEmpty(participant.Name) ? "Безымянный" : participant.Name)</h6>
+              <div class="d-flex align-center">
+                <MudText Class="my-0 mr-2">@(string.IsNullOrEmpty(participant.Name) ? "Безымянный" : participant.Name)</MudText>
                 @if (this.Session.ModeratorIds.Contains(participant.Id))
                 {
-                  <MudIcon Icon="@Icons.Material.Filled.LocalPolice" Color="Color.Warning"/>
+                  <MudIcon Icon="@Icons.Material.Filled.LocalPolice" Color="Color.Warning" />
                 }
               </div>
               @if (participant.Id == this.ParticipantId)
               {
                 <ParticipantChangeNameLink ParticipantInfo="@participant.ToInfo()"
                                            Title="Изменить имя"
-                                           ClassNames="p-0 m-0">
+                                           ClassNames="pa-0 ma-0">
                   <TitleTemplate>
                     <small>@context</small>
                   </TitleTemplate>
@@ -34,14 +34,19 @@
               }
             </div>
           </div>
-          @if (participant.Id == this.ParticipantId || this.Session.ProcessingState == SessionProcessingState.Stopped || this.Session.ProcessingState == SessionProcessingState.Finished)
-          {
-            <h4 class="text-muted"><strong>@participant.Vote.Value</strong></h4>
-          }
-          else
-          {
-            <h4>@(!Vote.Unset.Equals(participant.Vote) ? "👌" : string.Empty)</h4>
-          }
+          <MudText Color="Color.Default" Typo="Typo.h5" Align="Align.Center" Style="width: 48px">
+            <strong>
+              @if (participant.Id == this.ParticipantId || this.Session.ProcessingState == SessionProcessingState.Stopped || this.Session.ProcessingState == SessionProcessingState.Finished)
+              {
+
+                @participant.Vote.Value
+              }
+              else
+              {
+                @(!Vote.Unset.Equals(participant.Vote) ? "👌" : string.Empty)
+              }
+            </strong>
+          </MudText>
         </div>
       </MudListItem>
     }

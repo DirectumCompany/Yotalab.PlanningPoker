@@ -12,7 +12,7 @@
     {
       <MudTable Items="this.sessions" Hover="true" Breakpoint="Breakpoint.Sm" Dense="true">
         <RowTemplate>
-          <MudTd @onclick="@(() => NavigationManager.NavigateTo($"sessions/{context.Id}"))" Style="cursor:pointer">
+          <MudTd @onclick="@(() => NavigationManager.NavigateTo($"sessions/{context.Id}"))" Style="cursor:pointer; border:none">
             <div class="d-flex align-center">
               <div class="flex-grow-1 flex-shrink-0 d-flex align-center">
                 <MudText>@context.Name</MudText>

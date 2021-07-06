@@ -16,7 +16,7 @@
         {
           OnClickAsync = (args) => this.SessionService.RemoveModerator(this.Session.Id, this.Participant.Id),
           ItemTemplate =
-          @<div class="d-flex align-items-center">
+          @<div class="d-flex align-center">
             <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.RemoveModerator" Color="Color.Default" />
             <MudText Style="margin-bottom:-1px">Отменить модератора</MudText>
           </div>
@@ -28,7 +28,7 @@
         {
           OnClickAsync = (args) => this.SessionService.AddModerator(this.Session.Id, this.Participant.Id),
           ItemTemplate =
-          @<div class="d-flex align-items-center">
+          @<div class="d-flex align-center">
             <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.AddModerator" Color="Color.Warning" />
             <MudText Style="margin-bottom:-1px">Сделать модератором</MudText>
           </div>
@@ -39,7 +39,7 @@
       {
         OnClickAsync = (args) => this.Service.KickAsync(this.Session.Id, this.Participant.Id, this.ParticipantId),
         ItemTemplate =
-        @<div class="d-flex align-items-center">
+        @<div class="d-flex align-center">
           <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.PersonRemove" Color="Color.Error" />
           <MudText Style="margin-bottom:-1px">Исключить</MudText>
         </div>
@@ -53,7 +53,7 @@
         {
           OnClickAsync = (args) => this.Service.LeaveAsync(this.Session.Id, this.ParticipantId),
           ItemTemplate =
-          @<div class="d-flex align-items-center">
+          @<div class="d-flex align-center">
             <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.Close" Color="Color.Error" />
             <MudText Style="margin-bottom:-1px">Покинуть сессию</MudText>
           </div>
@@ -70,7 +70,7 @@
       {
         OnClickAsync = (args) => this.Service.LeaveAsync(this.Session.Id, this.ParticipantId),
         ItemTemplate =
-        @<div class="d-flex align-items-center">
+        @<div class="d-flex align-center">
             <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.Close" Color="Color.Error" />
             <MudText Style="margin-bottom:-1px">Покинуть сессию</MudText>
           </div>
