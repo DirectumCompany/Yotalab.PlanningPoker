@@ -2,12 +2,16 @@
 
 <AuthorizeView>
   <Authorized>
-    <MudLayout Class="m-auto" Style="width:75%">
-      <NavMenu />
-      <MudMainContent Class="pt-0 mx-auto" Style="width:75%">
-        @Body
-      </MudMainContent>
-    </MudLayout>
+    <MudContainer MaxWidth="MaxWidth.Large">
+      <MudLayout Class="m-auto">
+        <MudAppBar Dense="true" Color="Color.Transparent" Elevation="0" Fixed="false" ToolBarClass="px-0">
+          <NavMenu />
+        </MudAppBar>
+        <MudMainContent Class="pt-0 mx-auto">
+          @Body
+        </MudMainContent>
+      </MudLayout>
+    </MudContainer>
   </Authorized>
   <NotAuthorized>
     <Welcome />
