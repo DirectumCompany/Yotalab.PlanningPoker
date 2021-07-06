@@ -13,27 +13,27 @@
       <MudTable Items="this.sessions" Hover="true" Breakpoint="Breakpoint.Sm" Dense="true">
         <RowTemplate>
           <MudTd @onclick="@(() => NavigationManager.NavigateTo($"sessions/{context.Id}"))" Style="cursor:pointer">
-            <div class="d-flex align-items-center">
-              <div class="flex-fill d-flex align-items-center">
+            <div class="d-flex align-center">
+              <div class="flex-grow-1 flex-shrink-0 d-flex align-center">
                 <MudText>@context.Name</MudText>
                 @if (context.ProcessingState == Grains.Interfaces.Models.SessionProcessingState.Started)
                 {
-                  <MudChip Label="true" Style="cursor:pointer" Class="ms-2" Color="Color.Error" Size="Size.Small">Голосование идет</MudChip>
+                  <MudChip Label="true" Style="cursor:pointer" Class="ml-2" Color="Color.Error" Size="Size.Small">Голосование идет</MudChip>
                 }
               </div>
               <div>
                 @if (context.ModeratorIds.Contains(this.ParticipantId))
                 {
-                  <MudChip Label="true" Style="cursor:pointer" Class="me-2" Color="Color.Primary" Size="Size.Small">Вы модератор</MudChip>
+                  <MudChip Label="true" Style="cursor:pointer" Class="mr-2" Color="Color.Primary" Size="Size.Small">Вы модератор</MudChip>
                 }
                 <MudChip Label="true" Style="cursor:pointer" Color="Color.Success" Size="Size.Small">Участников: @context.ParticipantsCount</MudChip>
               </div>
-              <div class="ms-2">
+              <div class="ml-2">
                 @if (context.ModeratorIds.Contains(this.ParticipantId))
                 {
                   <DropDownMenu Icon="@Icons.Material.Filled.MoreVert">
                     <MudMenuItem OnClick="@(() => this.ShowRemoveSessionConfirmation(context.Id))">
-                      <div class="d-flex align-items-center">
+                      <div class="d-flex align-center">
                         <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.Delete" Color="Color.Error" />
                         <MudText Style="margin-bottom:-1px">Удалить</MudText>
                       </div>
@@ -54,15 +54,13 @@
     }
   </MudPaper>
 
-  <div class="float-end p-4 pe-3">
+  <div class="d-flex justify-end pa-4 pr-3">
     <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" @onclick="this.OnShowCreationModal" />
   </div>
 }
 else
 {
-  <div class="d-flex justify-content-center">
-    <div class="spinner-grow text-info" role="status">
-      <span class="visually-hidden">Загрузка...</span>
-    </div>
+  <div class="d-flex justify-center">
+    <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
   </div>
 }
