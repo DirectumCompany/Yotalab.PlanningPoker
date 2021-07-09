@@ -2,12 +2,12 @@
 
 @inject IDialogService DialogService
 
-<MudButton Variant="Variant.Text"
-           Class="@this.ClassNames"
-           Style="text-transform:none"
-           Color="Color.Primary"
-           Size="Size.Small"
-           @onclick="@(() => EditParticipantInfoDialog.Show(this.DialogService, this.ParticipantInfo))">
+<MudLink Underline="Underline.None"
+         Class="@this.ClassNames"
+         Style="cursor:pointer"
+         Color="Color.Primary"
+         Typo="Typo.caption"
+         @onclick="@(() => EditParticipantInfoDialog.Show(this.DialogService, this.ParticipantInfo))">
   @if (this.TitleTemplate == null)
   {
     <span>@this.Title</span>
@@ -16,7 +16,7 @@
   {
     @this.TitleTemplate(this.Title)
   }
-</MudButton>
+</MudLink>
 
 @code {
   [Parameter]
