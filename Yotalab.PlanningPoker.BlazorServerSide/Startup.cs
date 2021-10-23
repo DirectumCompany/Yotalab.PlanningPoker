@@ -34,6 +34,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       // Если используется UseOrleansSiloInProcess то эту строчку надо оставить закоментированной.
       // services.AddClusterService();
 
+      services.AddControllersWithViews();
+
       services.AddLocalization();
 
       if (this.Environment.IsDevelopment())
@@ -60,6 +62,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       services.AddSingleton<ParticipantsService>();
       services.AddScoped<JSInteropFunctions>();
       services.AddMudServices();
+      services.AddHttpClient();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

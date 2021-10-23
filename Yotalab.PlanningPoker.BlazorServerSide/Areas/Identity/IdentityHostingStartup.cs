@@ -27,19 +27,42 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
           });
         });
 
-        services
-          .AddDefaultIdentity<IdentityUser>(options =>
+        /*services
+          .AddIdentityCore<IdentityUser>(options =>
           {
             options.Password.RequireNonAlphanumeric = false;
             options.SignIn.RequireConfirmedAccount = true;
           })
+          .AddRoles<IdentityRole>()
           .AddErrorDescriber<OverrideIdentityErrorDescriber>()
-          .AddEntityFrameworkStores<ApplicationDbContext>();
+          .AddEntityFrameworkStores<ApplicationDbContext>()
+          .AddDefaultTokenProviders();*/
 
         services
+          .AddIdentityCore<IdentityUser>(options =>
+          {
+            options.Password.RequireNonAlphanumeric = false;
+            options.SignIn.RequireConfirmedAccount = true;
+          })
+          .AddRoles<IdentityRole>()
+          .AddErrorDescriber<OverrideIdentityErrorDescriber>()
+          .AddEntityFrameworkStores<ApplicationDbContext>()
+          .AddSignInManager()
+          .AddDefaultTokenProviders();
+
+        services.AddAuthentication(o =>
+        {
+          o.DefaultScheme = IdentityConstants.ApplicationScheme;
+          o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+        })
+        .TryConfigureMicrosoftAccount(context.Configuration)
+        .TryConfigureGoogleAccount(context.Configuration)
+        .AddIdentityCookies(o => { });
+
+        /*services
           .AddAuthentication()
           .TryConfigureMicrosoftAccount(context.Configuration)
-          .TryConfigureGoogleAccount(context.Configuration);
+          .TryConfigureGoogleAccount(context.Configuration);*/
 
         services.ConfigureApplicationCookie(options =>
         {

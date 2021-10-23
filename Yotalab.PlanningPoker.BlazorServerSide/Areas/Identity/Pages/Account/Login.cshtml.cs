@@ -72,21 +72,30 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages.Account
 
     public async Task<IActionResult> OnPostAsync(string returnUrl = null)
     {
+      if (ModelState.IsValid)
+      {
+        return await this.OnPostAsync(Input.Email, Input.Password, Input.RememberMe, returnUrl);
+      }
+      return Page();
+    }
+
+    public async Task<IActionResult> OnPostAsync(string email, string password, bool rememberMe, string returnUrl = null)
+    {
       returnUrl = returnUrl ?? Url.Content("~/");
 
-      if (ModelState.IsValid)
+      if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
       {
         // This doesn't count login failures towards account lockout
         // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+        var result = await _signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
-          _logger.LogInformation("User {UserEmail} logged in.", Input.Email);
+          _logger.LogInformation("User {UserEmail} logged in.", email);
           return LocalRedirect(returnUrl);
         }
         if (result.RequiresTwoFactor)
         {
-          return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+          return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
         if (result.IsLockedOut)
         {

@@ -1,11 +1,25 @@
-﻿<MudThemeProvider />
+﻿@using Microsoft.AspNetCore.Authorization
+
+<MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <CascadingAuthenticationState>
   <Router AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
-      <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+      @if (routeData != null)
+      {
+        var pageType = routeData.PageType;
+        var allowAnonymousAttribute = pageType.GetCustomAttributes(typeof(AllowAnonymousAttribute), true).FirstOrDefault();
+        if (allowAnonymousAttribute == null)
+        {
+          <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        }
+        else
+        {
+          <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        }
+      }
     </Found>
     <NotFound>
       <LayoutView Layout="@typeof(MainLayout)">

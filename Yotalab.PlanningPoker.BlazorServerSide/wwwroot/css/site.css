@@ -241,3 +241,15 @@ app {
   align-self: flex-start;
   margin-top: 32px;
 }
+
+.identity-layout {
+  margin-top: 13%
+}
+
+.login-card {
+  align-self: flex-start
+}
+
+.login-form {
+  min-width: 400px;
+}

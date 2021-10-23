@@ -16,7 +16,7 @@
 @code {
   @inject NavigationManager Navigation
 
-  private const string LoginUrlBase = "Identity/Account/Login";
+  private const string LoginUrlBase = "identity/login";
   private const string RegisterUrlBase = "Identity/Account/Register";
 
   protected override void OnParametersSet()
@@ -25,7 +25,10 @@
     var relativePath = this.Navigation.ToBaseRelativePath(this.Navigation.Uri);
     if (!string.IsNullOrWhiteSpace(relativePath))
     {
-      this.Navigation.NavigateTo($"{LoginUrlBase}?returnUrl=/{relativePath}");
+      if (relativePath != LoginUrlBase)
+        this.Navigation.NavigateTo($"{LoginUrlBase}?returnUrl={relativePath}");
+      else
+        this.Navigation.NavigateTo($"{LoginUrlBase}");
     }
   }
 }
