@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Services
@@ -27,6 +28,21 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
         return;
 
       await this.jsRuntime.InvokeVoidAsync("interopFunctions.clickElementById", elementId);
+    }
+
+    /// <summary>
+    /// Сгенерировать клик по элементу.
+    /// </summary>
+    /// <param name="element">Ссылка на элемент.</param>
+    /// <returns>Задача на клик по элементу.</returns>
+    public async Task ClickElement(ElementReference element)
+    {
+      await this.jsRuntime.InvokeVoidAsync("interopFunctions.clickElement", element);
+    }
+
+    public async Task<string> FrameInnerText(ElementReference frameElement)
+    {
+      return await this.jsRuntime.InvokeAsync<string>("interopFunctions.getFrameContentDocumentInnerText", frameElement);
     }
   }
 }

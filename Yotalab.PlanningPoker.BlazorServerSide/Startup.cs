@@ -34,8 +34,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       // Если используется UseOrleansSiloInProcess то эту строчку надо оставить закоментированной.
       // services.AddClusterService();
 
-      services.AddControllersWithViews();
-
       services.AddLocalization();
 
       if (this.Environment.IsDevelopment())

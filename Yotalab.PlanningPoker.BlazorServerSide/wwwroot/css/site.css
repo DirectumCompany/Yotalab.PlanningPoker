@@ -247,9 +247,23 @@ app {
 }
 
 .login-card {
-  align-self: flex-start
+  align-self: flex-start;
 }
 
 .login-form {
+  min-width: 400px;
+}
+
+.login-form-validation {
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.register-card {
+  align-self: flex-start
+}
+
+.register-form {
   min-width: 400px;
 }

@@ -1,31 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Server;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using MudBlazor;
+using Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Data;
+using Yotalab.PlanningPoker.BlazorServerSide.Services;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
 {
   [AllowAnonymous]
   public partial class Login
   {
-    private EditForm form;
-    private LoginInputModel loginInputModel = new LoginInputModel();
+    private LoginInputModel loginInputModel = new();
+    private bool isSubmitting = false;
     private bool success = true;
     private string[] errors = { };
-
-    [Inject]
-    private IHttpClientFactory HttpClientFactory { get; set; }
 
     private IList<AuthenticationScheme> ExternalLogins { get; set; }
 
@@ -44,8 +48,20 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
     [Inject]
     private ILogger<Login> Logger { get; set; }
 
+    [Inject]
+    private JSInteropFunctions JSFunctions { get; set; }
+
+    [Inject]
+    private AuthenticationStateProvider authenticationStateProvider { get; set; }
+
     [Parameter]
     public string ReturnUrl { get; set; }
+
+    private EditContext editContext;
+
+    private ElementReference submitButton;
+
+    private ElementReference submitHandlerFrame;
 
     protected override async Task OnInitializedAsync()
     {
@@ -54,6 +70,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
 
       var externalSchemes = await this.SignInManager.GetExternalAuthenticationSchemesAsync();
       this.ExternalLogins = externalSchemes.ToList();
+      this.editContext = new EditContext(this.loginInputModel);
     }
 
     public string GetReturnUrl()
@@ -67,46 +84,52 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
       return string.Empty;
     }
 
-    public async Task SignIn(EditContext editContext)
+    public async Task ValidSubmit()
     {
-      var user = await this.UserManager.FindByEmailAsync(this.loginInputModel.Email);
-      var result = await this.SignInManager.CheckPasswordSignInAsync(user, this.loginInputModel.Password, this.loginInputModel.RememberMe);
-      if (result.Succeeded)
+      if (this.editContext.Validate())
       {
-        this.Logger.LogInformation("User {UserEmail} logged in.", this.loginInputModel.Email);
-        var httpClient = this.HttpClientFactory.CreateClient();
-        var data = new FormUrlEncodedContent(new[]
+        if (this.isSubmitting)
         {
-          new KeyValuePair<string,string>($"InputModel.{nameof(this.loginInputModel.Email)}", this.loginInputModel.Email),
-          new KeyValuePair<string,string>($"InputModel.{nameof(this.loginInputModel.Password)}", this.loginInputModel.Email),
-          new KeyValuePair<string,string>($"InputModel.{nameof(this.loginInputModel.RememberMe)}", this.loginInputModel.RememberMe.ToString()),
-          new KeyValuePair<string,string>($"InputModel.{nameof(this.ReturnUrl)}", this.GetReturnUrl())
-        });
-        // см. https://stackoverflow.com/questions/59121741/anti-forgery-token-validation-in-mvc-app-with-blazor-server-side-component
-        // ?email={this.loginInputModel.Email}&password={this.loginInputModel.Password}&rememberMe={this.loginInputModel.RememberMe}&returnUrl={this.GetReturnUrl()}
-        var uri = $"{this.Navigation.BaseUri}/Identity/api/Values/Login?email={this.loginInputModel.Email}&password={this.loginInputModel.Password}&rememberMe={this.loginInputModel.RememberMe}&returnUrl={this.GetReturnUrl()}";
-        var resultPost = await httpClient.PostAsync(uri, data);
-      }
-      if (result.IsLockedOut)
-      {
-        this.Logger.LogWarning("User account locked out.");
+          this.errors = new[] { "Попробуйте обновить страницу, процесс предыдущего входа завершился неудачно" };
+          return;
+        }
+
+        this.isSubmitting = true;
+        await this.JSFunctions.ClickElement(this.submitButton);
       }
     }
-  }
 
-  public class LoginInputModel
-  {
-    [Required(ErrorMessage = "The Email field is required")]
-    [EmailAddress(ErrorMessage = "The {0} field is not a valid e-mail address")]
-    [Display(Name = "Email")]
-    public string Email { get; set; }
+    public async Task OnSubmitHandler(ProgressEventArgs e)
+    {
+      if (this.isSubmitting)
+      {
+        var frameContent = await this.JSFunctions.FrameInnerText(this.submitHandlerFrame);
+        try
+        {
+          var result = JsonSerializer.Deserialize<LoginResponse>(frameContent, new JsonSerializerOptions()
+          {
+            PropertyNameCaseInsensitive = true
+          });
+          if (result != null && result.IsSuccess())
+          {
+            var returnUrl = this.GetReturnUrl();
+            this.Navigation.NavigateTo(returnUrl, true);
+          }
+        }
+        finally
+        {
+          this.isSubmitting = false;
+        }
+      }
+    }
 
-    [Required(ErrorMessage = "The Password field is required")]
-    [DataType(DataType.Password)]
-    [Display(Name = "Password")]
-    public string Password { get; set; }
-
-    [Display(Name = "Remember Me")]
-    public bool RememberMe { get; set; }
+    public async Task OnErrorSubmitHandler(ErrorEventArgs e)
+    {
+      if (this.isSubmitting)
+      {
+        var frameContent = await this.JSFunctions.FrameInnerText(this.submitHandlerFrame);
+        this.isSubmitting = false;
+      }
+    }
   }
 }

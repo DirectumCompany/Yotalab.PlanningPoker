@@ -1,0 +1,36 @@
+﻿@page "/identity/register/{returnUrl?}"
+@layout IdentityLayout
+
+<MudCard Class="register-card">
+  <MudCardContent>
+    <MudText Align="Align.Center" Class="mb-10" Typo="Typo.h4">
+      <Logotype />
+    </MudText>
+    <MudText Typo="Typo.h6" Class="mb-3">
+      Регистрация нового пользователя
+    </MudText>
+    <MudFocusTrap>
+      <EditForm @bind-IsValid="@success" @bind-Errors="@errors" Model="this.inputModel" OnSubmit="this.SignUp" class="register-form">
+        <DataAnnotationsValidator />
+        <MudTextField @bind-Value="this.inputModel.Email" Label="Эл. почта"
+                      For="@(() => this.inputModel.Email)"
+                      InputType="InputType.Email"
+                      Required="true"
+                      RequiredError="Введите эл. почту" />
+        <MudTextField @bind-Value="this.inputModel.Password" Label="Пароль"
+                      For="@(() => this.inputModel.Password)"
+                      InputType="InputType.Password"
+                      Required="true"
+                      RequiredError="Введите пароль" />
+        <MudTextField @bind-Value="this.inputModel.ConfirmPassword" Label="Подтверждение пароля"
+                      For="@(() => this.inputModel.ConfirmPassword)"
+                      InputType="InputType.Password"
+                      Required="true"
+                      RequiredError="Подтвердите пароль" />
+        <div class="d-flex mt-3">
+          <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto align-self-center">Зарегистрироваться</MudButton>
+        </div>
+      </EditForm>
+    </MudFocusTrap>
+  </MudCardContent>
+</MudCard>
