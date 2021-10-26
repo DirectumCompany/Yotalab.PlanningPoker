@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
 {
-  public partial class ConfirmEmail
+  public partial class Confirm
   {
     private bool isSuccess;
 

@@ -10,7 +10,7 @@
       Входите, пожалуйста
     </MudText>
     <MudFocusTrap>
-      <form action="@($"identity/account/signin")" method="post" autocomplete="off" target="submit_handler" hidden>
+      <form action="identity/account/signin" method="post" autocomplete="off" target="submit_handler" hidden>
         <input @bind-value="this.loginInputModel.Email" name="InputModel.Email" type="email" autocomplete="off" hidden />
         <input @bind-value="this.loginInputModel.Password" name="InputModel.Password" type="password" autocomplete="off" hidden />
         <input @bind-value="this.loginInputModel.RememberMe" name="InputModel.RememberMe" type="checkbox" autocomplete="off" hidden />
@@ -58,7 +58,8 @@
   @if (this.ExternalLogins != null && this.ExternalLogins.Any())
   {
     <MudCardActions>
-      <form id="external-account" action="./ExternalLogin?returnUrl=@this.GetReturnUrl()" method="post" class="d-flex justify-space-around flex-grow-1 mt-5 mb-3">
+      <form id="external-account" action="identity/account/signinExternal?returnUrl=@this.GetReturnUrl()" method="post"
+            class="d-flex justify-space-around flex-grow-1 mt-5 mb-3">
         @foreach (var provider in this.ExternalLogins)
         {
           string icon = null;
@@ -72,6 +73,7 @@
               break;
           }
           <MudButton Variant="Variant.Filled" StartIcon="@icon" ButtonType="ButtonType.Submit"
+                     name="provider" value="@provider.Name"
                      title="@($"Войти с аккаунтом {provider.DisplayName}")">
             @provider.DisplayName
           </MudButton>
