@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Data;
@@ -29,15 +23,12 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
     private LoginInputModel loginInputModel = new();
     private bool isSubmitting = false;
     private bool success = true;
-    private string[] errors = { };
+    private List<string> errors = new();
 
     private IList<AuthenticationScheme> ExternalLogins { get; set; }
 
     [Inject]
     private IHttpContextAccessor HttpContextAccessor { get; set; }
-
-    [Inject]
-    private UserManager<IdentityUser> UserManager { get; set; }
 
     [Inject]
     private SignInManager<IdentityUser> SignInManager { get; set; }
@@ -50,9 +41,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
 
     [Inject]
     private JSInteropFunctions JSFunctions { get; set; }
-
-    [Inject]
-    private AuthenticationStateProvider authenticationStateProvider { get; set; }
 
     [Parameter]
     public string ReturnUrl { get; set; }
@@ -88,15 +76,21 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
     {
       if (this.editContext.Validate())
       {
+        this.errors.Clear();
         if (this.isSubmitting)
         {
-          this.errors = new[] { "Попробуйте обновить страницу, процесс предыдущего входа завершился неудачно" };
+          this.errors.Add("Попробуйте обновить страницу, процесс предыдущего входа завершился неудачно");
           return;
         }
 
         this.isSubmitting = true;
         await this.JSFunctions.ClickElement(this.submitButton);
       }
+    }
+
+    public void InvalidSubmit()
+    {
+      this.errors.Clear();
     }
 
     public async Task OnSubmitHandler(ProgressEventArgs e)
@@ -106,15 +100,38 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
         var frameContent = await this.JSFunctions.FrameInnerText(this.submitHandlerFrame);
         try
         {
-          var result = JsonSerializer.Deserialize<LoginResponse>(frameContent, new JsonSerializerOptions()
+          var options = new JsonSerializerOptions()
           {
             PropertyNameCaseInsensitive = true
-          });
-          if (result != null && result.IsSuccess())
+          };
+          var result = JsonSerializer.Deserialize<SignInDetails>(frameContent, options);
+          if (result != null)
           {
-            var returnUrl = this.GetReturnUrl();
-            this.Navigation.NavigateTo(returnUrl, true);
+            if (result.IsSuccess())
+            {
+              var returnUrl = this.GetReturnUrl();
+              this.Navigation.NavigateTo(returnUrl, true);
+            }
+            else if (result.IsForbidden())
+            {
+              this.errors.Clear();
+              if (result.IsLockedOut)
+                this.errors.Add("Учетная запись заблокировна, повторите попытку позже.");
+              else if (result.IsNotAllowed)
+                this.errors.Add("Учетная запись не подтверждена.");
+            }
+            else if (result.IsUnauthorized())
+            {
+              this.errors.Clear();
+              this.errors.Add("Неудачная попытка входа.");
+            }
           }
+        }
+        catch (Exception ex)
+        {
+          this.Logger.LogWarning(ex, "Sign in failed.");
+          this.errors.Clear();
+          this.errors.Add("Неудачная попытка входа.");
         }
         finally
         {
@@ -123,12 +140,14 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
       }
     }
 
-    public async Task OnErrorSubmitHandler(ErrorEventArgs e)
+    public void OnErrorSubmitHandler(ErrorEventArgs e)
     {
       if (this.isSubmitting)
       {
-        var frameContent = await this.JSFunctions.FrameInnerText(this.submitHandlerFrame);
+        this.errors.Clear();
+        this.errors.Add("Неудачная попытка входа.");
         this.isSubmitting = false;
+        this.StateHasChanged();
       }
     }
   }

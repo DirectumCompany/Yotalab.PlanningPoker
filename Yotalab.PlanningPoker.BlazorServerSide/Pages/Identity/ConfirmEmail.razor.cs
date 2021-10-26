@@ -1,50 +1,30 @@
-﻿using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
 {
   public partial class ConfirmEmail
   {
-    private bool isConfirmed;
+    private bool isSuccess;
+
+    private bool notFound;
 
     [Inject]
-    private UserManager<IdentityUser> userManager { get; set; }
+    private NavigationManager Navigation { get; set; }
 
-    [Inject]
-    private NavigationManager NavigationManager { get; set; }
-
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-      if (this.isConfirmed)
-        return;
-
-      var uri = this.NavManager.ToAbsoluteUri(this.NavManager.Uri);
+      var uri = this.Navigation.ToAbsoluteUri(this.Navigation.Uri);
       if (!string.IsNullOrWhiteSpace(uri.Query))
       {
         var queryMap = QueryHelpers.ParseQuery(uri.Query);
 
-        var userId = string.Empty;
-        if (queryMap.TryGetValue("userId", out var userIdValue))
-          userId = userIdValue.ToString();
+        var result = string.Empty;
+        if (queryMap.TryGetValue("result", out var userIdValue))
+          result = userIdValue.ToString();
 
-        string code = string.Empty;
-        if (queryMap.TryGetValue("code", out var codeValue))
-          code = codeValue.ToString();
-
-        string returnUrl = string.Empty;
-        if (queryMap.TryGetValue("returnUrl", out var returnUrlValue))
-          returnUrl = returnUrlValue.ToString();
-
-        var user = await userManager.FindByIdAsync(userId);
-        if (user != null)
-        {
-          code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-          var result = await userManager.ConfirmEmailAsync(user, code);
-          this.isConfirmed = true;
-        }
+        this.isSuccess = result == "success";
+        this.notFound = result == "notFound";
       }
     }
   }

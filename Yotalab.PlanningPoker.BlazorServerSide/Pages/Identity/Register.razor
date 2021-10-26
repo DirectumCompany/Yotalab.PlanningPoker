@@ -6,31 +6,57 @@
     <MudText Align="Align.Center" Class="mb-10" Typo="Typo.h4">
       <Logotype />
     </MudText>
-    <MudText Typo="Typo.h6" Class="mb-3">
-      Регистрация нового пользователя
-    </MudText>
-    <MudFocusTrap>
-      <EditForm @bind-IsValid="@success" @bind-Errors="@errors" Model="this.inputModel" OnSubmit="this.SignUp" class="register-form">
-        <DataAnnotationsValidator />
-        <MudTextField @bind-Value="this.inputModel.Email" Label="Эл. почта"
-                      For="@(() => this.inputModel.Email)"
-                      InputType="InputType.Email"
-                      Required="true"
-                      RequiredError="Введите эл. почту" />
-        <MudTextField @bind-Value="this.inputModel.Password" Label="Пароль"
-                      For="@(() => this.inputModel.Password)"
-                      InputType="InputType.Password"
-                      Required="true"
-                      RequiredError="Введите пароль" />
-        <MudTextField @bind-Value="this.inputModel.ConfirmPassword" Label="Подтверждение пароля"
-                      For="@(() => this.inputModel.ConfirmPassword)"
-                      InputType="InputType.Password"
-                      Required="true"
-                      RequiredError="Подтвердите пароль" />
-        <div class="d-flex mt-3">
-          <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto align-self-center">Зарегистрироваться</MudButton>
-        </div>
-      </EditForm>
-    </MudFocusTrap>
+    @if (this.showRequiredConfirmation)
+    {
+      <MudText Typo="Typo.h6" Class="mb-3">
+        Подтверждение регистрации
+      </MudText>
+      <MudAlert Severity="Severity.Success">На вашу почту отправлено письмо для подтверждения регистрации.</MudAlert>
+    }
+    else
+    {
+      <MudText Typo="Typo.h6" Class="mb-3">
+        Регистрация нового пользователя
+      </MudText>
+      <MudFocusTrap>
+        <form action="@($"identity/account/signup")" method="post" autocomplete="off" target="submit_handler" hidden>
+          <input @bind-value="this.inputModel.Email" name="InputModel.Email" type="email" autocomplete="off" hidden />
+          <input @bind-value="this.inputModel.Password" name="InputModel.Password" type="password" autocomplete="off" hidden />
+          <input @bind-value="this.inputModel.ConfirmPassword" name="InputModel.ConfirmPassword" type="password" autocomplete="off" hidden />
+          <button @ref="this.submitButton" type="submit" hidden />
+        </form>
+        <iframe @ref="this.submitHandlerFrame" name="submit_handler" @onload="this.OnSubmitHandler" @onerror="this.OnErrorSubmitHandler" hidden></iframe>
+        <EditForm class="register-form" EditContext="this.editContext" OnValidSubmit="this.ValidSubmit" OnInvalidSubmit="this.InvalidSubmit">
+          <DataAnnotationsValidator />
+          <MudTextField @bind-Value="this.inputModel.Email" Label="Эл. почта"
+                        For="@(() => this.inputModel.Email)"
+                        InputType="InputType.Email"
+                        Required="true"
+                        RequiredError="Введите эл. почту" />
+          <MudTextField @bind-Value="this.inputModel.Password" Label="Пароль"
+                        For="@(() => this.inputModel.Password)"
+                        InputType="InputType.Password"
+                        Required="true"
+                        RequiredError="Введите пароль" />
+          <MudTextField @bind-Value="this.inputModel.ConfirmPassword" Label="Подтверждение пароля"
+                        For="@(() => this.inputModel.ConfirmPassword)"
+                        InputType="InputType.Password"
+                        Required="true"
+                        RequiredError="Подтвердите пароль" />
+          <div class="d-flex mt-3">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto align-self-center">Зарегистрироваться</MudButton>
+          </div>
+        </EditForm>
+      </MudFocusTrap>
+    }
   </MudCardContent>
+  @if (this.errors?.Any() == true)
+  {
+    <div class="mb-2">
+      @foreach (var err in this.errors)
+      {
+        <MudAlert Severity="Severity.Error" Class="login-form-validation mt-1">@err</MudAlert>
+      }
+    </div>
+  }
 </MudCard>

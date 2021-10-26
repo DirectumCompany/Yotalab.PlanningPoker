@@ -1,80 +1,133 @@
-﻿using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Data;
-using Yotalab.PlanningPoker.BlazorServerSide.Services.Mailing;
+using Yotalab.PlanningPoker.BlazorServerSide.Services;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
 {
   public partial class Register
   {
-    private EditForm form;
     private RegisterInputModel inputModel = new();
-    private bool success = true;
-    private string[] errors = { };
+    private List<string> errors = new();
+    private EditContext editContext;
+    private bool isSubmitting = false;
+    private bool showRequiredConfirmation = false;
+    private ElementReference submitButton;
+    private ElementReference submitHandlerFrame;
 
     [Inject]
-    private SignInManager<IdentityUser> signInManager { get; set; }
+    private NavigationManager Navigation { get; set; }
 
     [Inject]
-    private UserManager<IdentityUser> userManager { get; set; }
+    private JSInteropFunctions JSFunctions { get; set; }
 
     [Inject]
-    private ILogger<Register> logger { get; set; }
-
-    [Inject]
-    private IEmailSender emailSender { get; set; }
-
-    [Inject]
-    private NavigationManager NavigationManager { get; set; }
+    private ILogger<Login> Logger { get; set; }
 
     [Parameter]
     public string ReturnUrl { get; set; }
 
-    public async Task SignUp(EditContext editContext)
+    protected override Task OnInitializedAsync()
     {
-      if (this.success)
+      this.editContext = new EditContext(this.inputModel);
+      return Task.CompletedTask;
+    }
+
+    public string GetReturnUrl()
+    {
+      if (Uri.TryCreate(this.Navigation.Uri, UriKind.Absolute, out var uri))
       {
-        var user = new IdentityUser { UserName = this.inputModel.Email, Email = this.inputModel.Email };
-        var result = await userManager.CreateAsync(user, this.inputModel.Password);
-        if (result.Succeeded)
+        var parameters = QueryHelpers.ParseQuery(uri.Query);
+        if (parameters.TryGetValue(nameof(ReturnUrl), out var returnUrlValue))
+          return returnUrlValue.FirstOrDefault();
+      }
+      return string.Empty;
+    }
+
+    public async Task ValidSubmit()
+    {
+      if (this.editContext.Validate())
+      {
+        this.errors.Clear();
+        if (this.isSubmitting)
         {
-          logger.LogInformation("User created a new account with password.");
+          this.errors.Add("Попробуйте обновить страницу, предыдущий процесс регистрации завершился неудачно");
+          return;
+        }
 
-          var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-          code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-          var callbackUrl = this.NavigationManager.ToAbsoluteUri($"identity/confirm?userId={user.Id}&code={code}&returnUrl={this.ReturnUrl}");
-          await emailSender.SendEmailAsync(this.inputModel.Email, "Подтвердите вашу эл. почту",
-              $"Подвердите вашу почту пройдя по <a href='{HtmlEncoder.Default.Encode(callbackUrl.ToString())}'>ссылке</a>.");
+        this.isSubmitting = true;
+        await this.JSFunctions.ClickElement(this.submitButton);
+      }
+    }
 
-          if (this.userManager.Options.SignIn.RequireConfirmedAccount)
+    public void InvalidSubmit()
+    {
+      this.errors.Clear();
+    }
+
+    public async Task OnSubmitHandler(ProgressEventArgs e)
+    {
+      if (this.isSubmitting)
+      {
+        var frameContent = await this.JSFunctions.FrameInnerText(this.submitHandlerFrame);
+        try
+        {
+          var options = new JsonSerializerOptions()
           {
-            /*
-              <h1 class="h3 mb-3 fw-normal">Подтверждение регистрации</h1>
-              <p>
-                На вашу почту отправлено письмо для подтверждения регистрации.
-              </p>
-            */
-            this.errors = new[] { "Ok" };
-            return;
-          }
-          else
+            PropertyNameCaseInsensitive = true
+          };
+          var result = JsonSerializer.Deserialize<RegisterDetails>(frameContent, options);
+          if (result != null)
           {
-            await signInManager.SignInAsync(user, isPersistent: false);
-            this.errors = new[] { "Ok" };
-            return;
+            if (result.IsSuccess())
+            {
+              if (result.ConfirmRequired)
+              {
+                this.showRequiredConfirmation = true;
+              }
+              else
+              {
+                var returnUrl = this.GetReturnUrl();
+                this.Navigation.NavigateTo(returnUrl, true);
+              }
+            }
+            else if (result.IsFailed())
+            {
+              this.errors.Clear();
+              this.errors.AddRange(result.Errors);
+            }
           }
         }
-        this.errors = result.Errors.Select(e => e.Description).ToArray();
+        catch (Exception ex)
+        {
+          this.Logger.LogWarning(ex, "Sign up failed.");
+          this.errors.Clear();
+          this.errors.Add("Неудачная регистрация, повторите позже");
+        }
+        finally
+        {
+          this.isSubmitting = false;
+        }
       }
+    }
 
-      await Task.CompletedTask;
+    public void OnErrorSubmitHandler(ErrorEventArgs e)
+    {
+      if (this.isSubmitting)
+      {
+        this.errors.Clear();
+        this.errors.Add("Неудачная регистрация, повторите позже");
+        this.isSubmitting = false;
+        this.StateHasChanged();
+      }
     }
   }
 }

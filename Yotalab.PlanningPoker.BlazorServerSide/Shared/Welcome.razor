@@ -22,10 +22,10 @@
   protected override void OnParametersSet()
   {
     base.OnParametersSet();
-    /*var relativePath = this.Navigation.ToBaseRelativePath(this.Navigation.Uri);
+    var relativePath = this.Navigation.ToBaseRelativePath(this.Navigation.Uri);
     if (!string.IsNullOrWhiteSpace(relativePath))
     {
       this.Navigation.NavigateTo($"{LoginUrlBase}?returnUrl=/{relativePath}");
-    }*/
+    }
   }
 }

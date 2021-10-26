@@ -10,14 +10,14 @@
       Входите, пожалуйста
     </MudText>
     <MudFocusTrap>
-      <form action="@($"identity/account/signin?returnUrl={this.GetReturnUrl()}")" method="post" autocomplete="off" target="submit_handler" hidden>
+      <form action="@($"identity/account/signin")" method="post" autocomplete="off" target="submit_handler" hidden>
         <input @bind-value="this.loginInputModel.Email" name="InputModel.Email" type="email" autocomplete="off" hidden />
         <input @bind-value="this.loginInputModel.Password" name="InputModel.Password" type="password" autocomplete="off" hidden />
         <input @bind-value="this.loginInputModel.RememberMe" name="InputModel.RememberMe" type="checkbox" autocomplete="off" hidden />
         <button @ref="this.submitButton" type="submit" hidden />
       </form>
       <iframe @ref="this.submitHandlerFrame" name="submit_handler" @onload="this.OnSubmitHandler" @onerror="this.OnErrorSubmitHandler" hidden></iframe>
-      <EditForm class="login-form" EditContext="this.editContext" OnValidSubmit="this.ValidSubmit">
+      <EditForm class="login-form" EditContext="this.editContext" OnValidSubmit="this.ValidSubmit" OnInvalidSubmit="this.InvalidSubmit">
         <DataAnnotationsValidator />
 
         <MudTextField @bind-Value="this.loginInputModel.Email"
