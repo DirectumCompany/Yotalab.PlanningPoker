@@ -1,0 +1,24 @@
+﻿@page "/identity/confirmExternal"
+@layout IdentityLayout
+
+<MudCard Class="register-card">
+  <MudCardContent>
+    <MudText Align="Align.Center" Class="mb-10" Typo="Typo.h4">
+      <Logotype />
+    </MudText>
+    @if (!this.isSuccess)
+    {
+      if (this.errors?.Any() == true)
+      {
+        foreach (var error in this.errors)
+        {
+          <MudAlert Severity="Severity.Error">@error</MudAlert>
+        }
+      }
+      else
+      {
+        <MudAlert Severity="Severity.Warning">Попытка входа была неудачной</MudAlert>
+      }
+    }
+  </MudCardContent>
+</MudCard>

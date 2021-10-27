@@ -13,7 +13,7 @@
       <form action="identity/account/signin" method="post" autocomplete="off" target="submit_handler" hidden>
         <input @bind-value="this.loginInputModel.Email" name="InputModel.Email" type="email" autocomplete="off" hidden />
         <input @bind-value="this.loginInputModel.Password" name="InputModel.Password" type="password" autocomplete="off" hidden />
-        <input @bind-value="this.loginInputModel.RememberMe" name="InputModel.RememberMe" type="checkbox" autocomplete="off" hidden />
+        <input value="@this.loginInputModel.RememberMe.ToString()" name="InputModel.RememberMe" type="text" autocomplete="off" hidden />
         <button @ref="this.submitButton" type="submit" hidden />
       </form>
       <iframe @ref="this.submitHandlerFrame" name="submit_handler" @onload="this.OnSubmitHandler" @onerror="this.OnErrorSubmitHandler" hidden></iframe>
@@ -22,16 +22,12 @@
 
         <MudTextField @bind-Value="this.loginInputModel.Email"
                       Label="Эл. почта"
-                      id="InputModel_Email"
-                      name="InputModel.Email"
                       For="@(() => this.loginInputModel.Email)"
                       InputType="InputType.Email"
                       Required="true"
                       RequiredError="Введите эл. почту" />
         <MudTextField @bind-Value="this.loginInputModel.Password"
                       Label="Пароль"
-                      id="InputModel_Password"
-                      name="InputModel.Password"
                       For="@(() => this.loginInputModel.Password)"
                       InputType="InputType.Password"
                       Required="true"
@@ -39,8 +35,6 @@
         <div class="d-flex mt-3">
           <MudCheckBox @bind-Checked="this.loginInputModel.RememberMe"
                        Label="Запомнить меня?"
-                       id="InputModel_RememberMe"
-                       name="InputModel.RememberMe"
                        For="@(() => this.loginInputModel.RememberMe)"
                        Class="ml-n2" Color="Color.Info" />
           <MudSpacer />

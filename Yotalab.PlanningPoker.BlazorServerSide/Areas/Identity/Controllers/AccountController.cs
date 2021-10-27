@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -73,8 +75,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
     public async Task<IActionResult> SignUp([FromForm] RegisterInputModel inputModel)
     {
       var user = new IdentityUser { UserName = inputModel.Email, Email = inputModel.Email };
-      var result = await userManager.CreateAsync(user, inputModel.Password);
-      if (result.Succeeded)
+      var identityResult = await userManager.CreateAsync(user, inputModel.Password);
+      if (identityResult.Succeeded)
       {
         logger.LogInformation("User created a new account with password.");
 
@@ -100,7 +102,10 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
         }
       }
 
-      return new LoginRegisterFailedResult(result);
+      foreach (var error in identityResult.Errors)
+        logger.LogError(error.Description);
+
+      return new LoginRegisterFailedResult(identityResult);
     }
 
     [HttpPost]
@@ -118,15 +123,23 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
     [AllowAnonymous]
     public async Task<IActionResult> Confirm(string userId, string code)
     {
+      // TODO: Подумать над передачей ошибок на клиента.
+      // Как вариант в подтверждение реализовать схему с iframe, по аналогии с SignIn.
       var user = await userManager.FindByIdAsync(userId);
       if (user != null)
       {
         code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-        var result = await userManager.ConfirmEmailAsync(user, code);
-        return result.Succeeded ?
+        var identityResult = await userManager.ConfirmEmailAsync(user, code);
+
+        foreach (var error in identityResult.Errors)
+          logger.LogError(error.Description);
+
+        return identityResult.Succeeded ?
           this.Redirect("~/identity/confirm?result=success") :
           this.Redirect("~/identity/confirm?result=failed");
       }
+
+      logger.LogWarning($"Confirm email skipped. User {userId} not found.");
 
       return this.Redirect("~/identity/confirm?result=notFound");
     }
@@ -149,19 +162,17 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
       var redirectUrl = returnUrl ?? this.Url.Content("~/");
       if (remoteError != null)
       {
-        // this.ErrorMessage = $"Ошибка входа с помощью внешнего аккаунта: {remoteError}";
-        return RedirectToPage("Identity/Login", new { ReturnUrl = returnUrl });
+        return this.Redirect($"~/identity/confirmExternal?error=Ошибка входа с помощью внешнего аккаунта: {remoteError}&returnUrl={returnUrl}");
       }
 
       var info = await signInManager.GetExternalLoginInfoAsync();
       if (info == null)
       {
-        // this.ErrorMessage = "Ошибка получения информации об аккаунте.";
-        return RedirectToPage("Identity/Login", new { ReturnUrl = returnUrl });
+        return this.Redirect($"~/identity/confirmExternal?error=Учетная запись не найдена&returnUrl={returnUrl}");
       }
 
       // Sign in the user with this external login provider if the user already has a login.
-      var signInResult = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+      var signInResult = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: true, bypassTwoFactor: true);
       if (signInResult.Succeeded)
       {
         logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
@@ -169,18 +180,16 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
       }
 
       if (signInResult.IsLockedOut)
-        return RedirectToPage("./Lockout");
+        return this.Redirect($"~/identity/confirmExternal?error=Учетная запись заблокировна, повторите попытку позже&returnUrl={returnUrl}");
 
       if (!info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
       {
-        // this.ErrorMessage = "Ошибка получения информации об аккаунте.";
-        return RedirectToPage("Identity/Login", new { ReturnUrl = returnUrl });
+        return this.Redirect($"~/identity/confirmExternal?error=Недостаточно разрешений для получения информации об аккаунте&returnUrl={returnUrl}");
       }
-      
+
       if (this.participantsService == null)
       {
-        // this.ErrorMessage = "Ошибка входа в систему.";
-        return RedirectToPage("Identity/Login", new { ReturnUrl = returnUrl });
+        return this.Redirect($"~/identity/confirmExternal?error=Ошибка входа в систему&returnUrl={returnUrl}");
       }
 
       var email = info.Principal.FindFirstValue(ClaimTypes.Email);
@@ -204,8 +213,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
       foreach (var error in identityResult.Errors)
         logger.LogError(error.Description);
 
-      // this.ErrorMessage = string.Join(Environment.NewLine, identityResult.Errors.Select(e => e.Description));
-      return RedirectToPage("Identity/Login", new { ReturnUrl = returnUrl });
+      var errors = string.Join("&", identityResult.Errors.Select(e => $"error={e.Description}"));
+      return this.Redirect($"~/identity/confirmExternal?returnUrl={returnUrl}");
     }
   }
 }
