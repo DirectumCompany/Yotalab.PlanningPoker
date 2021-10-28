@@ -11,10 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Yotalab.PlanningPoker.BlazorServerSide.Data;
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Net.Http.Headers;
 
 [assembly: HostingStartup(typeof(Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.IdentityHostingStartup))]
 namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity

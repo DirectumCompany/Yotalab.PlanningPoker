@@ -6,16 +6,9 @@
          Class="@this.ClassNames"
          Style="cursor:pointer"
          Color="Color.Primary"
-         Typo="Typo.caption"
+         Typo="Typo.subtitle2"
          @onclick="@(() => EditParticipantInfoDialog.Show(this.DialogService, this.ParticipantInfo))">
-  @if (this.TitleTemplate == null)
-  {
-    <span>@this.Title</span>
-  }
-  else
-  {
-    @this.TitleTemplate(this.Title)
-  }
+    @this.Title
 </MudLink>
 
 @code {

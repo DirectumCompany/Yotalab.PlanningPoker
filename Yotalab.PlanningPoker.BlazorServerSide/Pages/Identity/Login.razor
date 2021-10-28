@@ -1,87 +1,98 @@
 ﻿@page "/identity/login/{returnUrl?}"
 @layout IdentityLayout
 
-<MudCard Class="login-card">
-  <MudCardContent>
-    <MudText Align="Align.Center" Class="mb-10" Typo="Typo.h4">
-      <Logotype />
-    </MudText>
-    <MudText Typo="Typo.h6" Class="mb-3">
-      Входите, пожалуйста
-    </MudText>
-    <MudFocusTrap>
-      <form action="identity/account/signin" method="post" autocomplete="off" target="submit_handler" hidden>
-        <input @bind-value="this.loginInputModel.Email" name="InputModel.Email" type="email" autocomplete="off" hidden />
-        <input @bind-value="this.loginInputModel.Password" name="InputModel.Password" type="password" autocomplete="off" hidden />
-        <input value="@this.loginInputModel.RememberMe.ToString()" name="InputModel.RememberMe" type="text" autocomplete="off" hidden />
-        <button @ref="this.submitButton" type="submit" hidden />
-      </form>
-      <iframe @ref="this.submitHandlerFrame" name="submit_handler" @onload="this.OnSubmitHandler" @onerror="this.OnErrorSubmitHandler" hidden></iframe>
-      <EditForm class="login-form" EditContext="this.editContext" OnValidSubmit="this.ValidSubmit" OnInvalidSubmit="this.InvalidSubmit">
-        <DataAnnotationsValidator />
+<div>
+  <MudCard Class="login-card">
+    <MudCardContent>
+      <MudText Align="Align.Center" Class="mb-10" Typo="Typo.h4">
+        <Logotype />
+      </MudText>
+      <MudText Typo="Typo.h6" Class="mb-3">
+        Входите, пожалуйста
+      </MudText>
+      <MudFocusTrap>
+        <form action="identity/account/signin" method="post" autocomplete="off" target="submit_handler" hidden>
+          <input @bind-value="this.loginInputModel.Email" name="InputModel.Email" type="email" autocomplete="off" hidden />
+          <input @bind-value="this.loginInputModel.Password" name="InputModel.Password" type="password" autocomplete="off" hidden />
+          <input value="@this.loginInputModel.RememberMe.ToString()" name="InputModel.RememberMe" type="text" autocomplete="off" hidden />
+          <button @ref="this.submitButton" type="submit" hidden />
+        </form>
+        <iframe @ref="this.submitHandlerFrame" name="submit_handler" @onload="this.OnSubmitHandler" @onerror="this.OnErrorSubmitHandler" hidden></iframe>
+        <EditForm class="login-form" EditContext="this.editContext" OnValidSubmit="this.ValidSubmit" OnInvalidSubmit="this.InvalidSubmit">
+          <DataAnnotationsValidator />
 
-        <MudTextField @bind-Value="this.loginInputModel.Email"
-                      Label="Эл. почта"
-                      For="@(() => this.loginInputModel.Email)"
-                      InputType="InputType.Email"
-                      Required="true"
-                      RequiredError="Введите эл. почту" />
-        <MudTextField @bind-Value="this.loginInputModel.Password"
-                      Label="Пароль"
-                      For="@(() => this.loginInputModel.Password)"
-                      InputType="InputType.Password"
-                      Required="true"
-                      RequiredError="Введите пароль" />
-        <div class="d-flex mt-3">
-          <MudCheckBox @bind-Checked="this.loginInputModel.RememberMe"
-                       Label="Запомнить меня?"
-                       For="@(() => this.loginInputModel.RememberMe)"
-                       Class="ml-n2" Color="Color.Info" />
-          <MudSpacer />
-          <MudButton ButtonType="ButtonType.Submit"
-                     Variant="Variant.Filled"
-                     Color="Color.Primary"
-                     Disabled="@(!success)"
-                     Class="ml-auto align-self-center">
-            Войти
-          </MudButton>
-        </div>
-      </EditForm>
-    </MudFocusTrap>
-  </MudCardContent>
-  @if (this.ExternalLogins != null && this.ExternalLogins.Any())
-  {
-    <MudCardActions>
-      <form id="external-account" action="identity/account/signinExternal?returnUrl=@this.GetReturnUrl()" method="post"
-            class="d-flex justify-space-around flex-grow-1 mt-5 mb-3">
-        @foreach (var provider in this.ExternalLogins)
-        {
-          string icon = null;
-          switch (provider.Name.ToLower())
+          <MudTextField @bind-Value="this.loginInputModel.Email"
+                        Label="Эл. почта"
+                        For="@(() => this.loginInputModel.Email)"
+                        InputType="InputType.Email"
+                        Required="true"
+                        RequiredError="Введите эл. почту" />
+          <MudTextField @bind-Value="this.loginInputModel.Password"
+                        Label="Пароль"
+                        For="@(() => this.loginInputModel.Password)"
+                        InputType="InputType.Password"
+                        Required="true"
+                        RequiredError="Введите пароль" />
+          <MudLink Href="identity/forgotPassword" Underline="Underline.None" Typo="Typo.overline">Забыли пароль?</MudLink>
+          <div class="d-flex mt-3">
+            <MudCheckBox @bind-Checked="this.loginInputModel.RememberMe"
+                         Label="Запомнить меня?"
+                         For="@(() => this.loginInputModel.RememberMe)"
+                         Class="ml-n2" Color="Color.Info" />
+            <MudSpacer />
+            <MudButton ButtonType="ButtonType.Submit"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Disabled="@(!success)"
+                       Class="ml-auto align-self-center">
+              Войти
+            </MudButton>
+          </div>
+          @if (this.errors?.Any() == true)
           {
-            case "microsoft":
-              icon = Icons.Custom.Brands.Microsoft;
-              break;
-            case "google":
-              icon = Icons.Custom.Brands.Google;
-              break;
+            <div class="my-2 mx-auto">
+              @foreach (var err in this.errors)
+              {
+                <MudAlert Severity="Severity.Error" Class="login-form-validation">@err</MudAlert>
+              }
+            </div>
           }
-          <MudButton Variant="Variant.Filled" StartIcon="@icon" ButtonType="ButtonType.Submit"
-                     name="provider" value="@provider.Name"
-                     title="@($"Войти с аккаунтом {provider.DisplayName}")">
-            @provider.DisplayName
-          </MudButton>
-        }
-      </form>
-    </MudCardActions>
-  }
-  @if (this.errors?.Any() == true)
-  {
-    <div class="my-2">
-      @foreach (var err in this.errors)
+        </EditForm>
+      </MudFocusTrap>
+    </MudCardContent>
+
+    <MudCardActions>
+      @if (this.ExternalLogins != null && this.ExternalLogins.Any())
       {
-        <MudAlert Severity="Severity.Error" Class="login-form-validation">@err</MudAlert>
+        <form id="external-account" action="identity/account/signinExternal?returnUrl=@this.GetReturnUrl()" method="post"
+              class="d-flex justify-space-around flex-grow-1 mb-4">
+          @foreach (var provider in this.ExternalLogins)
+          {
+            string icon = null;
+            switch (provider.Name.ToLower())
+            {
+              case "microsoft":
+                icon = Icons.Custom.Brands.Microsoft;
+                break;
+              case "google":
+                icon = Icons.Custom.Brands.Google;
+                break;
+            }
+            <MudButton Variant="Variant.Filled" StartIcon="@icon" ButtonType="ButtonType.Submit"
+                       name="provider" value="@provider.Name"
+                       title="@($"Войти с аккаунтом {provider.DisplayName}")">
+              @provider.DisplayName
+            </MudButton>
+          }
+        </form>
       }
-    </div>
-  }
-</MudCard>
+    </MudCardActions>
+  </MudCard>
+
+  <MudCard Class="login-card mt-4">
+    <MudCardContent>
+      <MudText>Новичок в Agile Poker? <MudLink Href="identity/register" Underline="Underline.None">Создать учетную запись.</MudLink></MudText>
+    </MudCardContent>
+  </MudCard>
+
+</div>

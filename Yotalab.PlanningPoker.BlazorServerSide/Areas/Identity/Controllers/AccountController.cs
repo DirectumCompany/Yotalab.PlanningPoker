@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -86,7 +85,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
             "confirm",
             "account",
             values: new { userId = user.Id, code = code },
-            protocol: Request.Scheme);
+            protocol: this.Request.Scheme);
 
         await emailSender.SendEmailAsync(inputModel.Email, "Подтверждение регистрации",
             $"Подвердите вашу почту пройдя по <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>ссылке</a>.");
@@ -215,6 +214,74 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
 
       var errors = string.Join("&", identityResult.Errors.Select(e => $"error={e.Description}"));
       return this.Redirect($"~/identity/confirmExternal?returnUrl={returnUrl}");
+    }
+
+    [HttpPost]
+    [Route("forgotPassword")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ForgotPassword([FromForm] string email)
+    {
+      if (!string.IsNullOrWhiteSpace(email))
+      {
+        var user = await this.userManager.FindByEmailAsync(email);
+        if (user == null || !await this.userManager.IsEmailConfirmedAsync(user))
+        {
+          // Don't reveal that the user does not exist or is not confirmed
+          return this.Ok();
+        }
+
+        // For more information on how to enable account confirmation and password reset please
+        // visit https://go.microsoft.com/fwlink/?LinkID=532713
+        var code = await this.userManager.GeneratePasswordResetTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        var uriBuilder = new UriBuilder();
+        if (this.Request.Host.HasValue)
+        {
+          uriBuilder.Host = this.Request.Host.Host;
+          if (this.Request.Host.Port != null)
+            uriBuilder.Port = this.Request.Host.Port.Value;
+        }
+        uriBuilder.Scheme = this.Request.Scheme;
+        uriBuilder.Path = "identity/resetPassword";
+        uriBuilder.Query = $"code={code}";
+        var callbackUrl = uriBuilder.Uri.ToString(); // this.Url.ActionLink("resetPassword", "identity", values: new { code }, protocol: this.Request.Scheme);
+
+        await emailSender.SendEmailAsync(email, "Сброс пароля",
+            $"Сбросьте ваш пароль пройдя по <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>ссылке</a>.");
+      }
+
+      return this.Ok();
+    }
+
+    [HttpPost]
+    [Route("resetPassword")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordInputModel inputModel)
+    {
+      if (!this.ModelState.IsValid)
+      {
+        return this.BadRequest();
+      }
+
+      var user = await this.userManager.FindByEmailAsync(inputModel.Email);
+      if (user == null)
+      {
+        // Don't reveal that the user does not exist
+        return this.Ok();
+      }
+
+      var result = await this.userManager.ResetPasswordAsync(user, inputModel.Code, inputModel.Password);
+      if (result.Succeeded)
+      {
+        return this.Ok();
+      }
+
+      foreach (var error in result.Errors)
+      {
+        ModelState.AddModelError(string.Empty, error.Description);
+      }
+
+      return Ok();
     }
   }
 }
