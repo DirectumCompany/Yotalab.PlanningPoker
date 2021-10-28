@@ -62,8 +62,11 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
 
     public void OnSubmitHandler(ProgressEventArgs e)
     {
-      this.isSubmitting = false;
-      this.showResetSuccessful = true;
+      if (this.isSubmitting)
+      {
+        this.isSubmitting = false;
+        this.showResetSuccessful = true;
+      }
     }
 
     public void OnErrorSubmitHandler(ErrorEventArgs e)
