@@ -24,6 +24,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
     private bool isSubmitting = false;
     private bool success = true;
     private List<string> errors = new();
+    private EditContext editContext;
+    private ElementReference submitButton;
+    private ElementReference submitHandlerFrame;
 
     private IList<AuthenticationScheme> ExternalLogins { get; set; }
 
@@ -42,15 +45,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
     [Inject]
     private JSInteropFunctions JSFunctions { get; set; }
 
-    [Parameter]
-    public string ReturnUrl { get; set; }
-
-    private EditContext editContext;
-
-    private ElementReference submitButton;
-
-    private ElementReference submitHandlerFrame;
-
     protected override async Task OnInitializedAsync()
     {
       if (!this.HttpContextAccessor.HttpContext.Response.HasStarted)
@@ -61,18 +55,18 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
       this.editContext = new EditContext(this.loginInputModel);
     }
 
-    public string GetReturnUrl()
+    private string GetReturnUrl()
     {
       if (Uri.TryCreate(this.Navigation.Uri, UriKind.Absolute, out var uri))
       {
         var parameters = QueryHelpers.ParseQuery(uri.Query);
-        if (parameters.TryGetValue(nameof(ReturnUrl), out var returnUrlValue))
+        if (parameters.TryGetValue("returnUrl", out var returnUrlValue))
           return returnUrlValue.FirstOrDefault();
       }
       return string.Empty;
     }
 
-    public async Task ValidSubmit()
+    private async Task ValidSubmit()
     {
       if (this.editContext.Validate())
       {
@@ -88,12 +82,12 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
       }
     }
 
-    public void InvalidSubmit()
+    private void InvalidSubmit()
     {
       this.errors.Clear();
     }
 
-    public async Task OnSubmitHandler(ProgressEventArgs e)
+    private async Task OnSubmitHandler(ProgressEventArgs e)
     {
       if (this.isSubmitting)
       {
@@ -140,7 +134,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
       }
     }
 
-    public void OnErrorSubmitHandler(ErrorEventArgs e)
+    private void OnErrorSubmitHandler(ErrorEventArgs e)
     {
       if (this.isSubmitting)
       {

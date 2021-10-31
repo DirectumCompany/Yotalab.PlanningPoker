@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
 {
@@ -15,13 +14,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
     private IHttpClientFactory HttpClientFactory { get; set; }
 
     [Inject]
-    private ILogger<Login> Logger { get; set; }
-
-    [Inject]
     private NavigationManager Navigation { get; set; }
-
-    [Parameter]
-    public string ReturnUrl { get; set; }
 
     private async Task ValidSubmit()
     {

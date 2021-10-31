@@ -15,13 +15,13 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
 {
   public partial class Register
   {
-    private RegisterInputModel inputModel = new();
     private List<string> errors = new();
-    private EditContext editContext;
     private bool isSubmitting = false;
     private bool showRequiredConfirmation = false;
     private ElementReference submitButton;
     private ElementReference submitHandlerFrame;
+    private RegisterInputModel inputModel = new();
+    private EditContext editContext;
 
     [Inject]
     private NavigationManager Navigation { get; set; }
@@ -32,27 +32,24 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
     [Inject]
     private ILogger<Login> Logger { get; set; }
 
-    [Parameter]
-    public string ReturnUrl { get; set; }
-
     protected override Task OnInitializedAsync()
     {
       this.editContext = new EditContext(this.inputModel);
       return Task.CompletedTask;
     }
 
-    public string GetReturnUrl()
+    private string GetReturnUrl()
     {
       if (Uri.TryCreate(this.Navigation.Uri, UriKind.Absolute, out var uri))
       {
         var parameters = QueryHelpers.ParseQuery(uri.Query);
-        if (parameters.TryGetValue(nameof(ReturnUrl), out var returnUrlValue))
+        if (parameters.TryGetValue("returnUrl", out var returnUrlValue))
           return returnUrlValue.FirstOrDefault();
       }
       return string.Empty;
     }
 
-    public async Task ValidSubmit()
+    private async Task ValidSubmit()
     {
       if (this.editContext.Validate())
       {
@@ -68,12 +65,12 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
       }
     }
 
-    public void InvalidSubmit()
+    private void InvalidSubmit()
     {
       this.errors.Clear();
     }
 
-    public async Task OnSubmitHandler(ProgressEventArgs e)
+    private async Task OnSubmitHandler(ProgressEventArgs e)
     {
       if (this.isSubmitting)
       {
@@ -119,7 +116,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
       }
     }
 
-    public void OnErrorSubmitHandler(ErrorEventArgs e)
+    private void OnErrorSubmitHandler(ErrorEventArgs e)
     {
       if (this.isSubmitting)
       {

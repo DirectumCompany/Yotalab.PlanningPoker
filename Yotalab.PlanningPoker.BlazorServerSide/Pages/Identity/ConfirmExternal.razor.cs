@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
@@ -8,14 +7,10 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
   public partial class ConfirmExternal
   {
     private bool isSuccess;
-
     private List<string> errors = new();
 
     [Inject]
     private NavigationManager Navigation { get; set; }
-
-    [Inject]
-    private IHttpContextAccessor HttpContextAccessor { get; set; }
 
     protected override void OnInitialized()
     {

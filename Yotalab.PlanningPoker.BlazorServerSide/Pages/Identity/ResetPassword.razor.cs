@@ -12,13 +12,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
   public partial class ResetPassword
   {
     private bool isSubmitting = false;
-
     private bool showResetSuccessful;
-
     private ElementReference submitButton;
-
-    private ElementReference submitHandlerFrame;
-
     private ResetPasswordInputModel inputModel = new();
     private EditContext editContext;
 
@@ -27,9 +22,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
 
     [Inject]
     private JSInteropFunctions JSFunctions { get; set; }
-
-    [Parameter]
-    public string Code { get; set; }
 
     protected override void OnInitialized()
     {
@@ -45,7 +37,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
       this.editContext = new EditContext(this.inputModel);
     }
 
-    public async Task ValidSubmit()
+    private async Task ValidSubmit()
     {
       if (this.editContext.Validate())
       {
@@ -60,7 +52,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
       }
     }
 
-    public void OnSubmitHandler(ProgressEventArgs e)
+    private void OnSubmitHandler(ProgressEventArgs e)
     {
       if (this.isSubmitting)
       {
@@ -69,7 +61,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
       }
     }
 
-    public void OnErrorSubmitHandler(ErrorEventArgs e)
+    private void OnErrorSubmitHandler(ErrorEventArgs e)
     {
       if (this.isSubmitting)
       {

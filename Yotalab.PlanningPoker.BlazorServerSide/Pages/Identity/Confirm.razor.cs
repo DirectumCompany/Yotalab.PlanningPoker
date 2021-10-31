@@ -6,7 +6,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
   public partial class Confirm
   {
     private bool isSuccess;
-
     private bool notFound;
 
     [Inject]
