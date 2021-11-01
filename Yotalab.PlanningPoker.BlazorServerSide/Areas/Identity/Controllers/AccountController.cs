@@ -106,7 +106,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
       return new LoginRegisterFailedResult(identityResult);
     }
 
-    [HttpPost]
+    [HttpGet]
     [Route("SignOut")]
     public async Task<IActionResult> Exit()
     {
