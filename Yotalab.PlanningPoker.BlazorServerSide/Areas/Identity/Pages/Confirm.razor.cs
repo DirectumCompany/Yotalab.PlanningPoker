@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Data;
 
-namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
+namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
 {
   public partial class Confirm
   {

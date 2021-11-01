@@ -19,7 +19,7 @@
         Регистрация нового пользователя
       </MudText>
       <MudFocusTrap>
-        <form action="@($"identity/account/signup")" method="post" autocomplete="off" target="submit_handler" hidden>
+        <form action="api/identity/account/signup" method="post" autocomplete="off" target="submit_handler" hidden>
           <input @bind-value="this.inputModel.Email" name="InputModel.Email" type="email" autocomplete="off" hidden />
           <input @bind-value="this.inputModel.Password" name="InputModel.Password" type="password" autocomplete="off" hidden />
           <input @bind-value="this.inputModel.ConfirmPassword" name="InputModel.ConfirmPassword" type="password" autocomplete="off" hidden />

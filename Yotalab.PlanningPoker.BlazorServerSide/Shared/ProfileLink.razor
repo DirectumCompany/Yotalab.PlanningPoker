@@ -18,7 +18,7 @@
     </ButtonTemplate>
     <ChildContent>
       <MudMenuItem OnClick="@(() => EditParticipantInfoDialog.Show(this.DialogService, this.participantInfo))">Изменить имя</MudMenuItem>
-      <MudMenuItem Link="identity/account/signOut" Target="_self">Выйти</MudMenuItem>
+      <MudMenuItem Link="api/identity/account/signOut" Target="_self">Выйти</MudMenuItem>
     </ChildContent>
   </DropDownMenu>
 }

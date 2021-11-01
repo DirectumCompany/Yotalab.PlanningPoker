@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
-namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
+namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
 {
   public partial class ForgotPassword
   {
@@ -20,7 +20,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
     {
       this.showSuccessful = false;
       var httpClient = this.HttpClientFactory.CreateClient();
-      var response = await httpClient.PostAsync($"{this.Navigation.BaseUri}/identity/account/forgotPassword", new FormUrlEncodedContent(new Dictionary<string, string>()
+      var response = await httpClient.PostAsync($"{this.Navigation.BaseUri}/api/identity/account/forgotPassword", new FormUrlEncodedContent(new Dictionary<string, string>()
       {
         { "email", this.email }
       }));

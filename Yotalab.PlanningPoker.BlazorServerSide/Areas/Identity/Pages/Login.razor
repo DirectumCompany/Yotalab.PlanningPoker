@@ -11,7 +11,7 @@
         Входите, пожалуйста
       </MudText>
       <MudFocusTrap>
-        <form action="identity/account/signin" method="post" autocomplete="off" target="submit_handler" hidden>
+        <form action="api/identity/account/signin" method="post" autocomplete="off" target="submit_handler" hidden>
           <input @bind-value="this.loginInputModel.Email" name="InputModel.Email" type="email" autocomplete="off" hidden />
           <input @bind-value="this.loginInputModel.Password" name="InputModel.Password" type="password" autocomplete="off" hidden />
           <input value="@this.loginInputModel.RememberMe.ToString()" name="InputModel.RememberMe" type="text" autocomplete="off" hidden />
@@ -64,7 +64,7 @@
     <MudCardActions>
       @if (this.ExternalLogins != null && this.ExternalLogins.Any())
       {
-        <form id="external-account" action="identity/account/signinExternal?returnUrl=@this.GetReturnUrl()" method="post"
+        <form id="external-account" action="api/identity/account/signinExternal?returnUrl=@this.GetReturnUrl()" method="post"
               class="d-flex justify-space-around flex-grow-1 mb-4">
           @foreach (var provider in this.ExternalLogins)
           {

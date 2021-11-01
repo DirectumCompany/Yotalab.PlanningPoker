@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 using Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Data;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 
-namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
+namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
 {
   [AllowAnonymous]
   public partial class Login

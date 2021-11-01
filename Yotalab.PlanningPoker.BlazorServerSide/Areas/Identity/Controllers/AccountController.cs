@@ -15,7 +15,7 @@ using Yotalab.PlanningPoker.BlazorServerSide.Services.Mailing;
 namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
 {
   [Authorize]
-  [Route("identity/[controller]")]
+  [Route("api/identity/[controller]")]
   [ApiController]
   public class AccountController : ControllerBase
   {
