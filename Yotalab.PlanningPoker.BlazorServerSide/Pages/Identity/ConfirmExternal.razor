@@ -6,13 +6,13 @@
     <MudText Align="Align.Center" Class="mb-10" Typo="Typo.h4">
       <Logotype />
     </MudText>
-    @if (!this.isSuccess)
+    @if (this.result == null || !this.result.Succeeded)
     {
-      if (this.errors?.Any() == true)
+      if (this.result != null && this.result.Errors.Any())
       {
-        foreach (var error in this.errors)
+        foreach (var error in this.result.Errors)
         {
-          <MudAlert Severity="Severity.Error">@error</MudAlert>
+          <MudAlert Severity="Severity.Error">@error.Description</MudAlert>
         }
       }
       else
@@ -20,5 +20,8 @@
         <MudAlert Severity="Severity.Warning">Попытка входа была неудачной</MudAlert>
       }
     }
+    <MudCardActions Class="justify-end">
+      <MudButton Link="identity/login" Variant="Variant.Filled" Color="Color.Primary">Войти</MudButton>
+    </MudCardActions>
   </MudCardContent>
 </MudCard>

@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Data;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
 {
   public partial class Confirm
   {
-    private bool isSuccess;
-    private bool notFound;
+    private IdentityResult result;
 
     [Inject]
     private NavigationManager Navigation { get; set; }
@@ -17,13 +18,10 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Identity
       if (!string.IsNullOrWhiteSpace(uri.Query))
       {
         var queryMap = QueryHelpers.ParseQuery(uri.Query);
-
-        var result = string.Empty;
-        if (queryMap.TryGetValue("result", out var userIdValue))
-          result = userIdValue.ToString();
-
-        this.isSuccess = result == "success";
-        this.notFound = result == "notFound";
+        if (queryMap.TryGetValue("result", out var encodedIdentityResult))
+        {
+          this.result = IdentityResultEncoder.Base64UrlDecode(encodedIdentityResult.ToString());
+        }
       }
     }
   }

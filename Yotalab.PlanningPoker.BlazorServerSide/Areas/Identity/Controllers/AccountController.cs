@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -122,25 +121,22 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
     [AllowAnonymous]
     public async Task<IActionResult> Confirm(string userId, string code)
     {
-      // TODO: Подумать над передачей ошибок на клиента.
-      // Как вариант в подтверждение реализовать схему с iframe, по аналогии с SignIn.
+      string encodedResult;
       var user = await userManager.FindByIdAsync(userId);
       if (user != null)
       {
         code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
         var identityResult = await userManager.ConfirmEmailAsync(user, code);
-
         foreach (var error in identityResult.Errors)
           logger.LogError(error.Description);
 
-        return identityResult.Succeeded ?
-          this.Redirect("~/identity/confirm?result=success") :
-          this.Redirect("~/identity/confirm?result=failed");
+        encodedResult = IdentityResultEncoder.Base64UrlEncode(identityResult);
+        return this.Redirect($"~/identity/confirm?result={encodedResult}");
       }
 
       logger.LogWarning($"Confirm email skipped. User {userId} not found.");
-
-      return this.Redirect("~/identity/confirm?result=notFound");
+      encodedResult = IdentityResultEncoder.Base64UrlEncode(IdentityResult.Failed());
+      return this.Redirect($"~/identity/confirm?result={encodedResult}");
     }
 
     [HttpPost]
@@ -159,15 +155,21 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
     public async Task<IActionResult> ConfirmExternal(string returnUrl = null, string remoteError = null)
     {
       var redirectUrl = returnUrl ?? this.Url.Content("~/");
+      string encodedResult = string.Empty;
       if (remoteError != null)
       {
-        return this.Redirect($"~/identity/confirmExternal?error=Ошибка входа с помощью внешнего аккаунта: {remoteError}&returnUrl={returnUrl}");
+        encodedResult = IdentityResultEncoder.Base64UrlEncode(IdentityResult.Failed(new IdentityError()
+        {
+          Description = $"Ошибка входа с помощью внешнего аккаунта: {remoteError}"
+        }));
+        return this.Redirect($"~/identity/confirmExternal?result={encodedResult}&returnUrl={returnUrl}");
       }
 
       var info = await signInManager.GetExternalLoginInfoAsync();
       if (info == null)
       {
-        return this.Redirect($"~/identity/confirmExternal?error=Учетная запись не найдена&returnUrl={returnUrl}");
+        encodedResult = IdentityResultEncoder.Base64UrlEncode(IdentityResult.Failed());
+        return this.Redirect($"~/identity/confirmExternal?result={encodedResult}&returnUrl={returnUrl}");
       }
 
       // Sign in the user with this external login provider if the user already has a login.
@@ -179,16 +181,27 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
       }
 
       if (signInResult.IsLockedOut)
-        return this.Redirect($"~/identity/confirmExternal?error=Учетная запись заблокировна, повторите попытку позже&returnUrl={returnUrl}");
+      {
+        encodedResult = IdentityResultEncoder.Base64UrlEncode(IdentityResult.Failed(new IdentityError()
+        {
+          Description = "Учетная запись заблокировна, повторите попытку позже"
+        }));
+        return this.Redirect($"~/identity/confirmExternal?result={encodedResult}&returnUrl={returnUrl}");
+      }
 
       if (!info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
       {
-        return this.Redirect($"~/identity/confirmExternal?error=Недостаточно разрешений для получения информации об аккаунте&returnUrl={returnUrl}");
+        encodedResult = IdentityResultEncoder.Base64UrlEncode(IdentityResult.Failed(new IdentityError()
+        {
+          Description = "Недостаточно разрешений для получения информации об аккаунте"
+        }));
+        return this.Redirect($"~/identity/confirmExternal?result={encodedResult}&returnUrl={returnUrl}");
       }
 
       if (this.participantsService == null)
       {
-        return this.Redirect($"~/identity/confirmExternal?error=Ошибка входа в систему&returnUrl={returnUrl}");
+        encodedResult = IdentityResultEncoder.Base64UrlEncode(IdentityResult.Failed());
+        return this.Redirect($"~/identity/confirmExternal?result={encodedResult}&returnUrl={returnUrl}");
       }
 
       var email = info.Principal.FindFirstValue(ClaimTypes.Email);
@@ -212,8 +225,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
       foreach (var error in identityResult.Errors)
         logger.LogError(error.Description);
 
-      var errors = string.Join("&", identityResult.Errors.Select(e => $"error={e.Description}"));
-      return this.Redirect($"~/identity/confirmExternal?returnUrl={returnUrl}");
+      encodedResult = IdentityResultEncoder.Base64UrlEncode(identityResult);
+      return this.Redirect($"~/identity/confirmExternal?result={encodedResult}&returnUrl={returnUrl}");
     }
 
     [HttpPost]
@@ -277,9 +290,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
       }
 
       foreach (var error in result.Errors)
-      {
-        ModelState.AddModelError(string.Empty, error.Description);
-      }
+        logger.LogError(error.Description);
 
       return Ok();
     }

@@ -6,7 +6,7 @@
     <MudText Align="Align.Center" Class="mb-10" Typo="Typo.h4">
       <Logotype />
     </MudText>
-    @if (this.isSuccess)
+    @if (this.result == null || this.result.Succeeded)
     {
       <MudText Typo="Typo.h6" Class="mb-3">
         Вы подвердили вашу эл. почту
@@ -15,14 +15,20 @@
     }
     else
     {
-      if (this.notFound)
+      if (this.result != null)
       {
-        <MudAlert Severity="Severity.Warning">Учетная запись не найдена.</MudAlert>
+        foreach (var error in this.result.Errors)
+        {
+          <MudAlert Severity="Severity.Error">@error.Description</MudAlert>
+        }
       }
       else
       {
         <MudAlert Severity="Severity.Error">Ошибка подтверждения эл. почты.</MudAlert>
       }
     }
+    <MudCardActions Class="justify-end">
+      <MudButton Link="identity/login" Variant="Variant.Filled" Color="Color.Primary">Войти</MudButton>
+    </MudCardActions>
   </MudCardContent>
 </MudCard>
