@@ -46,6 +46,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
     [AllowAnonymous]
     public async Task<IActionResult> SignIn([FromForm] LoginInputModel inputModel)
     {
+      // Clear the existing external cookie to ensure a clean login process
+      this.SignOut(IdentityConstants.ExternalScheme);
+
       var user = await this.userManager.FindByEmailAsync(inputModel.Email);
       if (user != null)
       {
@@ -144,6 +147,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
     [AllowAnonymous]
     public IActionResult SignInExternal([FromForm] string provider, string returnUrl = null)
     {
+      // Clear the existing external cookie to ensure a clean login process
+      this.SignOut(IdentityConstants.ExternalScheme);
+
       var redirectUrl = this.Url.ActionLink("confirmExternal", "account", values: new { returnUrl });
       var properties = this.signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
       return this.Challenge(properties, provider);
@@ -254,8 +260,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
           if (this.Request.Host.Port != null)
             uriBuilder.Port = this.Request.Host.Port.Value;
         }
+
         uriBuilder.Scheme = this.Request.Scheme;
-        uriBuilder.Path = "identity/resetPassword";
+        uriBuilder.Path = this.Request.PathBase + "/identity/resetPassword";
         uriBuilder.Query = $"code={code}";
         var callbackUrl = uriBuilder.Uri.ToString(); // this.Url.ActionLink("resetPassword", "identity", values: new { code }, protocol: this.Request.Scheme);
 

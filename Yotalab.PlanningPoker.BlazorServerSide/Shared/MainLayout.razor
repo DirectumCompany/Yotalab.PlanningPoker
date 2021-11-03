@@ -3,11 +3,11 @@
 <AuthorizeView>
   <Authorized>
     <MudContainer MaxWidth="MaxWidth.Large">
-      <MudLayout Class="m-auto">
+      <MudLayout Class="m-auto d-flex flex-column">
         <MudAppBar Dense="true" Color="Color.Transparent" Elevation="0" Fixed="false" ToolBarClass="px-0">
           <NavMenu />
         </MudAppBar>
-        <MudMainContent Class="pt-0 mx-auto">
+        <MudMainContent Class="pt-0">
           @Body
         </MudMainContent>
       </MudLayout>

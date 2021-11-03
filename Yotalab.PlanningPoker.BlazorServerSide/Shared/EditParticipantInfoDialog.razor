@@ -1,7 +1,7 @@
 ﻿<MudDialog Class="mud-dialog-top-center">
   <DialogContent>
     <form>
-      <div class="mb-3 d-flex justify-center">
+      <div class="mb-3 d-flex flex-wrap justify-center">
         @foreach (var avatar in AvatarCollection)
         {
           var avatarClassName = string.Equals(this.newAvatarUrl, avatar, StringComparison.OrdinalIgnoreCase) ?

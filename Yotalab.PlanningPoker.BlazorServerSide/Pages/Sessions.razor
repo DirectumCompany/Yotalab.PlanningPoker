@@ -15,20 +15,22 @@
       <MudTable Items="this.sessions" OnRowClick="this.OnRowClick" Hover="true" Breakpoint="Breakpoint.Sm" Dense="true" T="SessionInfo">
         <RowTemplate>
           <MudTd Style="cursor:pointer">
-            <div class="d-flex align-center" style="min-height:48px">
-              <div class="flex-grow-1 flex-shrink-0 d-flex align-center">
-                <MudText>@context.Name</MudText>
-                @if (context.ProcessingState == Grains.Interfaces.Models.SessionProcessingState.Started)
-                {
-                  <MudChip Label="true" Style="cursor:pointer" Class="ml-2" Color="Color.Error" Size="Size.Small">Голосование идет</MudChip>
-                }
-              </div>
-              <div>
-                @if (context.ModeratorIds.Contains(this.ParticipantId))
-                {
-                  <MudChip Label="true" Style="cursor:pointer" Class="mr-2" Color="Color.Primary" Size="Size.Small">Вы модератор</MudChip>
-                }
-                <MudChip Label="true" Style="cursor:pointer" Color="Color.Success" Size="Size.Small">Участников: @context.ParticipantsCount</MudChip>
+            <div class="d-flex flex-grow-1 align-center" style="min-height:48px">
+              <div class="d-flex flex-grow-1 flex-wrap align-center">
+                <div class="flex-grow-1 flex-shrink-0 d-flex align-center">
+                  <MudText>@context.Name</MudText>
+                  @if (context.ProcessingState == Grains.Interfaces.Models.SessionProcessingState.Started)
+                  {
+                    <MudChip Label="true" Style="cursor:pointer" Class="ml-2" Color="Color.Error" Size="Size.Small">Голосование идет</MudChip>
+                  }
+                </div>
+                <div>
+                  @if (context.ModeratorIds.Contains(this.ParticipantId))
+                  {
+                    <MudChip Label="true" Style="cursor:pointer" Class="mr-2 ml-0" Color="Color.Primary" Size="Size.Small">Вы модератор</MudChip>
+                  }
+                  <MudChip Label="true" Style="cursor:pointer" Class="ml-0" Color="Color.Success" Size="Size.Small">Участников: @context.ParticipantsCount</MudChip>
+                </div>
               </div>
               <div>
                 @if (context.ModeratorIds.Contains(this.ParticipantId))

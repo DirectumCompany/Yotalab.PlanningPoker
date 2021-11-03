@@ -14,16 +14,23 @@
   else
   {
     <div class="d-flex flex-row justify-center align-center mb-2">
-      <MudText Class="mb-0 mx-2" Typo="Typo.h4" Align="Align.Center">@this.session.Name</MudText>
+      <div style="min-width: 0;">
+        <MudText Class="mb-0 mx-2 d-none d-sm-inline" Typo="Typo.h4" Align="Align.Center">@this.session.Name</MudText>
+        <MudText Class="mb-0 mx-2 d-sm-none" Typo="Typo.subtitle1" Align="Align.Center" Style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+          @this.session.Name
+        </MudText>
+      </div>
       @if (this.session.ModeratorIds.Contains(this.ParticipantId))
       {
         <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Warning" OnClick="this.OnShowEditModal" aria-label="edit"></MudIconButton>
       }
     </div>
     <CascadingValue Value="@this.session">
-      <MudGrid>
+      <MudGrid Class="flex-column flex-nowrap flex-md-row">
+        <MudItem md="5" lg="4" Class="d-md-none">
+          <SessionStatusPrompt ParticipantId="this.ParticipantId" />
+        </MudItem>
         <MudItem md="7" lg="8">
-          <!--<div class="col-md-7 col-lg-8">-->
           @if (this.session.ProcessingState != SessionProcessingState.Finished)
           {
             if (this.User != null)
@@ -40,11 +47,10 @@
             <ParticipantsVotesResult PaticipantVotes="this.participantVotes" />
           }
         </MudItem>
-        <!-- <div class="row g-3"> -->
         <MudItem md="5" lg="4">
-          <!--<div class="col-md-5 col-lg-4 order-md-last mt-4">-->
-          <SessionStatusPrompt ParticipantId="this.ParticipantId" />
-
+          <div class="d-none d-md-block">
+            <SessionStatusPrompt ParticipantId="this.ParticipantId" />
+          </div>
           <ParticipantsVotesList PaticipantVotes="this.participantVotes"
                                  ParticipantId="this.ParticipantId" />
         </MudItem>
@@ -55,8 +61,6 @@
 else
 {
   <div class="d-flex justify-center">
-    <div class="spinner-grow text-info" role="status">
-      <span class="visually-hidden">Загрузка...</span>
-    </div>
+    <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
   </div>
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -31,9 +32,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
     private IList<AuthenticationScheme> ExternalLogins { get; set; }
 
     [Inject]
-    private IHttpContextAccessor HttpContextAccessor { get; set; }
-
-    [Inject]
     private SignInManager<IdentityUser> SignInManager { get; set; }
 
     [Inject]
@@ -47,9 +45,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
 
     protected override async Task OnInitializedAsync()
     {
-      if (!this.HttpContextAccessor.HttpContext.Response.HasStarted)
-        await this.HttpContextAccessor.HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
       var externalSchemes = await this.SignInManager.GetExternalAuthenticationSchemesAsync();
       this.ExternalLogins = externalSchemes.ToList();
       this.editContext = new EditContext(this.loginInputModel);

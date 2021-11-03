@@ -8,12 +8,22 @@
     </div>
   </MudOverlay>
 
-  <MudChart ChartType="ChartType.Donut"
-            Class="mud-chart-legend-bottom-verticaler"
-            Height="50%" Width="50%"
-            InputData="@this.chartData.Select(d => d.ParticipantCount).ToArray()"
-            InputLabels="@this.chartData.Select(d => d.Vote).ToArray()"
-            LegendPosition="@Position.Bottom" />
+  <div class="d-none d-sm-block">
+    <MudChart ChartType="ChartType.Donut"
+              Class="mud-chart-legend-bottom-verticaler"
+              Height="50%" Width="50%"
+              InputData="@this.chartData.Select(d => d.ParticipantCount).ToArray()"
+              InputLabels="@this.chartData.Select(d => d.Vote).ToArray()"
+              LegendPosition="@Position.Bottom" />
+  </div>
+  <div class="d-sm-none">
+    <MudChart ChartType="ChartType.Donut"
+              Class="mud-chart-legend-bottom-verticaler"
+              Height="100%" Width="100%"
+              InputData="@this.chartData.Select(d => d.ParticipantCount).ToArray()"
+              InputLabels="@this.chartData.Select(d => d.Vote).ToArray()"
+              LegendPosition="@Position.Bottom" />
+  </div>
 </div>
 
 @code {
