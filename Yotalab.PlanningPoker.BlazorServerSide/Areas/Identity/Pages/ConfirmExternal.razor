@@ -12,7 +12,7 @@
       {
         foreach (var error in this.result.Errors)
         {
-          <MudAlert Severity="Severity.Error">@error.Description</MudAlert>
+          <MudAlert Severity="Severity.Error" Class="identity-card--form-validation">@error.Description</MudAlert>
         }
       }
       else

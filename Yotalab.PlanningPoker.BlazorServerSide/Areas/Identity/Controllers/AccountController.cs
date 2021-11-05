@@ -61,7 +61,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
 
         if (result.IsLockedOut || result.IsNotAllowed)
         {
-          this.logger.LogInformation("Forbidden");
+          this.logger.LogInformation($"User {user.Id} forbidden");
           return new LoginForbiddenResult(result);
         }
       }
@@ -278,11 +278,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
     [AllowAnonymous]
     public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordInputModel inputModel)
     {
-      if (!this.ModelState.IsValid)
-      {
-        return this.BadRequest();
-      }
-
       var user = await this.userManager.FindByEmailAsync(inputModel.Email);
       if (user == null)
       {
