@@ -17,11 +17,11 @@
           <MudTd Style="cursor:pointer">
             <div class="d-flex flex-grow-1 align-center" style="min-height:48px">
               <div class="d-flex flex-grow-1 flex-wrap align-center">
-                <div class="flex-grow-1 flex-shrink-0 d-flex align-center">
-                  <MudText>@context.Name</MudText>
+                <div class="d-flex flex-grow-1 flex-wrap align-center">
+                  <MudText Class="mr-2">@context.Name</MudText>
                   @if (context.ProcessingState == Grains.Interfaces.Models.SessionProcessingState.Started)
                   {
-                    <MudChip Label="true" Style="cursor:pointer" Class="ml-2" Color="Color.Error" Size="Size.Small">Голосование идет</MudChip>
+                    <MudChip Label="true" Style="cursor:pointer" Class="ml-0" Color="Color.Error" Size="Size.Small">Голосование идет</MudChip>
                   }
                 </div>
                 <div>
