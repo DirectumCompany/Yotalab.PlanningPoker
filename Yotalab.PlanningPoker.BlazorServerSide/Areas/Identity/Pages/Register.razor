@@ -1,7 +1,7 @@
 ﻿@page "/identity/register"
 @layout IdentityLayout
 
-<MudCard Class="register-card">
+<MudCard Class="identity-card">
   <MudCardContent>
     <MudText Align="Align.Center" Class="mb-10" Typo="Typo.h4">
       <Logotype />
@@ -26,7 +26,7 @@
           <button @ref="this.submitButton" type="submit" hidden />
         </form>
         <iframe @ref="this.submitHandlerFrame" name="submit_handler" @onload="this.OnSubmitHandler" @onerror="this.OnErrorSubmitHandler" hidden></iframe>
-        <EditForm class="register-form" EditContext="this.editContext" OnValidSubmit="this.ValidSubmit" OnInvalidSubmit="this.InvalidSubmit">
+        <EditForm class="identity-card--form" EditContext="this.editContext" OnValidSubmit="this.ValidSubmit" OnInvalidSubmit="this.InvalidSubmit">
           <DataAnnotationsValidator />
           <MudTextField @bind-Value="this.inputModel.Email" Label="Эл. почта"
                         For="@(() => this.inputModel.Email)"
@@ -55,7 +55,7 @@
     <div class="mb-2">
       @foreach (var err in this.errors)
       {
-        <MudAlert Severity="Severity.Error" Class="login-form-validation mt-1">@err</MudAlert>
+        <MudAlert Severity="Severity.Error" Class="identity-card--form-validation">@err</MudAlert>
       }
     </div>
   }

@@ -1,0 +1,17 @@
+﻿.identity-layout {
+  margin-top: 13%
+}
+
+.identity-card {
+  align-self: flex-start;
+}
+
+.identity-card--form {
+  min-width: 300px;
+}
+
+.identity-card--form-validation {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}

@@ -2,7 +2,7 @@
 @layout IdentityLayout
 
 <div>
-  <MudCard Class="login-card">
+  <MudCard Class="identity-card">
     <MudCardContent>
       <MudText Align="Align.Center" Class="mb-10" Typo="Typo.h4">
         <Logotype />
@@ -18,7 +18,7 @@
           <button @ref="this.submitButton" type="submit" hidden />
         </form>
         <iframe @ref="this.submitHandlerFrame" name="submit_handler" @onload="this.OnSubmitHandler" @onerror="this.OnErrorSubmitHandler" hidden></iframe>
-        <EditForm class="login-form" EditContext="this.editContext" OnValidSubmit="this.ValidSubmit" OnInvalidSubmit="this.InvalidSubmit">
+        <EditForm class="identity-card--form" EditContext="this.editContext" OnValidSubmit="this.ValidSubmit" OnInvalidSubmit="this.InvalidSubmit">
           <DataAnnotationsValidator />
 
           <MudTextField @bind-Value="this.loginInputModel.Email"
@@ -53,7 +53,7 @@
             <div class="my-2 mx-auto">
               @foreach (var err in this.errors)
               {
-                <MudAlert Severity="Severity.Error" Class="login-form-validation">@err</MudAlert>
+                <MudAlert Severity="Severity.Error" Class="identity-card--form-validation">@err</MudAlert>
               }
             </div>
           }
@@ -89,7 +89,7 @@
     </MudCardActions>
   </MudCard>
 
-  <MudCard Class="login-card mt-4">
+  <MudCard Class="mt-4">
     <MudCardContent>
       <MudText>Новичок в Agile Poker? <MudLink Href="identity/register" Underline="Underline.None">Создать учетную запись.</MudLink></MudText>
     </MudCardContent>

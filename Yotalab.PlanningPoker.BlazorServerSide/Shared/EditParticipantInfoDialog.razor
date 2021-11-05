@@ -5,7 +5,7 @@
         @foreach (var avatar in AvatarCollection)
         {
           var avatarClassName = string.Equals(this.newAvatarUrl, avatar, StringComparison.OrdinalIgnoreCase) ?
-            "avatar avatar--selected" : null;
+            "avatar avatar--selected" : "avatar";
         <div class="mr-3" style="cursor:pointer" @onclick="@(() => this.SelectAvatar(avatar))">
           <Avatar ClassNames="@avatarClassName" Url="@avatar" IsLarge="true" />
         </div>

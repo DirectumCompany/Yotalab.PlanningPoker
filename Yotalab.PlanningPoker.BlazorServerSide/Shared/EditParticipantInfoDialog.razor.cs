@@ -14,8 +14,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Shared
     [Parameter]
     public ParticipantInfo ParticipantInfo { get; set; }
 
-    private const string DefaultAvatar = "img/default_avatar.png";
-
     private static List<string> AvatarCollection = new List<string>()
     {
         "img/img_avatar_1.png",

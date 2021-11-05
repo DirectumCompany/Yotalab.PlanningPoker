@@ -1,50 +1,52 @@
 ﻿@using Grains.Interfaces.Models
 @inject SessionService Service
 
-<MudAlert Dense="true" NoIcon="true" Class="mud-alert-width-100 mb-2" Severity="this.alertSeverity" Elevation="1">
-  <div class="d-flex justify-space-between align-center">
-    <strong class="ms-2">@sessionStatus</strong>
-    @if (this.Session.ModeratorIds.Contains(this.ParticipantId))
-    {
-      @if (this.Session.ProcessingState == SessionProcessingState.Finished)
+<div class="session-status-promt">
+  <MudAlert Dense="true" NoIcon="true" Class="mud-alert-width-100 mb-2" Severity="this.alertSeverity" Elevation="1">
+    <div class="d-flex justify-space-between align-center">
+      <strong class="ms-2">@sessionStatus</strong>
+      @if (this.Session.ModeratorIds.Contains(this.ParticipantId))
       {
-        <MudButtonGroup DisableElevation="true" Variant="Variant.Filled" Size="Size.Small" OverrideStyles="false">
-          <MudIconButton Icon="@Icons.Material.Filled.Refresh"
-                         Size="Size.Small"
-                         Class="px-1"
-                         Variant="Variant.Filled"
-                         Color="Color.Default"
-                         Title="Обнулить"
-                         Disabled="@this.isSessionStateChanging"
-                         @onclick="@(async () => await this.ChangeSessionState(SessionProcessingState.Initial))"
-                         @ondblclick:stopPropagation="true">
-          </MudIconButton>
+        @if (this.Session.ProcessingState == SessionProcessingState.Finished)
+        {
+          <MudButtonGroup DisableElevation="true" Variant="Variant.Filled" Size="Size.Small" OverrideStyles="false">
+            <MudIconButton Icon="@Icons.Material.Filled.Refresh"
+                           Size="Size.Small"
+                           Class="px-1"
+                           Variant="Variant.Filled"
+                           Color="Color.Default"
+                           Title="Обнулить"
+                           Disabled="@this.isSessionStateChanging"
+                           @onclick="@(async () => await this.ChangeSessionState(SessionProcessingState.Initial))"
+                           @ondblclick:stopPropagation="true">
+            </MudIconButton>
+            <MudButton Disabled="@this.isSessionStateChanging"
+                       Style="text-transform:none"
+                       Size="Size.Small"
+                       Color="this.buttonColor"
+                       Variant="Variant.Filled"
+                       @onclick="@(async () => await this.ChangeSessionState(requestedState, true))"
+                       @ondblclick:stopPropagation="true">
+              @buttonText
+            </MudButton>
+          </MudButtonGroup>
+        }
+        else
+        {
           <MudButton Disabled="@this.isSessionStateChanging"
-                     Style="text-transform:none"
                      Size="Size.Small"
-                     Color="this.buttonColor"
+                     Style="text-transform:none"
                      Variant="Variant.Filled"
-                     @onclick="@(async () => await this.ChangeSessionState(requestedState, true))"
+                     Color="this.buttonColor"
+                     @onclick="@(async () => await this.ChangeSessionState(requestedState))"
                      @ondblclick:stopPropagation="true">
             @buttonText
           </MudButton>
-        </MudButtonGroup>
+        }
       }
-      else
-      {
-        <MudButton Disabled="@this.isSessionStateChanging"
-                   Size="Size.Small"
-                   Style="text-transform:none"
-                   Variant="Variant.Filled"
-                   Color="this.buttonColor"
-                   @onclick="@(async () => await this.ChangeSessionState(requestedState))"
-                   @ondblclick:stopPropagation="true">
-          @buttonText
-        </MudButton>
-      }
-    }
-  </div>
-</MudAlert>
+    </div>
+  </MudAlert>
+</div>
 
 @code {
   [Parameter]

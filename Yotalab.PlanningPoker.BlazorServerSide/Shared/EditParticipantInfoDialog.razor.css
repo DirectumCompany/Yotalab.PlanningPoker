@@ -1,0 +1,10 @@
+﻿::deep .avatar {
+}
+
+::deep .avatar--selected {
+  border: 2px solid lightskyblue;
+}
+
+::deep .avatar:hover {
+  border: 1px solid lightskyblue;
+}
