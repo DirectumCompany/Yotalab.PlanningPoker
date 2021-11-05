@@ -49,14 +49,14 @@
         </EditForm>
       </MudFocusTrap>
     }
+    @if (this.errors?.Any() == true)
+    {
+      <div class="mb-2">
+        @foreach (var err in this.errors)
+        {
+          <MudAlert Severity="Severity.Error" Class="identity-card--form-validation">@err</MudAlert>
+        }
+      </div>
+    }
   </MudCardContent>
-  @if (this.errors?.Any() == true)
-  {
-    <div class="mb-2">
-      @foreach (var err in this.errors)
-      {
-        <MudAlert Severity="Severity.Error" Class="identity-card--form-validation">@err</MudAlert>
-      }
-    </div>
-  }
 </MudCard>

@@ -48,17 +48,15 @@
               Войти
             </MudButton>
           </div>
-          @if (this.errors?.Any() == true)
-          {
-            <div class="my-2 mx-auto">
-              @foreach (var err in this.errors)
-              {
-                <MudAlert Severity="Severity.Error" Class="identity-card--form-validation">@err</MudAlert>
-              }
-            </div>
-          }
         </EditForm>
       </MudFocusTrap>
+      @if (this.errors?.Any() == true)
+      {
+        @foreach (var err in this.errors)
+        {
+          <MudAlert Severity="Severity.Error" Class="identity-card--form-validation">@err</MudAlert>
+        }
+      }
     </MudCardContent>
 
     <MudCardActions>
