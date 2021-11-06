@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Yotalab.PlanningPoker.BlazorServerSide.Resources;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 
@@ -41,7 +42,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Shared
         MaxWidth = MaxWidth.Small,
         FullWidth = true
       };
-      dialogService.Show<EditParticipantInfoDialog>("Изменить имя", parameters, options);
+      dialogService.Show<EditParticipantInfoDialog>(UIResources.EditParticipantInfoDialogTitle, parameters, options);
     }
 
     protected override void OnParametersSet()

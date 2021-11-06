@@ -49,7 +49,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
       if (this.EditArgs != null)
       {
         this.editContext = new EditContext(this.EditArgs);
-        // this.editContext.SetFieldCssClassProvider(new Bootstrap5FieldClassProvider());
         this.editContext.OnFieldChanged += this.HandleFieldChanged;
         this.formInvalid = !this.editContext.Validate();
       }

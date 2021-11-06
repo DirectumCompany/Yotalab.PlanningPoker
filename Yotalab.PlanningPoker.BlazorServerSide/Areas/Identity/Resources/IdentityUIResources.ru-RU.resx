@@ -165,6 +165,9 @@
   <data name="SignInWithButton" xml:space="preserve">
     <value>Войти с помощью {0}</value>
   </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
   <data name="SignUpButton" xml:space="preserve">
     <value>Зарегистрироваться</value>
   </data>

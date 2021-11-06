@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
+using Yotalab.PlanningPoker.BlazorServerSide.Resources;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO;
 using Yotalab.PlanningPoker.BlazorServerSide.Shared;
@@ -50,7 +51,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
               OnClickAsync = (args) => this.SessionService.RemoveModerator(this.Session.Id, this.Participant.Id),
               Icon = MudBlazorIcons.Material.Filled.RemoveModerator,
               IconColor = MudBlazorColor.Default,
-              Title = "Отменить модератора"
+              Title = UIResources.RemoveModeratorButton
             });
           }
           else
@@ -60,7 +61,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
               OnClickAsync = (args) => this.SessionService.AddModerator(this.Session.Id, this.Participant.Id),
               Icon = MudBlazorIcons.Material.Filled.AddModerator,
               IconColor = MudBlazorColor.Warning,
-              Title = "Сделать модератором"
+              Title = UIResources.AddModeratorButton
             });
           }
 
@@ -69,7 +70,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
             OnClickAsync = (args) => this.Service.KickAsync(this.Session.Id, this.Participant.Id, this.ParticipantId),
             Icon = MudBlazorIcons.Material.Filled.PersonRemove,
             IconColor = MudBlazorColor.Error,
-            Title = "Исключить"
+            Title = UIResources.ExcludeParticipantButton
           });
         }
         else // Меню на себе.
@@ -81,7 +82,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
               OnClickAsync = (args) => this.Service.LeaveAsync(this.Session.Id, this.ParticipantId),
               Icon = MudBlazorIcons.Material.Filled.Close,
               IconColor = MudBlazorColor.Error,
-              Title = "Покинуть сессию"
+              Title = UIResources.LeaveSessionButton
             });
           }
         }
@@ -96,7 +97,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
             OnClickAsync = (args) => this.Service.LeaveAsync(this.Session.Id, this.ParticipantId),
             Icon = MudBlazorIcons.Material.Filled.Close,
             IconColor = MudBlazorColor.Error,
-            Title = "Покинуть сессию"
+            Title = UIResources.LeaveSessionButton
           });
         }
         else // Меню на другом участнике сессии.

@@ -117,88 +117,130 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ForgotPassword" xml:space="preserve">
-    <value>Forgot password?</value>
+  <data name="AddModeratorButton" xml:space="preserve">
+    <value>Сделать модератором</value>
   </data>
-  <data name="NotRegisteredQuestion" xml:space="preserve">
-    <value>New to Agile Poker?</value>
+  <data name="BackToMySessionsButton" xml:space="preserve">
+    <value>Вернуться к моим сессиям</value>
   </data>
-  <data name="PasswordRecoverySentDetails" xml:space="preserve">
-    <value>A password reset email has been sent to the email address '{0}'.</value>
+  <data name="CancelButton" xml:space="preserve">
+    <value>Отменить</value>
   </data>
-  <data name="PasswordRecoveryTitle" xml:space="preserve">
-    <value>Password Recovery</value>
+  <data name="ChartAverage" xml:space="preserve">
+    <value>Среднее: {0}</value>
   </data>
-  <data name="ResetPasswordButton" xml:space="preserve">
-    <value>Reset Password</value>
+  <data name="ChartVoteSummary" xml:space="preserve">
+    <value>Оценка {0} - {1} (голосов: {2})</value>
   </data>
-  <data name="ResetPasswordEmailBody" xml:space="preserve">
-    <value>Please reset your password by &lt;a href='{0}'&gt;clicking here&lt;/a&gt;.</value>
+  <data name="CreateSession" xml:space="preserve">
+    <value>Новая сессия</value>
   </data>
-  <data name="ResetPasswordEmailTitle" xml:space="preserve">
-    <value>Reset Password</value>
+  <data name="EditParticipantInfoButton" xml:space="preserve">
+    <value>Изменить профиль</value>
   </data>
-  <data name="ResetPasswordSuccess" xml:space="preserve">
-    <value>Your password has been reset</value>
+  <data name="EditParticipantInfoDialogNameLabel" xml:space="preserve">
+    <value>Имя</value>
   </data>
-  <data name="ResetPasswordTitle" xml:space="preserve">
-    <value>Reset Password</value>
+  <data name="EditParticipantInfoDialogTitle" xml:space="preserve">
+    <value>Изменение профиля</value>
   </data>
-  <data name="SignInAttemptFailed" xml:space="preserve">
-    <value>Failed sign in attempt</value>
+  <data name="EditSessionDialogAutoStopHint" xml:space="preserve">
+    <value>Автоматически останавливать сессию и показывать голоса, когда все участники проголосовали</value>
   </data>
-  <data name="SignInButton" xml:space="preserve">
-    <value>Sign In</value>
+  <data name="EditSessionDialogAutoStopLabel" xml:space="preserve">
+    <value>Автостоп сессии</value>
   </data>
-  <data name="SignInTitle" xml:space="preserve">
-    <value>Sign in, please</value>
+  <data name="EditSessionDialogNameLabel" xml:space="preserve">
+    <value>Имя сессии</value>
   </data>
-  <data name="SignInWithAttemptFailed" xml:space="preserve">
-    <value>Failed sign in attempt using an external account</value>
+  <data name="EditSessionDialogNameRequired" xml:space="preserve">
+    <value>Имя сессии не может быть пустым</value>
   </data>
-  <data name="SignInWithAttemptFailedNotEnoughPermissions" xml:space="preserve">
-    <value>Insufficient permissions to receive the user's email</value>
+  <data name="EditSessionDialogTitle" xml:space="preserve">
+    <value>Изменение сессии</value>
   </data>
-  <data name="SignInWithAttemptFailedRemoteError" xml:space="preserve">
-    <value>Failed sign in attempt using an external account: {0}</value>
+  <data name="ExcludeParticipantButton" xml:space="preserve">
+    <value>Исключить</value>
   </data>
-  <data name="SignInWithButton" xml:space="preserve">
-    <value>Sign in with {0}</value>
+  <data name="FinishedSessionState" xml:space="preserve">
+    <value>Голосование завершилось</value>
   </data>
-  <data name="SignOut" xml:space="preserve">
-    <value>Sign Out</value>
+  <data name="FinishSessionButton" xml:space="preserve">
+    <value>Завершить</value>
   </data>
-  <data name="SignUpButton" xml:space="preserve">
-    <value>Sign Up</value>
+  <data name="InitialSessionButton" xml:space="preserve">
+    <value>Обнулить</value>
   </data>
-  <data name="SignUpConfirmationEmailBody" xml:space="preserve">
-    <value>Please confirm your account by &lt;a href='{0}'&gt;clicking here&lt;/a&gt;.</value>
+  <data name="JoinButton" xml:space="preserve">
+    <value>Присоединиться</value>
   </data>
-  <data name="SignUpConfirmationEmailTitle" xml:space="preserve">
-    <value>Sign Up Confirmation</value>
+  <data name="LeaveSessionButton" xml:space="preserve">
+    <value>Покинуть сессию</value>
   </data>
-  <data name="SignUpConfirmationFailed" xml:space="preserve">
-    <value>Email confirmation error.</value>
+  <data name="MySessions" xml:space="preserve">
+    <value>Мои сессии</value>
   </data>
-  <data name="SignUpConfirmationSentDetails" xml:space="preserve">
-    <value>An email has been sent to the email address '{0}' to confirm registration.</value>
+  <data name="NamelessParticipantName" xml:space="preserve">
+    <value>Безымянный</value>
   </data>
-  <data name="SignUpConfirmationSuccess" xml:space="preserve">
-    <value>Your email has been confirmed. Thank you for choosing us!</value>
+  <data name="NewSessionName" xml:space="preserve">
+    <value>Новая сессия</value>
   </data>
-  <data name="SignUpConfirmationTitle" xml:space="preserve">
-    <value>Sign Up Confirmation</value>
+  <data name="NotParticipantHint" xml:space="preserve">
+    <value>Вы не являетесь участником сессии '{0}'</value>
   </data>
-  <data name="SignUpFailed" xml:space="preserve">
-    <value>Failed sign up, please repeat later</value>
+  <data name="NotStartedSessionState" xml:space="preserve">
+    <value>Голосование не проводится</value>
   </data>
-  <data name="SignUpLink" xml:space="preserve">
-    <value>Create an account</value>
+  <data name="ParticipantsCount" xml:space="preserve">
+    <value>Участников: {0}</value>
   </data>
-  <data name="SignUpTitle" xml:space="preserve">
-    <value>Creating a New User</value>
+  <data name="RemoveModeratorButton" xml:space="preserve">
+    <value>Отменить модератора</value>
   </data>
-  <data name="UserNotConfirmEmail" xml:space="preserve">
-    <value>You have not confirmed your email</value>
+  <data name="RemoveSession" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="RemoveSessionDialogTitle" xml:space="preserve">
+    <value>Удаление сессии</value>
+  </data>
+  <data name="RemoveSessionDialogWarning" xml:space="preserve">
+    <value>Сессию &lt;b&gt;"{0}"&lt;/b&gt; после удаления не восстановить.</value>
+  </data>
+  <data name="RestartSessionButton" xml:space="preserve">
+    <value>Перезапустить</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="SessionNotExists" xml:space="preserve">
+    <value>Сессии не существует</value>
+  </data>
+  <data name="SessionsEmpty" xml:space="preserve">
+    <value>Вы пока не участвуете ни в одной сессии</value>
+  </data>
+  <data name="StartedSessionState" xml:space="preserve">
+    <value>Голосование началось...</value>
+  </data>
+  <data name="StartSessionButton" xml:space="preserve">
+    <value>Начать</value>
+  </data>
+  <data name="StoppedSessionState" xml:space="preserve">
+    <value>Голосование остановлено</value>
+  </data>
+  <data name="StopSessionButton" xml:space="preserve">
+    <value>Остановить</value>
+  </data>
+  <data name="VotingInProcess" xml:space="preserve">
+    <value>Голосование идет</value>
+  </data>
+  <data name="WellcomeSubtitle" xml:space="preserve">
+    <value>Сделайте оценку Agile проектов простой и увлекательной.</value>
+  </data>
+  <data name="WellcomeTitle" xml:space="preserve">
+    <value>Ясное и простое планирование!</value>
+  </data>
+  <data name="YouModerator" xml:space="preserve">
+    <value>Вы модератор</value>
   </data>
 </root>

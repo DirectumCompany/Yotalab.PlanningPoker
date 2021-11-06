@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Yotalab.PlanningPoker.BlazorServerSide.Pages.Components;
+using Yotalab.PlanningPoker.BlazorServerSide.Resources;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.Args;
 using Yotalab.PlanningPoker.BlazorServerSide.Shared;
@@ -42,7 +43,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
         {
           Icon = Icons.Material.Filled.Delete,
           IconColor = Color.Error,
-          Title = "Удалить",
+          Title = UIResources.RemoveSession,
           OnClick = (args) => this.ShowRemoveSessionConfirmation(session.Id)
         }
       };
@@ -72,12 +73,12 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     {
       var newSessionArgs = new EditSessionArgs()
       {
-        Name = "Новая сессия",
+        Name = UIResources.NewSessionName,
         Bulletin = Bulletin.Default()
       };
 
       var onConfirm = new EventCallbackFactory().Create<EditSessionArgs>(this, this.CreateSessionAsync);
-      EditSessionDialog.Show(this.DialogService, "Новая сессия", newSessionArgs, onConfirm);
+      EditSessionDialog.Show(this.DialogService, UIResources.CreateSession, newSessionArgs, onConfirm);
     }
   }
 }

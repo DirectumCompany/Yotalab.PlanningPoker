@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Yotalab.PlanningPoker.BlazorServerSide.Resources;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
@@ -28,7 +29,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
         MaxWidth = MaxWidth.Small,
         FullWidth = true
       };
-      dialogService.Show<RemoveSessionDialog>("Удалить сессию", parameters, options);
+      dialogService.Show<RemoveSessionDialog>(UIResources.RemoveSessionDialogTitle, parameters, options);
     }
 
     private async Task ConfirmAsync()

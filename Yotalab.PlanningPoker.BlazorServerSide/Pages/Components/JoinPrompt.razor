@@ -11,14 +11,14 @@
     {
       <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" Style="text-transform:none"
                  OnClick="@(async () => await this.Service.JoinAsync(this.Session.Id, this.ParticipantId))">
-        <MudText>Присоединиться</MudText>
+        <MudText>@UIResources.JoinButton</MudText>
       </MudButton>
     }
     else
     {
       <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Style="text-transform:none"
                  OnClick="@(() => this.NavigationManager.NavigateTo("/"))">
-        <MudText>Вернуться к моим сессиям</MudText>
+        <MudText>@UIResources.BackToMySessionsButton</MudText>
       </MudButton>
     }
   </div>
@@ -39,7 +39,7 @@
     await base.OnParametersSetAsync();
     this.sessionExists = this.Session != null && this.Session.IsInitialized;
     this.title = this.sessionExists ?
-      $"Вы не являетесь участником сессии '{this.Session.Name}'" :
-      "Сессии не существует";
+      string.Format(@UIResources.NotParticipantHint, this.Session.Name) :
+      UIResources.SessionNotExists;
   }
 }

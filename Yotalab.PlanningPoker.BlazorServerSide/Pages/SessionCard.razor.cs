@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using Orleans.Streams;
 using Yotalab.PlanningPoker.BlazorServerSide.Pages.Components;
+using Yotalab.PlanningPoker.BlazorServerSide.Resources;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.Args;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO;
@@ -138,7 +139,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
       };
 
       var onConfirm = new EventCallbackFactory().Create<EditSessionArgs>(this, this.HandleEditSessionConfirmAsync);
-      EditSessionDialog.Show(this.DialogService, "Изменение сессии", this.editSessionArgs, onConfirm);
+      EditSessionDialog.Show(this.DialogService, @UIResources.EditSessionDialogTitle, this.editSessionArgs, onConfirm);
     }
 
     public async ValueTask DisposeAsync()

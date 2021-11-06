@@ -3,8 +3,8 @@
 <div style="position:relative">
   <MudOverlay Visible="true" Absolute="true" Style="pointer-events: none; bottom: 70px; left: -20px;">
     <div style="text-align:center">
-      <div class="text-muted">Участников: @this.PaticipantVotes.Count()</div>
-      <div><h2>Среднее: @this.FormatAverage(this.average)</h2></div>
+      <div class="text-muted">@string.Format(UIResources.ParticipantsCount, this.PaticipantVotes.Count())</div>
+      <div><h2>@string.Format(UIResources.ChartAverage, this.FormatAverage(this.average))</h2></div>
     </div>
   </MudOverlay>
 
@@ -47,7 +47,7 @@
       var percents = (double)voteCount / (double)allVotesCount;
       this.chartData.Add(new ChartDataItem()
       {
-        Vote = $"Оценка {voteGroup.Key} - {this.FormatPercents(percents)} (голосов: {voteCount})",
+        Vote = string.Format(UIResources.ChartVoteSummary, voteGroup.Key, this.FormatPercents(percents), voteCount),
         ParticipantCount = voteCount
       });
     }

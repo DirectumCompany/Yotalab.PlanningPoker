@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Yotalab.PlanningPoker.BlazorServerSide.Resources;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Services.Args
@@ -17,7 +18,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services.Args
     /// <summary>
     /// Имя сессии.
     /// </summary>
-    [Required(ErrorMessage = "Имя сессии не может быть пустым!")]
+    [Required(ErrorMessageResourceName = nameof(UIResources.EditSessionDialogNameRequired), ErrorMessageResourceType = typeof(UIResources))]
     public string Name { get; set; }
 
     /// <summary>

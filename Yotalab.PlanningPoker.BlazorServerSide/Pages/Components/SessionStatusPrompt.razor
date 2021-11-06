@@ -15,7 +15,7 @@
                            Class="px-1"
                            Variant="Variant.Filled"
                            Color="Color.Default"
-                           Title="Обнулить"
+                           Title="@UIResources.InitialSessionButton"
                            Disabled="@this.isSessionStateChanging"
                            @onclick="@(async () => await this.ChangeSessionState(SessionProcessingState.Initial))"
                            @ondblclick:stopPropagation="true">
@@ -66,32 +66,32 @@
   {
     base.OnParametersSet();
 
-    this.buttonText = "Начать";
-    this.sessionStatus = "Голосование не проводится";
+    this.buttonText = UIResources.StartSessionButton;
+    this.sessionStatus = UIResources.NotStartedSessionState;
     this.requestedState = SessionProcessingState.Started;
     this.alertSeverity = Severity.Normal;
     this.buttonColor = Color.Primary;
 
     if (this.Session.ProcessingState == SessionProcessingState.Started)
     {
-      this.buttonText = "Остановить";
-      this.sessionStatus = "Голосование началось...";
+      this.buttonText = UIResources.StopSessionButton;
+      this.sessionStatus = UIResources.StartedSessionState;
       this.requestedState = SessionProcessingState.Stopped;
       this.alertSeverity = Severity.Info;
       this.buttonColor = Color.Warning;
     }
     else if (this.Session.ProcessingState == SessionProcessingState.Stopped)
     {
-      this.buttonText = "Завершить";
-      this.sessionStatus = "Голосование остановлено";
+      this.buttonText = UIResources.FinishSessionButton;
+      this.sessionStatus = UIResources.StoppedSessionState;
       this.requestedState = SessionProcessingState.Finished;
       this.alertSeverity = Severity.Warning;
       this.buttonColor = Color.Success;
     }
     else if (this.Session.ProcessingState == SessionProcessingState.Finished)
     {
-      this.buttonText = "Перезапустить";
-      this.sessionStatus = "Голосование завершилось";
+      this.buttonText = UIResources.RestartSessionButton;
+      this.sessionStatus = UIResources.FinishedSessionState;
       this.requestedState = SessionProcessingState.Started;
       this.alertSeverity = Severity.Success;
       this.buttonColor = Color.Primary;

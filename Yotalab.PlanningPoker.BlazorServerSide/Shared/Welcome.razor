@@ -4,11 +4,15 @@
   </MudText>
 
   <MudText Align="Align.Center">
-    <MudText Typo="Typo.h4" GutterBottom="true">Ясное и простое планирование!</MudText>
-    <MudText Typo="Typo.body1" Class="grey-text text-darken-1">Сделайте оценку Agile-проектов простой и увлекательной.</MudText>
+    <MudText Typo="Typo.h4" GutterBottom="true">@UIResources.WellcomeTitle</MudText>
+    <MudText Typo="Typo.body1" Class="grey-text text-darken-1">@UIResources.WellcomeSubtitle</MudText>
     <p class="mt-4">
-      <MudButton Link="@RegisterUrlBase" Color="Color.Primary" Variant="Variant.Filled" Class="mr-2">Зарегистрироваться</MudButton>
-      <MudButton Link="@LoginUrlBase" Color="Color.Default" Variant="Variant.Filled">Войти</MudButton>
+      <MudButton Link="@RegisterUrlBase" Color="Color.Primary" Variant="Variant.Filled" Class="mr-2">
+        @IdentityUIResources.SignUpButton
+      </MudButton>
+      <MudButton Link="@LoginUrlBase" Color="Color.Default" Variant="Variant.Filled">
+        @IdentityUIResources.SignInButton
+      </MudButton>
     </p>
   </MudText>
 </div>

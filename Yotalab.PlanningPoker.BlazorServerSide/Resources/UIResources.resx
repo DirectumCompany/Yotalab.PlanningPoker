@@ -117,88 +117,130 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ForgotPassword" xml:space="preserve">
-    <value>Forgot password?</value>
+  <data name="AddModeratorButton" xml:space="preserve">
+    <value>Make Moderator</value>
   </data>
-  <data name="NotRegisteredQuestion" xml:space="preserve">
-    <value>New to Agile Poker?</value>
+  <data name="BackToMySessionsButton" xml:space="preserve">
+    <value>Back to My Sessions</value>
   </data>
-  <data name="PasswordRecoverySentDetails" xml:space="preserve">
-    <value>A password reset email has been sent to the email address '{0}'.</value>
+  <data name="CancelButton" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="PasswordRecoveryTitle" xml:space="preserve">
-    <value>Password Recovery</value>
+  <data name="ChartAverage" xml:space="preserve">
+    <value>Average: {0}</value>
   </data>
-  <data name="ResetPasswordButton" xml:space="preserve">
-    <value>Reset Password</value>
+  <data name="ChartVoteSummary" xml:space="preserve">
+    <value>Score {0} - {1} (votes: {2})</value>
   </data>
-  <data name="ResetPasswordEmailBody" xml:space="preserve">
-    <value>Please reset your password by &lt;a href='{0}'&gt;clicking here&lt;/a&gt;.</value>
+  <data name="CreateSession" xml:space="preserve">
+    <value>New Session</value>
   </data>
-  <data name="ResetPasswordEmailTitle" xml:space="preserve">
-    <value>Reset Password</value>
+  <data name="EditParticipantInfoButton" xml:space="preserve">
+    <value>Edit profile</value>
   </data>
-  <data name="ResetPasswordSuccess" xml:space="preserve">
-    <value>Your password has been reset</value>
+  <data name="EditParticipantInfoDialogNameLabel" xml:space="preserve">
+    <value>Name</value>
   </data>
-  <data name="ResetPasswordTitle" xml:space="preserve">
-    <value>Reset Password</value>
+  <data name="EditParticipantInfoDialogTitle" xml:space="preserve">
+    <value>Editing profile</value>
   </data>
-  <data name="SignInAttemptFailed" xml:space="preserve">
-    <value>Failed sign in attempt</value>
+  <data name="EditSessionDialogAutoStopHint" xml:space="preserve">
+    <value>Automatically stop the session and show votes when all participants have voted</value>
   </data>
-  <data name="SignInButton" xml:space="preserve">
-    <value>Sign In</value>
+  <data name="EditSessionDialogAutoStopLabel" xml:space="preserve">
+    <value>Automatic stop the session</value>
   </data>
-  <data name="SignInTitle" xml:space="preserve">
-    <value>Sign in, please</value>
+  <data name="EditSessionDialogNameLabel" xml:space="preserve">
+    <value>Session Name</value>
   </data>
-  <data name="SignInWithAttemptFailed" xml:space="preserve">
-    <value>Failed sign in attempt using an external account</value>
+  <data name="EditSessionDialogNameRequired" xml:space="preserve">
+    <value>The session name cannot be empty</value>
   </data>
-  <data name="SignInWithAttemptFailedNotEnoughPermissions" xml:space="preserve">
-    <value>Insufficient permissions to receive the user's email</value>
+  <data name="EditSessionDialogTitle" xml:space="preserve">
+    <value>Editing session</value>
   </data>
-  <data name="SignInWithAttemptFailedRemoteError" xml:space="preserve">
-    <value>Failed sign in attempt using an external account: {0}</value>
+  <data name="ExcludeParticipantButton" xml:space="preserve">
+    <value>Exclude</value>
   </data>
-  <data name="SignInWithButton" xml:space="preserve">
-    <value>Sign in with {0}</value>
+  <data name="FinishedSessionState" xml:space="preserve">
+    <value>Voting has ended</value>
   </data>
-  <data name="SignOut" xml:space="preserve">
-    <value>Sign Out</value>
+  <data name="FinishSessionButton" xml:space="preserve">
+    <value>Finish</value>
   </data>
-  <data name="SignUpButton" xml:space="preserve">
-    <value>Sign Up</value>
+  <data name="InitialSessionButton" xml:space="preserve">
+    <value>Reset</value>
   </data>
-  <data name="SignUpConfirmationEmailBody" xml:space="preserve">
-    <value>Please confirm your account by &lt;a href='{0}'&gt;clicking here&lt;/a&gt;.</value>
+  <data name="JoinButton" xml:space="preserve">
+    <value>Join</value>
   </data>
-  <data name="SignUpConfirmationEmailTitle" xml:space="preserve">
-    <value>Sign Up Confirmation</value>
+  <data name="LeaveSessionButton" xml:space="preserve">
+    <value>Leave Session</value>
   </data>
-  <data name="SignUpConfirmationFailed" xml:space="preserve">
-    <value>Email confirmation error.</value>
+  <data name="MySessions" xml:space="preserve">
+    <value>My Sessions</value>
   </data>
-  <data name="SignUpConfirmationSentDetails" xml:space="preserve">
-    <value>An email has been sent to the email address '{0}' to confirm registration.</value>
+  <data name="NamelessParticipantName" xml:space="preserve">
+    <value>Nameless</value>
   </data>
-  <data name="SignUpConfirmationSuccess" xml:space="preserve">
-    <value>Your email has been confirmed. Thank you for choosing us!</value>
+  <data name="NewSessionName" xml:space="preserve">
+    <value>New Session</value>
   </data>
-  <data name="SignUpConfirmationTitle" xml:space="preserve">
-    <value>Sign Up Confirmation</value>
+  <data name="NotParticipantHint" xml:space="preserve">
+    <value>You are not a participant of the session '{0}'</value>
   </data>
-  <data name="SignUpFailed" xml:space="preserve">
-    <value>Failed sign up, please repeat later</value>
+  <data name="NotStartedSessionState" xml:space="preserve">
+    <value>No voting is held</value>
   </data>
-  <data name="SignUpLink" xml:space="preserve">
-    <value>Create an account</value>
+  <data name="ParticipantsCount" xml:space="preserve">
+    <value>Participants: {0}</value>
   </data>
-  <data name="SignUpTitle" xml:space="preserve">
-    <value>Creating a New User</value>
+  <data name="RemoveModeratorButton" xml:space="preserve">
+    <value>Cancel Moderator</value>
   </data>
-  <data name="UserNotConfirmEmail" xml:space="preserve">
-    <value>You have not confirmed your email</value>
+  <data name="RemoveSession" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="RemoveSessionDialogTitle" xml:space="preserve">
+    <value>Removing session</value>
+  </data>
+  <data name="RemoveSessionDialogWarning" xml:space="preserve">
+    <value>Session &lt;b&gt;'{0}'&lt;/b&gt; cannot be restored after deletion.</value>
+  </data>
+  <data name="RestartSessionButton" xml:space="preserve">
+    <value>Restart</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SessionNotExists" xml:space="preserve">
+    <value>Session not exists</value>
+  </data>
+  <data name="SessionsEmpty" xml:space="preserve">
+    <value>You are not participating in any session yet</value>
+  </data>
+  <data name="StartedSessionState" xml:space="preserve">
+    <value>Voting has begun...</value>
+  </data>
+  <data name="StartSessionButton" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="StoppedSessionState" xml:space="preserve">
+    <value>Voting stopped</value>
+  </data>
+  <data name="StopSessionButton" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="VotingInProcess" xml:space="preserve">
+    <value>Voting is underway</value>
+  </data>
+  <data name="WellcomeSubtitle" xml:space="preserve">
+    <value>Make estimating Agile projects simple and fun.</value>
+  </data>
+  <data name="WellcomeTitle" xml:space="preserve">
+    <value>Clear and simple planning!</value>
+  </data>
+  <data name="YouModerator" xml:space="preserve">
+    <value>You a moderator</value>
   </data>
 </root>

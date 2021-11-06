@@ -17,8 +17,10 @@
       </div>
     </ButtonTemplate>
     <ChildContent>
-      <MudMenuItem OnClick="@(() => EditParticipantInfoDialog.Show(this.DialogService, this.participantInfo))">Изменить имя</MudMenuItem>
-      <MudMenuItem Link="api/identity/account/signOut" Target="_self">Выйти</MudMenuItem>
+      <MudMenuItem OnClick="@(() => EditParticipantInfoDialog.Show(this.DialogService, this.participantInfo))">
+        @UIResources.EditParticipantInfoButton
+      </MudMenuItem>
+      <MudMenuItem Link="api/identity/account/signOut" Target="_self">@IdentityUIResources.SignOut</MudMenuItem>
     </ChildContent>
   </DropDownMenu>
 }
@@ -52,7 +54,7 @@
 
   private void RefreshDisplayName(ParticipantInfo info)
   {
-    this.displayName = string.IsNullOrWhiteSpace(info?.Name) ? "Безымянный" : info.Name;
+    this.displayName = string.IsNullOrWhiteSpace(info?.Name) ? UIResources.NamelessParticipantName : info.Name;
   }
 
   public async ValueTask DisposeAsync()

@@ -206,6 +206,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sign Out.
+        /// </summary>
+        public static string SignOut {
+            get {
+                return ResourceManager.GetString("SignOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sign Up.
         /// </summary>
         public static string SignUpButton {

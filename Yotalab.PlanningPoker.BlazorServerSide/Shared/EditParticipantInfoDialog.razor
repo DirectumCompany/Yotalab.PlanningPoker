@@ -12,7 +12,7 @@
         }
       </div>
       <div class="mb-3">
-        <MudTextField @bind-Value="this.newName" Label="Имя" />
+        <MudTextField @bind-Value="this.newName" Label="@UIResources.EditParticipantInfoDialogNameLabel" />
       </div>
     </form>
   </DialogContent>
@@ -21,12 +21,12 @@
                Variant="Variant.Filled"
                Disabled="@(this.ParticipantInfo == null)"
                @onclick="@(async () => await this.Submit())">
-      Сохранить
+      @UIResources.SaveButton
     </MudButton>
     <MudButton Color="Color.Default"
                Variant="Variant.Filled"
                OnClick="this.Cancel">
-      Отменить
+      @UIResources.CancelButton
     </MudButton>
   </DialogActions>
 </MudDialog>

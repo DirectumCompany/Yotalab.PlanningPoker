@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Yotalab.PlanningPoker.BlazorServerSide.Resources;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 
@@ -46,7 +47,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
       else
       {
         this.Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-        this.Snackbar.Add($"Голосование не началось", Severity.Warning, options =>
+        this.Snackbar.Add(UIResources.NotStartedSessionState, Severity.Warning, options =>
         {
           options.SnackbarVariant = Variant.Filled;
           options.VisibleStateDuration = 2000;
