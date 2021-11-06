@@ -6,6 +6,7 @@
 
 @inject JSInteropFunctions JSFunctions
 @inject IDialogService DialogService
+@inject NavigationManager Navigation
 
 @if (this.participantInfo != null)
 {
@@ -21,6 +22,12 @@
         @UIResources.EditParticipantInfoButton
       </MudMenuItem>
       <MudMenuItem Link="api/identity/account/signOut" Target="_self">@IdentityUIResources.SignOut</MudMenuItem>
+      <MudDivider />
+      <MudListSubheader Class="pb-0">
+        @UIResources.InterfaceLanguage
+      </MudListSubheader>
+      <MudMenuItem OnClick="@(() => this.Navigation.NavigateToSetCulture(new System.Globalization.CultureInfo("ru")))">@UIResources.Russian</MudMenuItem>
+      <MudMenuItem OnClick="@(() => this.Navigation.NavigateToSetCulture(new System.Globalization.CultureInfo("en")))">@UIResources.English</MudMenuItem>
     </ChildContent>
   </DropDownMenu>
 }

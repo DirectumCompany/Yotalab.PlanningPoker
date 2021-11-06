@@ -187,6 +187,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to English.
+        /// </summary>
+        public static string English {
+            get {
+                return ResourceManager.GetString("English", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exclude.
         /// </summary>
         public static string ExcludeParticipantButton {
@@ -219,6 +228,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         public static string InitialSessionButton {
             get {
                 return ResourceManager.GetString("InitialSessionButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interface Language.
+        /// </summary>
+        public static string InterfaceLanguage {
+            get {
+                return ResourceManager.GetString("InterfaceLanguage", resourceCulture);
             }
         }
         
@@ -336,6 +354,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         public static string RestartSessionButton {
             get {
                 return ResourceManager.GetString("RestartSessionButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Русский.
+        /// </summary>
+        public static string Russian {
+            get {
+                return ResourceManager.GetString("Russian", resourceCulture);
             }
         }
         

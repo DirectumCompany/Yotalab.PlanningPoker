@@ -159,6 +159,9 @@
   <data name="EditSessionDialogTitle" xml:space="preserve">
     <value>Editing session</value>
   </data>
+  <data name="English" xml:space="preserve">
+    <value>English</value>
+  </data>
   <data name="ExcludeParticipantButton" xml:space="preserve">
     <value>Exclude</value>
   </data>
@@ -170,6 +173,9 @@
   </data>
   <data name="InitialSessionButton" xml:space="preserve">
     <value>Reset</value>
+  </data>
+  <data name="InterfaceLanguage" xml:space="preserve">
+    <value>Interface Language</value>
   </data>
   <data name="JoinButton" xml:space="preserve">
     <value>Join</value>
@@ -209,6 +215,9 @@
   </data>
   <data name="RestartSessionButton" xml:space="preserve">
     <value>Restart</value>
+  </data>
+  <data name="Russian" xml:space="preserve">
+    <value>Русский</value>
   </data>
   <data name="SaveButton" xml:space="preserve">
     <value>Save</value>

@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager Navigation
 
 <AuthorizeView>
   <Authorized>
@@ -15,8 +16,16 @@
   </Authorized>
   <NotAuthorized>
     <MudLayout Class="d-flex">
-      <MudContainer>
+      <MudContainer Class="d-flex flex-column align-center">
         <Welcome />
+        <MudSpacer />
+        <MudMenu StartIcon="@Icons.Material.Filled.Language"
+                 Class="mb-4"
+                 Color="Color.Surface"
+                 Label="@UIResources.InterfaceLanguage">
+          <MudMenuItem OnClick="@(() => this.Navigation.NavigateToSetCulture(new System.Globalization.CultureInfo("ru")))">@UIResources.Russian</MudMenuItem>
+          <MudMenuItem OnClick="@(() => this.Navigation.NavigateToSetCulture(new System.Globalization.CultureInfo("en")))">@UIResources.English</MudMenuItem>
+        </MudMenu>
       </MudContainer>
     </MudLayout>
   </NotAuthorized>

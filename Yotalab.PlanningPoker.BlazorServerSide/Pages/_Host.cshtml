@@ -1,4 +1,8 @@
 ﻿@page "/"
+
+@using System.Globalization
+@using Microsoft.AspNetCore.Localization
+
 @namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
@@ -20,6 +24,15 @@
   <link rel="stylesheet" href="css/app.css" />
 </head>
 <body class="h-100 bg-light">
+  @{
+    this.HttpContext.Response.Cookies.Append(
+        CookieRequestCultureProvider.DefaultCookieName,
+        CookieRequestCultureProvider.MakeCookieValue(
+            new RequestCulture(
+                CultureInfo.CurrentCulture,
+                CultureInfo.CurrentUICulture)));
+  }
+
   <app>
     <component type="typeof(App)" render-mode="Server" />
   </app>
