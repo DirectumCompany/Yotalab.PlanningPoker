@@ -139,7 +139,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
       };
 
       var onConfirm = new EventCallbackFactory().Create<EditSessionArgs>(this, this.HandleEditSessionConfirmAsync);
-      EditSessionDialog.Show(this.DialogService, @UIResources.EditSessionDialogTitle, this.editSessionArgs, onConfirm);
+      EditSessionDialog.Show(this.DialogService, UIResources.EditSessionDialogTitle, this.editSessionArgs, onConfirm);
     }
 
     public async ValueTask DisposeAsync()

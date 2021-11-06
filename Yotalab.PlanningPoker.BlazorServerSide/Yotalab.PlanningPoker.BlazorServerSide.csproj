@@ -74,10 +74,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Areas\Identity\Resources\DataAnnotationResources.ru-RU.resx">
-      <LastGenOutput>DataAnnotationResources.Designer.cs</LastGenOutput>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
     <EmbeddedResource Update="Areas\Identity\Resources\DataAnnotationResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>DataAnnotationResources.Designer.cs</LastGenOutput>

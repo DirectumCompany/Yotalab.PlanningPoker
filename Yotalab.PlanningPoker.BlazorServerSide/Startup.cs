@@ -77,13 +77,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       app.UseHttpsRedirection();
       app.UseStaticFiles();
 
-      var supportedCultures = new[] { "en-US", "ru-RU" };
-      app.UseRequestLocalization(options =>
-      {
-        options.SetDefaultCulture(supportedCultures[1]);
-        options.AddSupportedCultures(supportedCultures);
-        options.AddSupportedUICultures(supportedCultures);
-      });
+      var supportedCultures = new[] { "en", "ru" };
+      app.UseRequestLocalization(supportedCultures);
 
       app.UseRouting();
 
