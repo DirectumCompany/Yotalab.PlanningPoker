@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Data;
+using Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Resources;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.Mailing;
 
@@ -89,8 +90,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
             values: new { userId = user.Id, code = code },
             protocol: this.Request.Scheme);
 
-        await emailSender.SendEmailAsync(inputModel.Email, "Подтверждение регистрации",
-            $"Подвердите вашу почту пройдя по <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>ссылке</a>.");
+        await emailSender.SendEmailAsync(inputModel.Email, IdentityUIResources.SignUpConfirmationEmailTitle,
+            string.Format(IdentityUIResources.SignUpConfirmationEmailBody, HtmlEncoder.Default.Encode(callbackUrl)));
 
         if (this.userManager.Options.SignIn.RequireConfirmedAccount)
         {
@@ -166,7 +167,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
       {
         encodedResult = IdentityResultEncoder.Base64UrlEncode(IdentityResult.Failed(new IdentityError()
         {
-          Description = $"Ошибка входа с помощью внешнего аккаунта: {remoteError}"
+          Description = string.Format(IdentityUIResources.SignInWithAttemptFailedRemoteError, remoteError)
         }));
         return this.Redirect($"~/identity/confirmExternal?result={encodedResult}&returnUrl={returnUrl}");
       }
@@ -174,7 +175,10 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
       var info = await signInManager.GetExternalLoginInfoAsync();
       if (info == null)
       {
-        encodedResult = IdentityResultEncoder.Base64UrlEncode(IdentityResult.Failed());
+        encodedResult = IdentityResultEncoder.Base64UrlEncode(IdentityResult.Failed(new IdentityError()
+        {
+          Description = IdentityUIResources.SignInWithAttemptFailed
+        }));
         return this.Redirect($"~/identity/confirmExternal?result={encodedResult}&returnUrl={returnUrl}");
       }
 
@@ -190,7 +194,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
       {
         encodedResult = IdentityResultEncoder.Base64UrlEncode(IdentityResult.Failed(new IdentityError()
         {
-          Description = "Учетная запись заблокировна, повторите попытку позже"
+          Description = IdentityResources.UserLockedOut
         }));
         return this.Redirect($"~/identity/confirmExternal?result={encodedResult}&returnUrl={returnUrl}");
       }
@@ -199,14 +203,17 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
       {
         encodedResult = IdentityResultEncoder.Base64UrlEncode(IdentityResult.Failed(new IdentityError()
         {
-          Description = "Недостаточно разрешений для получения информации об аккаунте"
+          Description = IdentityUIResources.SignInWithAttemptFailedNotEnoughPermissions
         }));
         return this.Redirect($"~/identity/confirmExternal?result={encodedResult}&returnUrl={returnUrl}");
       }
 
       if (this.participantsService == null)
       {
-        encodedResult = IdentityResultEncoder.Base64UrlEncode(IdentityResult.Failed());
+        encodedResult = IdentityResultEncoder.Base64UrlEncode(IdentityResult.Failed(new IdentityError()
+        {
+          Description = IdentityUIResources.SignInWithAttemptFailed
+        }));
         return this.Redirect($"~/identity/confirmExternal?result={encodedResult}&returnUrl={returnUrl}");
       }
 
@@ -238,11 +245,11 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
     [HttpPost]
     [Route("forgotPassword")]
     [AllowAnonymous]
-    public async Task<IActionResult> ForgotPassword([FromForm] string email)
+    public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordInputModel inputModel)
     {
-      if (!string.IsNullOrWhiteSpace(email))
+      if (!string.IsNullOrWhiteSpace(inputModel.Email))
       {
-        var user = await this.userManager.FindByEmailAsync(email);
+        var user = await this.userManager.FindByEmailAsync(inputModel.Email);
         if (user == null || !await this.userManager.IsEmailConfirmedAsync(user))
         {
           // Don't reveal that the user does not exist or is not confirmed
@@ -266,8 +273,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
         uriBuilder.Query = $"code={code}";
         var callbackUrl = uriBuilder.Uri.ToString(); // this.Url.ActionLink("resetPassword", "identity", values: new { code }, protocol: this.Request.Scheme);
 
-        await emailSender.SendEmailAsync(email, "Сброс пароля",
-            $"Сбросьте ваш пароль пройдя по <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>ссылке</a>.");
+        await emailSender.SendEmailAsync(inputModel.Email, IdentityUIResources.ResetPasswordEmailTitle,
+            string.Format(IdentityUIResources.ResetPasswordEmailTitle, HtmlEncoder.Default.Encode(callbackUrl)));
       }
 
       return this.Ok();

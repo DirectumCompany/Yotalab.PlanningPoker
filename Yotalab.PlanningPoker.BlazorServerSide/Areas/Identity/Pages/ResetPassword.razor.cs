@@ -43,7 +43,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
       {
         if (this.isSubmitting)
         {
-          // this.errors.Add("Попробуйте обновить страницу, процесс предыдущего входа завершился неудачно");
           return;
         }
 

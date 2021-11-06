@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Data;
+using Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Resources;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
@@ -56,7 +57,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
         this.errors.Clear();
         if (this.isSubmitting)
         {
-          this.errors.Add("Попробуйте обновить страницу, предыдущий процесс регистрации завершился неудачно");
+          this.errors.Add(IdentityUIResources.SignUpFailed);
           return;
         }
 
@@ -107,7 +108,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
         {
           this.Logger.LogWarning(ex, "Sign up failed.");
           this.errors.Clear();
-          this.errors.Add("Неудачная регистрация, повторите позже");
+          this.errors.Add(IdentityUIResources.SignUpFailed);
         }
         finally
         {
@@ -121,7 +122,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
       if (this.isSubmitting)
       {
         this.errors.Clear();
-        this.errors.Add("Неудачная регистрация, повторите позже");
+        this.errors.Add(IdentityUIResources.SignUpFailed);
         this.isSubmitting = false;
         this.StateHasChanged();
       }

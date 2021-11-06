@@ -8,7 +8,7 @@
         <Logotype />
       </MudText>
       <MudText Typo="Typo.h6" Class="mb-3">
-        Входите, пожалуйста
+        @IdentityUIResources.SignInTitle
       </MudText>
       <MudFocusTrap>
         <form action="api/identity/account/signin" method="post" autocomplete="off" target="submit_handler" hidden>
@@ -22,21 +22,21 @@
           <DataAnnotationsValidator />
 
           <MudTextField @bind-Value="this.loginInputModel.Email"
-                        Label="Эл. почта"
+                        Label="@DataAnnotationResources.EmailLabel"
                         For="@(() => this.loginInputModel.Email)"
                         InputType="InputType.Email"
-                        Required="true"
-                        RequiredError="Введите эл. почту" />
+                        Required="true" />
           <MudTextField @bind-Value="this.loginInputModel.Password"
-                        Label="Пароль"
+                        Label="@DataAnnotationResources.PasswordLabel"
                         For="@(() => this.loginInputModel.Password)"
                         InputType="InputType.Password"
-                        Required="true"
-                        RequiredError="Введите пароль" />
-          <MudLink Href="identity/forgotPassword" Underline="Underline.None" Typo="Typo.overline">Забыли пароль?</MudLink>
+                        Required="true" />
+          <MudLink Href="identity/forgotPassword" Underline="Underline.None" Typo="Typo.overline">
+            @IdentityUIResources.ForgotPassword
+          </MudLink>
           <div class="d-flex mt-3">
             <MudCheckBox @bind-Checked="this.loginInputModel.RememberMe"
-                         Label="Запомнить меня?"
+                         Label="@DataAnnotationResources.RememberMeLabel"
                          For="@(() => this.loginInputModel.RememberMe)"
                          Class="ml-n2" Color="Color.Info" />
             <MudSpacer />
@@ -45,7 +45,7 @@
                        Color="Color.Primary"
                        Disabled="@(!success)"
                        Class="ml-auto align-self-center">
-              Войти
+              @IdentityUIResources.SignInButton
             </MudButton>
           </div>
         </EditForm>
@@ -78,7 +78,7 @@
             }
             <MudButton Variant="Variant.Filled" StartIcon="@icon" ButtonType="ButtonType.Submit"
                        name="provider" value="@provider.Name"
-                       title="@($"Войти с аккаунтом {provider.DisplayName}")">
+                       title="@string.Format(IdentityUIResources.SignInWithButton, provider.DisplayName)">
               @provider.DisplayName
             </MudButton>
           }
@@ -89,7 +89,7 @@
 
   <MudCard Class="mt-4">
     <MudCardContent>
-      <MudText>Новичок в Agile Poker? <MudLink Href="identity/register" Underline="Underline.None">Создать учетную запись.</MudLink></MudText>
+      <MudText>@IdentityUIResources.NotRegisteredQuestion <MudLink Href="identity/register" Underline="Underline.None">@IdentityUIResources.SignUpLink</MudLink></MudText>
     </MudCardContent>
   </MudCard>
 

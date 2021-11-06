@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -9,11 +8,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Data;
+using Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Resources;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
@@ -68,7 +67,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
         this.errors.Clear();
         if (this.isSubmitting)
         {
-          this.errors.Add("Попробуйте обновить страницу, процесс предыдущего входа завершился неудачно");
+          this.errors.Add(IdentityUIResources.SignInAttemptFailed);
           return;
         }
 
@@ -105,14 +104,14 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
             {
               this.errors.Clear();
               if (result.IsLockedOut)
-                this.errors.Add("Учетная запись заблокировна, повторите попытку позже.");
+                this.errors.Add(IdentityResources.UserLockedOut);
               else if (result.IsNotAllowed)
-                this.errors.Add("Учетная запись не подтверждена.");
+                this.errors.Add(IdentityUIResources.UserNotConfirmEmail);
             }
             else if (result.IsUnauthorized())
             {
               this.errors.Clear();
-              this.errors.Add("Неудачная попытка входа.");
+              this.errors.Add(IdentityUIResources.SignInAttemptFailed);
             }
           }
         }
@@ -120,7 +119,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
         {
           this.Logger.LogWarning(ex, "Sign in failed.");
           this.errors.Clear();
-          this.errors.Add("Неудачная попытка входа.");
+          this.errors.Add(IdentityUIResources.SignInAttemptFailed);
         }
         finally
         {
@@ -134,7 +133,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages
       if (this.isSubmitting)
       {
         this.errors.Clear();
-        this.errors.Add("Неудачная попытка входа.");
+        this.errors.Add(IdentityUIResources.SignInAttemptFailed);
         this.isSubmitting = false;
         this.StateHasChanged();
       }

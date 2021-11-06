@@ -9,14 +9,16 @@
     @if (this.showRequiredConfirmation)
     {
       <MudText Typo="Typo.h6" Class="mb-3">
-        Подтверждение регистрации
+        @IdentityUIResources.SignUpTitle
       </MudText>
-      <MudAlert Severity="Severity.Success">На вашу почту отправлено письмо для подтверждения регистрации.</MudAlert>
+      <MudAlert Severity="Severity.Success">
+        @string.Format(IdentityUIResources.SignUpConfirmationSentDetails, this.inputModel.Email)
+      </MudAlert>
     }
     else
     {
       <MudText Typo="Typo.h6" Class="mb-3">
-        Регистрация нового пользователя
+        @IdentityUIResources.SignUpTitle
       </MudText>
       <MudFocusTrap>
         <form action="api/identity/account/signup" method="post" autocomplete="off" target="submit_handler" hidden>
@@ -28,23 +30,25 @@
         <iframe @ref="this.submitHandlerFrame" name="submit_handler" @onload="this.OnSubmitHandler" @onerror="this.OnErrorSubmitHandler" hidden></iframe>
         <EditForm class="identity-card--form" EditContext="this.editContext" OnValidSubmit="this.ValidSubmit" OnInvalidSubmit="this.InvalidSubmit">
           <DataAnnotationsValidator />
-          <MudTextField @bind-Value="this.inputModel.Email" Label="Эл. почта"
+          <MudTextField @bind-Value="this.inputModel.Email"
+                        Label="@DataAnnotationResources.EmailLabel"
                         For="@(() => this.inputModel.Email)"
                         InputType="InputType.Email"
-                        Required="true"
-                        RequiredError="Введите эл. почту" />
-          <MudTextField @bind-Value="this.inputModel.Password" Label="Пароль"
+                        Required="true" />
+          <MudTextField @bind-Value="this.inputModel.Password"
+                        Label="@DataAnnotationResources.PasswordLabel"
                         For="@(() => this.inputModel.Password)"
                         InputType="InputType.Password"
-                        Required="true"
-                        RequiredError="Введите пароль" />
-          <MudTextField @bind-Value="this.inputModel.ConfirmPassword" Label="Подтверждение пароля"
+                        Required="true" />
+          <MudTextField @bind-Value="this.inputModel.ConfirmPassword"
+                        Label="@DataAnnotationResources.ConfirmPasswordLabel"
                         For="@(() => this.inputModel.ConfirmPassword)"
                         InputType="InputType.Password"
-                        Required="true"
-                        RequiredError="Подтвердите пароль" />
+                        Required="true" />
           <div class="d-flex mt-3">
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto align-self-center">Зарегистрироваться</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto align-self-center">
+              @IdentityUIResources.SignUpButton
+            </MudButton>
           </div>
         </EditForm>
       </MudFocusTrap>

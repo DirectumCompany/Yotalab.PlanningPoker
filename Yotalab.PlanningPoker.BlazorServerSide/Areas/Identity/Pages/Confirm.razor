@@ -6,12 +6,12 @@
     <MudText Align="Align.Center" Class="mb-10" Typo="Typo.h4">
       <Logotype />
     </MudText>
+    <MudText Typo="Typo.h6" Class="mb-3">
+      @IdentityUIResources.SignUpConfirmationTitle
+    </MudText>
     @if (this.result == null || this.result.Succeeded)
     {
-      <MudText Typo="Typo.h6" Class="mb-3">
-        Вы подвердили вашу эл. почту
-      </MudText>
-      <MudAlert Severity="Severity.Success">Спасибо, что выбрали нас!</MudAlert>
+      <MudAlert Severity="Severity.Success">@IdentityUIResources.SignUpConfirmationSuccess</MudAlert>
     }
     else
     {
@@ -24,11 +24,13 @@
       }
       else
       {
-        <MudAlert Severity="Severity.Error" Class="identity-card--form-validation">Ошибка подтверждения эл. почты.</MudAlert>
+        <MudAlert Severity="Severity.Error" Class="identity-card--form-validation">@IdentityUIResources.SignUpConfirmationFailed</MudAlert>
       }
     }
     <MudCardActions Class="justify-end">
-      <MudButton Link="identity/login" Variant="Variant.Filled" Color="Color.Primary">Войти</MudButton>
+      <MudButton Link="identity/login" Variant="Variant.Filled" Color="Color.Primary">
+        @IdentityUIResources.SignInButton
+      </MudButton>
     </MudCardActions>
   </MudCardContent>
 </MudCard>

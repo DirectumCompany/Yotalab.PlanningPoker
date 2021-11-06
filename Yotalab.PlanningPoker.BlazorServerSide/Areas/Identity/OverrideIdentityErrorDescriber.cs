@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
-using Yotalab.PlanningPoker.BlazorServerSide.Resources;
+using Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Resources;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
 {
   public class OverrideIdentityErrorDescriber : IdentityErrorDescriber
   {
-    private IStringLocalizer<IdentityResource> localizer;
+    private IStringLocalizer<IdentityResources> localizer;
 
-    public OverrideIdentityErrorDescriber(IStringLocalizer<IdentityResource> localizer)
+    public OverrideIdentityErrorDescriber(IStringLocalizer<IdentityResources> localizer)
     {
       this.localizer = localizer;
     }

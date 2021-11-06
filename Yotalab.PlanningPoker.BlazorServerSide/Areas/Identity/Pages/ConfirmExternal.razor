@@ -6,6 +6,9 @@
     <MudText Align="Align.Center" Class="mb-10" Typo="Typo.h4">
       <Logotype />
     </MudText>
+    <MudText Typo="Typo.h6" Class="mb-3">
+      @IdentityUIResources.SignUpConfirmationTitle
+    </MudText>
     @if (this.result == null || !this.result.Succeeded)
     {
       if (this.result != null && this.result.Errors.Any())
@@ -17,11 +20,13 @@
       }
       else
       {
-        <MudAlert Severity="Severity.Warning">Попытка входа была неудачной</MudAlert>
+        <MudAlert Severity="Severity.Warning">@IdentityUIResources.SignInAttemptFailed</MudAlert>
       }
     }
     <MudCardActions Class="justify-end">
-      <MudButton Link="identity/login" Variant="Variant.Filled" Color="Color.Primary">Войти</MudButton>
+      <MudButton Link="identity/login" Variant="Variant.Filled" Color="Color.Primary">
+        @IdentityUIResources.SignInButton
+      </MudButton>
     </MudCardActions>
   </MudCardContent>
 </MudCard>

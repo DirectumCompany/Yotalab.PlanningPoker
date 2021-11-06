@@ -1,10 +1,8 @@
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
@@ -27,9 +25,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddRazorPages()
-        .AddDataAnnotationsLocalization(options =>
-          options.DataAnnotationLocalizerProvider = CreateDataAnnotationLocalizer);
+      services.AddRazorPages();
       services.AddServerSideBlazor();
       // Если используется UseOrleansSiloInProcess то эту строчку надо оставить закоментированной.
       // services.AddClusterService();
@@ -98,20 +94,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
         endpoints.MapBlazorHub();
         endpoints.MapFallbackToPage("/_Host");
       });
-    }
-
-    /// <summary>
-    /// Фабричный метод получения локализатора для DataAnnotaion атрибутов.
-    /// </summary>
-    /// <param name="type">Тип модели.</param>
-    /// <param name="factory">Фабрика локализаторов.</param>
-    /// <returns>Локализатор строк.</returns>
-    private static IStringLocalizer CreateDataAnnotationLocalizer(Type type, IStringLocalizerFactory factory)
-    {
-      if (type.FullName.StartsWith("Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Pages.Account"))
-        return factory.Create(typeof(Resources.IdentityResource));
-
-      return factory.Create(type);
     }
   }
 }
