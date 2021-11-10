@@ -138,6 +138,9 @@
   <data name="ResetPasswordEmailTitle" xml:space="preserve">
     <value>Reset Password</value>
   </data>
+  <data name="ResetPasswordFailed" xml:space="preserve">
+    <value>Failed reset password, please repeat later or refresh page</value>
+  </data>
   <data name="ResetPasswordSuccess" xml:space="preserve">
     <value>Your password has been reset</value>
   </data>

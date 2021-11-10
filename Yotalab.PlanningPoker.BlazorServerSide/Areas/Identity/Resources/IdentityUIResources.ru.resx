@@ -138,6 +138,9 @@
   <data name="ResetPasswordEmailTitle" xml:space="preserve">
     <value>Сброс пароля</value>
   </data>
+  <data name="ResetPasswordFailed" xml:space="preserve">
+    <value>Не удалось сбросить пароль, пожалуйста, повторите позже или обновите страницу</value>
+  </data>
   <data name="ResetPasswordSuccess" xml:space="preserve">
     <value>Ваш пароль сброшен</value>
   </data>

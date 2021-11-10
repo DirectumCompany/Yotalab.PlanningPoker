@@ -125,6 +125,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed reset password, please repeat later or refresh page.
+        /// </summary>
+        public static string ResetPasswordFailed {
+            get {
+                return ResourceManager.GetString("ResetPasswordFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your password has been reset.
         /// </summary>
         public static string ResetPasswordSuccess {

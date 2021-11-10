@@ -274,7 +274,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
         var callbackUrl = uriBuilder.Uri.ToString(); // this.Url.ActionLink("resetPassword", "identity", values: new { code }, protocol: this.Request.Scheme);
 
         await emailSender.SendEmailAsync(inputModel.Email, IdentityUIResources.ResetPasswordEmailTitle,
-            string.Format(IdentityUIResources.ResetPasswordEmailTitle, HtmlEncoder.Default.Encode(callbackUrl)));
+            string.Format(IdentityUIResources.ResetPasswordEmailBody, HtmlEncoder.Default.Encode(callbackUrl)));
       }
 
       return this.Ok();
