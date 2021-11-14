@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using System.Net.NetworkInformation;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Orleans;
 using Orleans.Hosting;
@@ -15,7 +17,16 @@ namespace Yotalab.PlanningPoker.Hosting
         .UseOrleans((context, builder) =>
         {
           builder.ConfigureApplicationParts(manager => manager.AddFromApplicationBaseDirectory());
-          builder.UseLocalhostClustering();
+
+          // При локальном рамещении нет возможности настроить Orleans, чтобы он не занимал порты.
+          // Issue запланированна на 4.0 версию https://github.com/dotnet/orleans/issues/7023
+          // Поэтому пока вручную можно менять в конфиге на не занятый порт.
+          // И выведем в консоль занятые порты, чтобы разбираться было легче.
+          ListUsedTCPPort();
+          var siloPort = context.Configuration.GetValue<int>("Orleans:SiloPort", 11111);
+          var gatewayPort = context.Configuration.GetValue<int>("Orleans:GatewayPort", 30000);
+          builder.UseLocalhostClustering(siloPort, gatewayPort);
+
           builder.AddAdoNetGrainStorageAsDefault(options =>
           {
             options.Invariant = "MySql.Data.MySqlConnector";
@@ -39,6 +50,14 @@ namespace Yotalab.PlanningPoker.Hosting
             options.HideTrace = true;
           });*/
         });
+    }
+
+    private static void ListUsedTCPPort()
+    {
+      var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+      var tcpConnections = ipGlobalProperties.GetActiveTcpConnections();
+      foreach (var connection in tcpConnections)
+        Console.WriteLine("Used Port {0} {1} {2} ", connection.LocalEndPoint, connection.RemoteEndPoint, connection.State);
     }
   }
 }

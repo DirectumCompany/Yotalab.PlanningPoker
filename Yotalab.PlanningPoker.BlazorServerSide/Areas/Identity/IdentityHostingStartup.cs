@@ -54,7 +54,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
         services.ConfigureApplicationCookie(options =>
         {
           options.AccessDeniedPath = string.Empty;
-          options.ExpireTimeSpan = TimeSpan.FromHours(24);
+          options.ExpireTimeSpan = TimeSpan.FromDays(365 / 2); // Пол года.
           options.Events = new CookieAuthenticationEvents()
           {
             // Базовая реализация делает редирект на Login страницу.
