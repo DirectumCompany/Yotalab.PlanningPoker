@@ -6,10 +6,8 @@
            @onclick="@(async () => await this.OnPokerCardClick())"
            value="@this.Value.Value">
     <div class="d-flex justify-center align-center h-100">
-      <MudText Typo="Typo.h2">
-        <b>
-          @this.Value.Value
-        </b>
+      <MudText Typo="Typo.h2" Style="font-weight: 500;">
+        @this.Value.Value
       </MudText>
     </div>
   </section>

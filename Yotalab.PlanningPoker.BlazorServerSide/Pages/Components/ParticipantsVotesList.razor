@@ -25,24 +25,21 @@
               @if (participant.Id == this.ParticipantId)
               {
                 <ParticipantChangeNameLink ParticipantInfo="@participant.ToInfo()"
-                                           Title="@UIResources.EditParticipantInfoButton"
-                                           ClassNames="pa-0 ma-0">
+                                       Title="@UIResources.EditParticipantInfoButton"
+                                       ClassNames="pa-0 ma-0">
                 </ParticipantChangeNameLink>
               }
             </div>
           </div>
-          <MudText Color="Color.Default" Typo="Typo.h5" Align="Align.Center" Style="width: 48px">
-            <strong>
-              @if (participant.Id == this.ParticipantId || this.Session.ProcessingState == SessionProcessingState.Stopped || this.Session.ProcessingState == SessionProcessingState.Finished)
-              {
-
-                @participant.Vote.Value
-              }
-              else
-              {
-                @(!Vote.Unset.Equals(participant.Vote) ? "👌" : string.Empty)
-              }
-            </strong>
+          <MudText Color="Color.Default" Typo="Typo.h5" Align="Align.Center" Style="width: 48px; font-weight: 500;">
+            @if (participant.Id == this.ParticipantId || this.Session.ProcessingState == SessionProcessingState.Stopped || this.Session.ProcessingState == SessionProcessingState.Finished)
+            {
+              @participant.Vote.Value
+            }
+            else
+            {
+              @(!Vote.Unset.Equals(participant.Vote) ? "👌" : string.Empty)
+            }
           </MudText>
         </div>
       </MudListItem>
