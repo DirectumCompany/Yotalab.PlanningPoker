@@ -3,23 +3,26 @@
 @inject NavigationManager NavigationManager
 @inject ParticipantsService Service
 
-<div class="alert alert-secondary mt-4" role="alert">
-  <strong class="me-2 align-middle">@this.title</strong>
-  @if (this.sessionExists)
-  {
-    <button class="font-weight-bold btn btn-sm btn-success"
-            @onclick="@(async () => await this.Service.JoinAsync(this.Session.Id, this.ParticipantId))">
-      Присоединиться
-    </button>
-  }
-  else
-  {
-    <button class="font-weight-bold btn btn-sm btn-primary"
-            @onclick="@(() => this.NavigationManager.NavigateTo("/"))">
-      Вернуться к моим сессиям
-    </button>
-  }
-</div>
+<MudAlert Severity="Severity.Normal" Class="mt-4 mud-alert-width-100" NoIcon="true">
+  <div class="d-flex align-center">
+    <MudText Class="mr-2" Align="Align.Center"><strong>@this.title</strong></MudText>
+    <MudSpacer />
+    @if (this.sessionExists)
+    {
+      <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" Style="text-transform:none"
+                 OnClick="@(async () => await this.Service.JoinAsync(this.Session.Id, this.ParticipantId))">
+        <MudText>@UIResources.JoinButton</MudText>
+      </MudButton>
+    }
+    else
+    {
+      <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Style="text-transform:none"
+                 OnClick="@(() => this.NavigationManager.NavigateTo("/"))">
+        <MudText>@UIResources.BackToMySessionsButton</MudText>
+      </MudButton>
+    }
+  </div>
+</MudAlert>
 
 @code {
   private string title;
@@ -36,7 +39,7 @@
     await base.OnParametersSetAsync();
     this.sessionExists = this.Session != null && this.Session.IsInitialized;
     this.title = this.sessionExists ?
-      $"Вы не являетесь участником сессии '{this.Session.Name}'" :
-      "Сессии не существует";
+      string.Format(@UIResources.NotParticipantHint, this.Session.Name) :
+      UIResources.SessionNotExists;
   }
 }

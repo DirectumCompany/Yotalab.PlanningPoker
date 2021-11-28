@@ -1,111 +1,12 @@
-﻿@using Grains.Interfaces.Models
-@using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO
-
-@{
-  var dropDownItems = new List<DropDownMenuItem>();
-  // Строим меню модератора.
-  if (this.Session.ModeratorIds.Contains(this.ParticipantId))
-  {
-    // Меню на другом участнике сессии.
-    if (this.ParticipantId != this.Participant.Id)
-    {
-      if (this.Session.ModeratorIds.Contains(this.Participant.Id))
-      {
-        dropDownItems.Add(new DropDownMenuItem()
-        {
-          ItemTemplate =
-        @<button class="dropdown-item d-flex align-items-center"
-                 @onclick="@(async () => await this.SessionService.RemoveModerator(this.Session.Id, this.Participant.Id))">
-          <img class="me-2" src="img/crown_cross_out_icon.svg" alt="Host" />
-          Отменить модератора
-        </button>
-        });
-      }
-      else
-      {
-        dropDownItems.Add(new DropDownMenuItem()
-        {
-          ItemTemplate =
-        @<button class="dropdown-item d-flex align-items-center"
-                 @onclick="@(async () => await this.SessionService.AddModerator(this.Session.Id, this.Participant.Id))">
-          <img class="me-2" src="img/crown_icon.svg" alt="Host" />
-          Сделать модератором
-        </button>
-        });
-      }
-
-      dropDownItems.Add(new DropDownMenuItem()
-      {
-        ItemTemplate =
-        @<button class="dropdown-item d-flex align-items-center"
-                 @onclick="@(async () => await this.Service.KickAsync(this.Session.Id, this.Participant.Id, this.ParticipantId))">
-          <img class="me-2" src="img/kick_icon.svg" alt="Leave" />
-          Исключить
-        </button>
-      });
-    }
-    else // Меню на себе.
-    {
-      if (this.Session.ModeratorIds.Length > 1)
-      {
-        dropDownItems.Add(new DropDownMenuItem()
-        {
-          ItemTemplate =
-        @<button class="dropdown-item d-flex align-items-center"
-                 @onclick="@(async () => { await this.Service.LeaveAsync(this.Session.Id, this.ParticipantId); })">
-          <img class="me-2" src="img/door_icon.svg" alt="Leave" />
-          Покинуть сессию
-        </button>
-        });
-      }
-    }
-  }
-  else // Меню участника.
-  {
-    // Меню на себе.
-    if (this.ParticipantId == this.Participant.Id)
-    {
-      dropDownItems.Add(new DropDownMenuItem()
-      {
-        ItemTemplate =
-        @<button class="dropdown-item d-flex align-items-center"
-                 @onclick="@(async () => { await this.Service.LeaveAsync(this.Session.Id, this.ParticipantId); })">
-          <img class="me-2" src="img/door_icon.svg" alt="Leave" />
-          Покинуть сессию
-        </button>
-      });
-    }
-    else // Меню на другом участнике сессии.
-    {
-      // Нет элементов.
-    }
-  }
-
-  if (dropDownItems.Count > 0)
-  {
-    var participantContextMenuId = $"avatarContextMenu-{this.Participant.Id}";
-    <DropDownMenu ButtonId="@participantContextMenuId" Items="dropDownItems">
-      <ButtonTemplate>
-        <Avatar Url="@this.Participant.AvatarUrl" />
-      </ButtonTemplate>
-    </DropDownMenu>
-  }
-  else
-  {
-    <Avatar Url="@this.Participant.AvatarUrl" />
-  }
+﻿@if (this.contextMenuItems.Count > 0)
+{
+  <DropDownMenu Items="this.contextMenuItems">
+    <ButtonTemplate>
+      <Avatar Url="@this.Participant.AvatarUrl" />
+    </ButtonTemplate>
+  </DropDownMenu>
 }
-
-@code {
-  [Parameter]
-  public ParticipantInfoDTO Participant { get; set; }
-
-  [Parameter]
-  public Guid ParticipantId { get; set; }
-
-  [CascadingParameter]
-  public SessionInfo Session { get; set; }
-
-  @inject ParticipantsService Service
-  @inject SessionService SessionService
+else
+{
+  <Avatar Url="@this.Participant.AvatarUrl" />
 }

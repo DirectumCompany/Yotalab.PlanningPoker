@@ -1,0 +1,96 @@
+﻿@page "/identity/login"
+@layout IdentityLayout
+
+<div>
+  <MudCard Class="identity-card">
+    <MudCardContent>
+      <MudText Align="Align.Center" Class="mb-10" Typo="Typo.h4">
+        <Logotype />
+      </MudText>
+      <MudText Typo="Typo.h6" Class="mb-3">
+        @IdentityUIResources.SignInTitle
+      </MudText>
+      <MudFocusTrap>
+        <form action="api/identity/account/signin" method="post" autocomplete="off" target="submit_handler" hidden>
+          <input @bind-value="this.loginInputModel.Email" name="InputModel.Email" type="email" autocomplete="off" hidden />
+          <input @bind-value="this.loginInputModel.Password" name="InputModel.Password" type="password" autocomplete="off" hidden />
+          <input value="@this.loginInputModel.RememberMe.ToString()" name="InputModel.RememberMe" type="text" autocomplete="off" hidden />
+          <button @ref="this.submitButton" type="submit" hidden />
+        </form>
+        <iframe @ref="this.submitHandlerFrame" name="submit_handler" @onload="this.OnSubmitHandler" @onerror="this.OnErrorSubmitHandler" hidden></iframe>
+        <EditForm class="identity-card--form" EditContext="this.editContext" OnValidSubmit="this.ValidSubmit" OnInvalidSubmit="this.InvalidSubmit">
+          <DataAnnotationsValidator />
+
+          <MudTextField @bind-Value="this.loginInputModel.Email"
+                        Label="@DataAnnotationResources.EmailLabel"
+                        For="@(() => this.loginInputModel.Email)"
+                        InputType="InputType.Email"
+                        Required="true" />
+          <MudTextField @bind-Value="this.loginInputModel.Password"
+                        Label="@DataAnnotationResources.PasswordLabel"
+                        For="@(() => this.loginInputModel.Password)"
+                        InputType="InputType.Password"
+                        Required="true" />
+          <MudLink Href="identity/forgotPassword" Underline="Underline.None" Typo="Typo.overline">
+            @IdentityUIResources.ForgotPassword
+          </MudLink>
+          <div class="d-flex mt-3">
+            <MudCheckBox @bind-Checked="this.loginInputModel.RememberMe"
+                         Label="@DataAnnotationResources.RememberMeLabel"
+                         For="@(() => this.loginInputModel.RememberMe)"
+                         Class="ml-n2" Color="Color.Info" />
+            <MudSpacer />
+            <MudButton ButtonType="ButtonType.Submit"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Disabled="@(!success)"
+                       Class="ml-auto align-self-center">
+              @IdentityUIResources.SignInButton
+            </MudButton>
+          </div>
+        </EditForm>
+      </MudFocusTrap>
+      @if (this.errors?.Any() == true)
+      {
+        @foreach (var err in this.errors)
+        {
+          <MudAlert Severity="Severity.Error" Class="identity-card--form-validation">@err</MudAlert>
+        }
+      }
+    </MudCardContent>
+
+    <MudCardActions>
+      @if (this.ExternalLogins != null && this.ExternalLogins.Any())
+      {
+        <form id="external-account" action="api/identity/account/signinExternal?returnUrl=@this.GetReturnUrl()" method="post"
+              class="d-flex justify-space-around flex-grow-1 mb-4">
+          @foreach (var provider in this.ExternalLogins)
+          {
+            string icon = null;
+            switch (provider.Name.ToLower())
+            {
+              case "microsoft":
+                icon = Icons.Custom.Brands.Microsoft;
+                break;
+              case "google":
+                icon = Icons.Custom.Brands.Google;
+                break;
+            }
+            <MudButton Variant="Variant.Filled" StartIcon="@icon" ButtonType="ButtonType.Submit"
+                       name="provider" value="@provider.Name"
+                       title="@string.Format(IdentityUIResources.SignInWithButton, provider.DisplayName)">
+              @provider.DisplayName
+            </MudButton>
+          }
+        </form>
+      }
+    </MudCardActions>
+  </MudCard>
+
+  <MudCard Class="mt-4">
+    <MudCardContent>
+      <MudText>@IdentityUIResources.NotRegisteredQuestion <MudLink Href="identity/register" Underline="Underline.None">@IdentityUIResources.SignUpLink</MudLink></MudText>
+    </MudCardContent>
+  </MudCard>
+
+</div>

@@ -1,21 +1,9 @@
-﻿<nav class="navbar navbar-expand-lg navbar-light py-1">
-  <div class="container-fluid w-75">
-    <div class="pb-1">
-      <Logotype />
-    </div>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav flex-fill justify-content-between">
-
-        <li class="nav-item">
-          <a class="nav-link" href="">Мои сессии</a>
-        </li>
-        <li class="nav-item d-flex align-items-center">
-          <ProfileLink />
-        </li>
-      </ul>
-    </div>
+﻿@inject NavigationManager Navigation
+<div class="d-flex flex-grow-1 flex-shrink-0 mx-auto align-baseline">
+  <span class="pr-4"><Logotype /></span>
+  <MudButton Variant="Variant.Text" Color="Color.Primary" Link="@this.Navigation.BaseUri">@UIResources.MySessions</MudButton>
+  <MudSpacer />
+  <div class="d-flex align-self-center">
+    <ProfileLink />
   </div>
-</nav>
+</div>

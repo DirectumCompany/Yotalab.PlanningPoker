@@ -1,24 +1,27 @@
-﻿<section class="py-5 text-center container" style="position: relative; top: 15%;height:85%">
-  <div class="mb-4 text-muted">
+﻿<div style="margin-top:15%">
+  <MudText Align="Align.Center" Class="mb-16">
     <Logotype />
-  </div>
-  <div class="row py-lg-5">
-    <div class="col-lg-6 col-md-8 mx-auto">
-      <h1 class="fw-light">Ясное и простое планирование!</h1>
-      <p class="lead text-muted">Сделайте оценку Agile-проектов простой и увлекательной.</p>
-      <p>
-        <a href="@RegisterUrlBase" class="btn btn-primary my-2">Зарегистрироваться</a>
-        <a href="@LoginUrlBase" class="btn btn-secondary my-2">Войти</a>
-      </p>
-    </div>
-  </div>
-</section>
+  </MudText>
+
+  <MudText Align="Align.Center">
+    <MudText Typo="Typo.h4" GutterBottom="true">@UIResources.WellcomeTitle</MudText>
+    <MudText Typo="Typo.body1" Class="grey-text text-darken-1">@UIResources.WellcomeSubtitle</MudText>
+    <p class="mt-4">
+      <MudButton Link="@RegisterUrlBase" Color="Color.Primary" Variant="Variant.Filled" Class="mr-2">
+        @IdentityUIResources.SignUpButton
+      </MudButton>
+      <MudButton Link="@LoginUrlBase" Color="Color.Default" Variant="Variant.Filled">
+        @IdentityUIResources.SignInButton
+      </MudButton>
+    </p>
+  </MudText>
+</div>
 
 @code {
   @inject NavigationManager Navigation
 
-  private const string LoginUrlBase = "Identity/Account/Login";
-  private const string RegisterUrlBase = "Identity/Account/Register";
+  private const string LoginUrlBase = "identity/login";
+  private const string RegisterUrlBase = "identity/register";
 
   protected override void OnParametersSet()
   {

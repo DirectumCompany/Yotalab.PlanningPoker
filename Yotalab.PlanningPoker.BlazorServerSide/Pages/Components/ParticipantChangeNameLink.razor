@@ -1,59 +1,17 @@
 ﻿@using Grains.Interfaces.Models
 
-<button id="@this.Id" type="button" class="@(this.ClassNames ?? "btn btn-link p-0 m-0")" data-bs-toggle="modal" data-bs-target="#changeNameModal">
-  @if (this.TitleTemplate == null)
-  {
-    <span>@this.Title</span>
-  }
-  else
-  {
-    @this.TitleTemplate(this.Title)
-  }
-</button>
+@inject IDialogService DialogService
 
-<div class="modal fade" id="changeNameModal" tabindex="-1" aria-labelledby="changeNameModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="changeNameModalLabel">Изменение имени</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="mb-3 d-flex justify-content-center">
-            @foreach (var avatar in AvatarCollection)
-            {
-              var avatarClassName = string.Equals(this.newAvatarUrl, avatar, StringComparison.OrdinalIgnoreCase) ?
-                "avatar avatar--selected" : null;
-              <div class="me-3" style="cursor:pointer" @onclick="@(() => this.SelectAvatar(avatar))">
-                <Avatar Url="@avatar" ClassNames="@avatarClassName" />
-              </div>
-            }
-          </div>
-          <div class="mb-3">
-            <label for="new-name" class="col-form-label">Имя:</label>
-            <input @bind="this.newName" type="text" class="form-control" id="new-name" autofocus>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                disabled="@(this.ParticipantInfo == null)"
-                @onclick="@(async () => await this.ChangeInfoAsync())">
-          Сохранить
-        </button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Отменить
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+<MudLink Underline="Underline.None"
+         Class="@this.ClassNames"
+         Style="cursor:pointer"
+         Color="Color.Primary"
+         Typo="Typo.subtitle2"
+         @onclick="@(() => EditParticipantInfoDialog.Show(this.DialogService, this.ParticipantInfo))">
+    @this.Title
+</MudLink>
 
 @code {
-  [Parameter]
-  public string Id { get; set; }
-
   [Parameter]
   public ParticipantInfo ParticipantInfo { get; set; }
 
@@ -65,42 +23,4 @@
 
   [Parameter]
   public string ClassNames { get; set; }
-
-  private const string DefaultAvatar = "img/default_avatar.png";
-
-  private static List<string> AvatarCollection = new List<string>()
-{
-    "img/img_avatar_1.png",
-    "img/img_avatar_2.png",
-    "img/img_avatar_3.png",
-    "img/img_avatar_4.png",
-    "img/img_avatar_5.png",
-  };
-
-  private string newName;
-
-  private string newAvatarUrl;
-
-  @inject ParticipantsService Service
-
-  protected override void OnParametersSet()
-  {
-    if (this.ParticipantInfo != null)
-    {
-      this.newName = this.ParticipantInfo.Name;
-      this.newAvatarUrl = this.ParticipantInfo.AvatarUrl;
-    }
-    base.OnParametersSet();
-  }
-
-  private void SelectAvatar(string avatarUrl)
-  {
-    this.newAvatarUrl = avatarUrl;
-    this.StateHasChanged();
-  }
-
-  private Task ChangeInfoAsync()
-  {
-    return this.Service.ChangeInfo(this.ParticipantInfo.Id, this.newName, this.newAvatarUrl);
-  }
 }

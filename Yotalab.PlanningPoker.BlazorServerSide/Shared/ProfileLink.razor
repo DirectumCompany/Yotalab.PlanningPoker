@@ -5,44 +5,36 @@
 @implements IAsyncDisposable
 
 @inject JSInteropFunctions JSFunctions
+@inject IDialogService DialogService
+@inject NavigationManager Navigation
 
 @if (this.participantInfo != null)
 {
-  var dropDownMenuItems = new List<DropDownMenuItem>()
-{
-    new DropDownMenuItem()
-    {
-      ItemTemplate =
-@<button class="dropdown-item" @onclick="this.RaiseClickOnChangeNameLinkAsync">
-  Изменить имя
-</button>
-    },
-    new DropDownMenuItem()
-    {
-      ItemTemplate =
-@<form method="post" action="Identity/Account/LogOut">
-  <button type="submit" class="dropdown-item">Выйти</button>
-</form>
-    }
-  };
-
-  <DropDownMenu ButtonId="profileLinkMenu" Items="dropDownMenuItems">
+  <DropDownMenu>
     <ButtonTemplate>
-      <Avatar ClassNames="avatar avatar--small me-2" Url="@this.participantInfo.AvatarUrl" />
-      <span class="text-muted fw-bold">@this.displayName</span>
+      <div class="d-flex align-center">
+        <Avatar ClassNames="mr-2" Url="@this.participantInfo.AvatarUrl" IsSmall="true" />
+        <MudText Class="d-none d-md-inline">@this.displayName</MudText>
+      </div>
     </ButtonTemplate>
+    <ChildContent>
+      <MudMenuItem OnClick="@(() => EditParticipantInfoDialog.Show(this.DialogService, this.participantInfo))">
+        @UIResources.EditParticipantInfoButton
+      </MudMenuItem>
+      <MudMenuItem Link="api/identity/account/signOut" Target="_self">@IdentityUIResources.SignOut</MudMenuItem>
+      <MudDivider />
+      <MudListSubheader Class="pb-0">
+        @UIResources.InterfaceLanguage
+      </MudListSubheader>
+      <MudMenuItem OnClick="@(() => this.Navigation.NavigateToSetCulture(new System.Globalization.CultureInfo("ru")))">@UIResources.Russian</MudMenuItem>
+      <MudMenuItem OnClick="@(() => this.Navigation.NavigateToSetCulture(new System.Globalization.CultureInfo("en")))">@UIResources.English</MudMenuItem>
+    </ChildContent>
   </DropDownMenu>
-
-  <ParticipantChangeNameLink Id="@this.participantChangeNameLinkId"
-                             ParticipantInfo="this.participantInfo"
-                             ClassNames="visually-hidden">
-  </ParticipantChangeNameLink>
 }
 
 @code {
   private ParticipantInfo participantInfo;
   private string displayName;
-  private string participantChangeNameLinkId = "profileChangeNameGlobalButton";
   private StreamSubscriptionHandle<ParticipantChangedNotification> participantChangedSubscription;
 
   protected override async Task OnInitializedAsync()
@@ -69,15 +61,7 @@
 
   private void RefreshDisplayName(ParticipantInfo info)
   {
-    this.displayName = string.IsNullOrWhiteSpace(info?.Name) ? "Безымянный" : info.Name;
-  }
-
-  private async Task RaiseClickOnChangeNameLinkAsync()
-  {
-    // Bootstrap не может простой разметкой показать модалку из скрытой области.
-    // Если добавить ParticipantChangeNameLink в контекстное меню, то он окажется в скрытой области.
-    // Нужно вынести модалку за контекстное меню и тогда можно щелкнуть по кнопке js-ом.
-    await this.JSFunctions.ClickElementById(this.participantChangeNameLinkId);
+    this.displayName = string.IsNullOrWhiteSpace(info?.Name) ? UIResources.NamelessParticipantName : info.Name;
   }
 
   public async ValueTask DisposeAsync()

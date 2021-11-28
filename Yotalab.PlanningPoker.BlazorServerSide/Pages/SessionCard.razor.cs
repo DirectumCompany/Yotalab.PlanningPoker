@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using MudBlazor;
 using Orleans.Streams;
 using Yotalab.PlanningPoker.BlazorServerSide.Pages.Components;
+using Yotalab.PlanningPoker.BlazorServerSide.Resources;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.Args;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO;
@@ -34,6 +36,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    private IDialogService DialogService { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -132,6 +137,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
         AutoStop = this.session?.AutoStop == true,
         Bulletin = new Bulletin(this.bulletin)
       };
+
+      var onConfirm = new EventCallbackFactory().Create<EditSessionArgs>(this, this.HandleEditSessionConfirmAsync);
+      EditSessionDialog.Show(this.DialogService, UIResources.EditSessionDialogTitle, this.editSessionArgs, onConfirm);
     }
 
     public async ValueTask DisposeAsync()

@@ -17,7 +17,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="3.1.12" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.11" />
     <PackageReference Include="Microsoft.Extensions.Localization" Version="5.0.4" />
@@ -27,10 +26,10 @@
     <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="3.4.1" />
     <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="3.4.1" />
     <PackageReference Include="Microsoft.Orleans.Persistence.AdoNet" Version="3.4.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" ExcludeAssets="All" />
+    <PackageReference Include="MudBlazor" Version="5.2.0" />
     <PackageReference Include="OrleansDashboard" Version="3.1.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.2.4" />
-    <PackageReference Include="Radzen.Blazor" Version="3.1.6" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
     <PackageReference Include="Serilog.Expressions" Version="1.1.1" />
@@ -43,6 +42,53 @@
   <ItemGroup>
     <ProjectReference Include="..\Yotalab.PlanningPoker.Grains.Interfaces\Yotalab.PlanningPoker.Grains.Interfaces.csproj" />
     <ProjectReference Include="..\Yotalab.PlanningPoker.Grains\Yotalab.PlanningPoker.Grains.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Areas\Identity\Data\DataAnnotationResources - Copy.Designer.cs">
+      <DependentUpon>DataAnnotationResources.Designer.cs</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Areas\Identity\Resources\DataAnnotationResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DataAnnotationResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Areas\Identity\Resources\IdentityResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IdentityResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Areas\Identity\Resources\IdentityUIResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IdentityUIResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\UIResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UIResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Areas\Identity\Resources\DataAnnotationResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DataAnnotationResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Areas\Identity\Resources\IdentityResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>IdentityResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Areas\Identity\Resources\IdentityUIResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>IdentityUIResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\UIResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>UIResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

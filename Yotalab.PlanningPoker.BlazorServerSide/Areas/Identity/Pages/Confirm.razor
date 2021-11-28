@@ -1,0 +1,36 @@
+﻿@page "/identity/confirm"
+@layout IdentityLayout
+
+<MudCard Class="identity-card">
+  <MudCardContent>
+    <MudText Align="Align.Center" Class="mb-10" Typo="Typo.h4">
+      <Logotype />
+    </MudText>
+    <MudText Typo="Typo.h6" Class="mb-3">
+      @IdentityUIResources.SignUpConfirmationTitle
+    </MudText>
+    @if (this.result == null || this.result.Succeeded)
+    {
+      <MudAlert Severity="Severity.Success">@IdentityUIResources.SignUpConfirmationSuccess</MudAlert>
+    }
+    else
+    {
+      if (this.result != null)
+      {
+        foreach (var error in this.result.Errors)
+        {
+          <MudAlert Severity="Severity.Error" Class="identity-card--form-validation">@error.Description</MudAlert>
+        }
+      }
+      else
+      {
+        <MudAlert Severity="Severity.Error" Class="identity-card--form-validation">@IdentityUIResources.SignUpConfirmationFailed</MudAlert>
+      }
+    }
+    <MudCardActions Class="justify-end">
+      <MudButton Link="identity/login" Variant="Variant.Filled" Color="Color.Primary">
+        @IdentityUIResources.SignInButton
+      </MudButton>
+    </MudCardActions>
+  </MudCardContent>
+</MudCard>

@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "http://localhost/PlanningPoker",
+      "applicationUrl": "https://localhost/PlanningPoker",
       "sslPort": 0
     },
     "iisExpress": {
@@ -12,6 +12,14 @@
     }
   },
   "profiles": {
+    "IIS": {
+      "commandName": "IIS",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "ancmHostingModel": "OutOfProcess"
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,

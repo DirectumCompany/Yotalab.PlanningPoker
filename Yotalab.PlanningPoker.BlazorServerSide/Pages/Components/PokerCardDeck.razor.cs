@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Radzen;
+using MudBlazor;
+using Yotalab.PlanningPoker.BlazorServerSide.Resources;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 
@@ -12,7 +13,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
     private Vote selectedVote;
 
     [Inject]
-    private NotificationService Notification { get; set; }
+    private ISnackbar Snackbar { get; set; }
 
     [Parameter]
     public Guid SessionId { get; set; }
@@ -45,12 +46,13 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
       }
       else
       {
-        this.Notification.Notify(new NotificationMessage
+        this.Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        this.Snackbar.Add(UIResources.NotStartedSessionState, Severity.Warning, options =>
         {
-          Severity = NotificationSeverity.Warning,
-          Summary = "Вы не можете голосовать",
-          Detail = "Голосование не началось",
-          Duration = 4000
+          options.SnackbarVariant = Variant.Filled;
+          options.VisibleStateDuration = 2000;
+          options.ShowTransitionDuration = 200;
+          options.HideTransitionDuration = 200;
         });
       }
     }
