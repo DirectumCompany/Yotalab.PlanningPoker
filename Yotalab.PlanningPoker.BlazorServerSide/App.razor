@@ -1,30 +1,63 @@
 ﻿@using Microsoft.AspNetCore.Authorization
 
-<MudThemeProvider />
+<MudThemeProvider Theme="this.theme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<CascadingAuthenticationState>
-  <Router AppAssembly="@typeof(Program).Assembly">
-    <Found Context="routeData">
-      @if (routeData != null)
-      {
-        var pageType = routeData.PageType;
-        var allowAnonymousAttribute = pageType.GetCustomAttributes(typeof(AllowAnonymousAttribute), true).FirstOrDefault();
-        if (allowAnonymousAttribute == null)
-        {
-          <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        }
-        else
-        {
-          <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        }
-      }
-    </Found>
-    <NotFound>
-      <LayoutView Layout="@typeof(MainLayout)">
-        <p>Sorry, there's nothing at this address.</p>
-      </LayoutView>
-    </NotFound>
-  </Router>
-</CascadingAuthenticationState>
+<CascadingValue Value="this.theme" Name="Theme">
+  <CascadingValue Value="this.switchThemeCallback" Name="SwitchTheme">
+    <CascadingAuthenticationState>
+      <Router AppAssembly="@typeof(Program).Assembly">
+        <Found Context="routeData">
+          @if (routeData != null)
+          {
+            var pageType = routeData.PageType;
+            var allowAnonymousAttribute = pageType.GetCustomAttributes(typeof(AllowAnonymousAttribute), true).FirstOrDefault();
+            if (allowAnonymousAttribute == null)
+            {
+              <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            }
+            else
+            {
+              <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            }
+          }
+        </Found>
+        <NotFound>
+          <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+          </LayoutView>
+        </NotFound>
+      </Router>
+    </CascadingAuthenticationState>
+  </CascadingValue>
+</CascadingValue>
+
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage LocalStorage
+
+@code {
+  private const string ThemeNameStorageKey = ".AgilePoker.ThemeName";
+
+  private MudTheme theme;
+
+  private string themeName;
+
+  private EventCallback<MudTheme> switchThemeCallback;
+
+  protected override async Task OnInitializedAsync()
+  {
+    var storedThemeName = await this.LocalStorage.GetAsync<string>(ThemeNameStorageKey);
+    this.themeName = storedThemeName.Success ? storedThemeName.Value : Themes.GetName(this.theme);
+    this.theme = Themes.GetTheme(this.themeName);
+    this.switchThemeCallback = new EventCallbackFactory().Create<MudTheme>(this, this.SwitchTheme);
+  }
+
+  private async Task SwitchTheme(MudTheme newTheme)
+  {
+    this.themeName = Themes.GetName(newTheme);
+    this.theme = newTheme;
+
+    await this.LocalStorage.SetAsync(ThemeNameStorageKey, this.themeName);
+  }
+}

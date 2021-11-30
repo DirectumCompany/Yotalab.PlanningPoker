@@ -1,21 +1,24 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager Navigation
 
-<AuthorizeView>
-  <Authorized>
-    <MudContainer MaxWidth="MaxWidth.Large">
-      <MudLayout Class="m-auto d-flex flex-column">
-        <MudAppBar Dense="true" Color="Color.Transparent" Elevation="0" Fixed="false" ToolBarClass="px-0">
-          <NavMenu />
-        </MudAppBar>
-        <MudMainContent Class="pt-0">
-          @Body
-        </MudMainContent>
-      </MudLayout>
-    </MudContainer>
-  </Authorized>
-  <NotAuthorized>
-    <MudLayout Class="d-flex">
+<MudLayout Class="d-flex">
+  <AuthorizeView>
+    <Authorized>
+
+      <MudContainer MaxWidth="MaxWidth.Large">
+        <MudLayout Class="m-auto d-flex flex-column">
+          <MudAppBar Dense="true" Color="Color.Transparent" Elevation="0" Fixed="false" ToolBarClass="px-0">
+            <NavMenu />
+          </MudAppBar>
+          <MudMainContent Class="pt-0">
+            @Body
+          </MudMainContent>
+        </MudLayout>
+      </MudContainer>
+
+    </Authorized>
+    <NotAuthorized>
+
       <MudContainer Class="d-flex flex-column align-center">
         <Welcome />
         <MudSpacer />
@@ -27,6 +30,7 @@
           <MudMenuItem OnClick="@(() => this.Navigation.NavigateToSetCulture(new System.Globalization.CultureInfo("en")))">@UIResources.English</MudMenuItem>
         </MudMenu>
       </MudContainer>
-    </MudLayout>
-  </NotAuthorized>
-</AuthorizeView>
+
+    </NotAuthorized>
+  </AuthorizeView>
+</MudLayout>

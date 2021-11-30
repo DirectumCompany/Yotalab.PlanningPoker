@@ -4,7 +4,6 @@
   width: 132px;
   height: 172px;
   border-radius: 4px;
-  background: #fff;
   cursor: pointer;
 }
 
@@ -51,7 +50,7 @@
   }
 
 .poker-card--selected {
-  background: bisque;
+  background: #FFE0B2;
 }
 
   .poker-card--selected:hover {
