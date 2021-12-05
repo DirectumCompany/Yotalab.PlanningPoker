@@ -138,6 +138,12 @@
   <data name="EditParticipantInfoButton" xml:space="preserve">
     <value>Edit profile</value>
   </data>
+  <data name="EditParticipantInfoDialogAvatarUploadError" xml:space="preserve">
+    <value>Failed to upload image, try again later.</value>
+  </data>
+  <data name="EditParticipantInfoDialogMaxAvatarSize" xml:space="preserve">
+    <value>The image size should not be larger than {0} kbyte</value>
+  </data>
   <data name="EditParticipantInfoDialogNameLabel" xml:space="preserve">
     <value>Name</value>
   </data>

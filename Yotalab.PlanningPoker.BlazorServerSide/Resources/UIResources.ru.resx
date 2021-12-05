@@ -138,6 +138,12 @@
   <data name="EditParticipantInfoButton" xml:space="preserve">
     <value>Изменить профиль</value>
   </data>
+  <data name="EditParticipantInfoDialogAvatarUploadError" xml:space="preserve">
+    <value>Не удалось загрузить изображение, попробуйте позже.</value>
+  </data>
+  <data name="EditParticipantInfoDialogMaxAvatarSize" xml:space="preserve">
+    <value>Размер изображения не должен быть больше чем {0} кбайт</value>
+  </data>
   <data name="EditParticipantInfoDialogNameLabel" xml:space="preserve">
     <value>Имя</value>
   </data>

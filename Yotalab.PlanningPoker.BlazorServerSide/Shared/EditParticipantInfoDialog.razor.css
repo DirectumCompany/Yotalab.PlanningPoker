@@ -8,3 +8,7 @@
 ::deep .avatar:hover {
   border: 1px solid lightskyblue;
 }
+
+.upload-avatar-label {
+  cursor: pointer;
+}

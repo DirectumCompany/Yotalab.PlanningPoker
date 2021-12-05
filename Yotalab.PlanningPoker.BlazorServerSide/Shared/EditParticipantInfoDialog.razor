@@ -1,15 +1,23 @@
 ﻿<MudDialog Class="mud-dialog-top-center">
   <DialogContent>
+    @if (!string.IsNullOrWhiteSpace(this.error))
+    {
+      <MudAlert Severity="Severity.Error" Class="mb-4">@this.error</MudAlert>
+    }
     <form>
       <div class="mb-3 d-flex flex-wrap justify-center">
-        @foreach (var avatar in AvatarCollection)
+        @foreach (var avatar in this.fullAvatarCollection)
         {
-          var avatarClassName = string.Equals(this.newAvatarUrl, avatar, StringComparison.OrdinalIgnoreCase) ?
-            "avatar avatar--selected" : "avatar";
-        <div class="mr-3" style="cursor:pointer" @onclick="@(() => this.SelectAvatar(avatar))">
-          <Avatar ClassNames="@avatarClassName" Url="@avatar" IsLarge="true" />
-        </div>
+          var avatarClassName = this.AvatarClassNameByUrl(avatar);
+          <div class="mr-3" style="cursor:pointer" @onclick="@(() => this.SelectAvatar(avatar))">
+            <Avatar ClassNames="@avatarClassName" Url="@avatar" IsLarge="true" />
+          </div>
         }
+
+        <label class="upload-avatar-label" for="upload_avatar" @ref="this.uploadLabel">
+          <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Large" OnClick="this.StartUploading" />
+        </label>
+        <InputFile id="upload_avatar" name="profile_avatar" OnChange="this.Upload" hidden />
       </div>
       <div class="mb-3">
         <MudTextField @bind-Value="this.newName" Label="@UIResources.EditParticipantInfoDialogNameLabel" />
