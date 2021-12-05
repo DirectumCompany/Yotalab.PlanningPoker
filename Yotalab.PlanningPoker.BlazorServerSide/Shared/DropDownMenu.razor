@@ -37,25 +37,3 @@ else
     </ChildContent>
   </MudMenu>
 }
-
-@code {
-  [Parameter]
-  public string Icon { get; set; }
-
-  [Parameter]
-  public RenderFragment ButtonTemplate { get; set; }
-
-  [Parameter]
-  public RenderFragment ChildContent { get; set; }
-
-  [Parameter]
-  public IEnumerable<DropDownMenuItem> Items { get; set; }
-
-  private EventCallback<MouseEventArgs> CreateOnClickCallback(DropDownMenuItem item)
-  {
-    var factory = new EventCallbackFactory();
-    return item.OnClick != null ?
-      factory.Create<MouseEventArgs>(this, item.OnClick) :
-      factory.Create<MouseEventArgs>(this, item.OnClickAsync);
-  }
-}

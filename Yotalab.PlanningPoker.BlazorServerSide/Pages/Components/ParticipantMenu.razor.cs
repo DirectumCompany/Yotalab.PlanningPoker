@@ -11,9 +11,12 @@ using MudBlazorIcons = MudBlazor.Icons;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
 {
-  public partial class ParticipantAvatar
+  public partial class ParticipantMenu
   {
     private List<DropDownMenuItem> contextMenuItems = new();
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> InputAttributes { get; set; }
 
     [Inject]
     private ParticipantsService Service { get; set; }
@@ -29,6 +32,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
 
     [Parameter]
     public Guid ParticipantId { get; set; }
+
 
     protected override void OnParametersSet()
     {

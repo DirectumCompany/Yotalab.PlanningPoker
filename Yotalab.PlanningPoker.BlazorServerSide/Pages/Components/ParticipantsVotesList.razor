@@ -12,35 +12,32 @@
         <div class="d-flex align-center justify-space-between">
           <div class="d-flex align-center">
             <div class="mr-3">
-              <ParticipantAvatar Participant="participant" ParticipantId="this.ParticipantId" />
+              <Avatar Url="@participant.AvatarUrl" />
             </div>
-            <div>
-              <div class="d-flex align-center">
-                <MudText Class="my-0 mr-2">@(string.IsNullOrEmpty(participant.Name) ? UIResources.NamelessParticipantName : participant.Name)</MudText>
-                @if (this.Session.ModeratorIds.Contains(participant.Id))
-                {
-                  <MudIcon Icon="@Icons.Material.Filled.LocalPolice" Color="Color.Warning" />
-                }
-              </div>
-              @if (participant.Id == this.ParticipantId)
-              {
-                <ParticipantChangeNameLink ParticipantInfo="@participant.ToInfo()"
-                                       Title="@UIResources.EditParticipantInfoButton"
-                                       ClassNames="pa-0 ma-0">
-                </ParticipantChangeNameLink>
-              }
-            </div>
+            <MudText Class="my-0 mr-2 d-none d-md-block">
+              @(string.IsNullOrEmpty(participant.Name) ? UIResources.NamelessParticipantName : participant.Name)
+            </MudText>
+            <MudText Class="my-0 mr-2 d-md-none" Style="flex:0">
+              @(string.IsNullOrEmpty(participant.Name) ? UIResources.NamelessParticipantName : participant.Name)
+            </MudText>
+            @if (this.Session.ModeratorIds.Contains(participant.Id))
+            {
+              <MudIcon Icon="@Icons.Material.Filled.LocalPolice" Color="Color.Warning" />
+            }
           </div>
-          <MudText Color="Color.Default" Typo="Typo.h5" Align="Align.Center" Style="width: 48px; font-weight: 500;">
-            @if (participant.Id == this.ParticipantId || this.Session.ProcessingState == SessionProcessingState.Stopped || this.Session.ProcessingState == SessionProcessingState.Finished)
-            {
-              @participant.Vote.Value
-            }
-            else
-            {
-              @(!Vote.Unset.Equals(participant.Vote) ? "👌" : string.Empty)
-            }
-          </MudText>
+          <div class="d-flex align-center">
+            <MudText Color="Color.Default" Typo="Typo.h5" Align="Align.Center" Class="d-flex justify-center" Style="width: 48px; font-weight: 500;">
+              @if (participant.Id == this.ParticipantId || this.Session.ProcessingState == SessionProcessingState.Stopped || this.Session.ProcessingState == SessionProcessingState.Finished)
+              {
+                @participant.Vote.Value
+              }
+              else if (!Vote.Unset.Equals(participant.Vote))
+              {
+                <MudIcon Icon="@Icons.Material.Filled.Done" Color="@Color.Warning" />
+              }
+            </MudText>
+            <ParticipantMenu Participant="participant" ParticipantId="this.ParticipantId" style="min-width:48px" />
+          </div>
         </div>
       </MudListItem>
     }

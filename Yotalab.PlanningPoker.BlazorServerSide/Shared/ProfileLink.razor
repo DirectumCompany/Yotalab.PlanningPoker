@@ -12,11 +12,13 @@
 {
   <DropDownMenu>
     <ButtonTemplate>
-      <div class="d-flex align-center">
-        <Avatar ClassNames="mr-2" Url="@this.participantInfo.AvatarUrl" IsSmall="true" />
-        <MudText Class="d-none d-md-inline">@this.displayName</MudText>
-      </div>
-    </ButtonTemplate>
+      <MudButton Style="text-transform:none">
+        <div class="d-flex align-center">
+          <Avatar ClassNames="ml-1 mr-2" Url="@this.participantInfo.AvatarUrl" IsSmall="true" />
+          <MudText Class="d-none d-md-inline">@this.displayName</MudText>
+        </div>
+      </MudButton>
+  </ButtonTemplate>
     <ChildContent>
       <MudMenuItem OnClick="@(() => EditParticipantInfoDialog.Show(this.DialogService, this.participantInfo))">
         @UIResources.EditParticipantInfoButton
