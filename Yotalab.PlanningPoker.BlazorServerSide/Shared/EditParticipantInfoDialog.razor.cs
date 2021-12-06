@@ -161,6 +161,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Shared
 
     private bool UploadedAvatarExist(string avatarUrl)
     {
+      if (string.IsNullOrWhiteSpace(avatarUrl))
+        return false;
+
       var queryIndex = avatarUrl.IndexOf("?");
       var avatarUrlWithoutQuery = queryIndex > 0 ? avatarUrl.Substring(0, queryIndex) : avatarUrl;
 
