@@ -138,6 +138,9 @@
   <data name="EditParticipantInfoButton" xml:space="preserve">
     <value>Изменить профиль</value>
   </data>
+  <data name="EditParticipantInfoDialogAvatarSubmitError" xml:space="preserve">
+    <value>Не удалось сохранить профиль, попробуйте позже.</value>
+  </data>
   <data name="EditParticipantInfoDialogAvatarUploadError" xml:space="preserve">
     <value>Не удалось загрузить изображение, попробуйте позже.</value>
   </data>

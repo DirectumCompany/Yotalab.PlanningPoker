@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using MudBlazor;
 using Yotalab.PlanningPoker.BlazorServerSide.Resources;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
+using Yotalab.PlanningPoker.BlazorServerSide.Services.FilesStoraging;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Shared
@@ -20,13 +20,13 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Shared
     private const long MaxAvatarSizeInBytes = 1024 * MaxAvatarSizeInKb; // 300 кб.
 
     [Inject]
-    IWebHostEnvironment Environment { get; set; }
-
-    [Inject]
     JSInteropFunctions JSInterop { get; set; }
 
     [Inject]
     ILogger<EditParticipantInfoDialog> Logger { get; set; }
+
+    [Inject]
+    AvatarStorage AvatarStorage { get; set; }
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
@@ -37,20 +37,13 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Shared
 
     private string error;
 
-    private static List<string> DefaultAvatarCollection = new List<string>()
-    {
-        "img/img_avatar_1.png",
-        "img/img_avatar_2.png",
-        "img/img_avatar_3.png",
-        "img/img_avatar_4.png",
-        "img/img_avatar_5.png"
-    };
-
     private List<string> fullAvatarCollection = new();
 
     private string newName;
 
-    private string newAvatarUrl;
+    private AvatarDescriptor newAvatarDescriptor;
+
+    private TransientAvatarDescriptor transientAvatarDescriptor;
 
     private bool shouldRender = true;
 
@@ -76,7 +69,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Shared
       if (this.ParticipantInfo != null)
       {
         this.newName = this.ParticipantInfo.Name;
-        this.newAvatarUrl = this.ParticipantInfo.AvatarUrl;
+        this.newAvatarDescriptor = !string.IsNullOrWhiteSpace(this.ParticipantInfo.AvatarUrl)
+          ? new AvatarDescriptor(this.ParticipantInfo.AvatarUrl)
+          : null;
         this.InitFullAvatarCollection();
       }
       base.OnParametersSet();
@@ -89,32 +84,52 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Shared
 
     private void SelectAvatar(string avatarUrl)
     {
+      if (string.IsNullOrEmpty(avatarUrl))
+        return;
+
       this.error = null;
-      this.newAvatarUrl = avatarUrl;
+      this.newAvatarDescriptor = new AvatarDescriptor(avatarUrl);
       this.StateHasChanged();
     }
 
     private async Task Submit()
     {
       if (string.IsNullOrWhiteSpace(this.error))
-        await this.Service.ChangeInfo(this.ParticipantInfo.Id, this.newName, this.newAvatarUrl);
+      {
+        try
+        {
+          var oldAvatarUrl = this.ParticipantInfo.AvatarUrl;
+          var newAvatarUrl = await this.HandleAvatarChanges();
+
+          if (!string.Equals(this.ParticipantInfo.Name, this.newName) || !string.Equals(oldAvatarUrl, newAvatarUrl))
+            await this.Service.ChangeInfo(this.ParticipantInfo.Id, this.newName, newAvatarUrl);
+        }
+        catch (Exception ex)
+        {
+          this.Logger.LogError(ex, "Can not submit profile changes (participant id: {ParticipantId})", this.ParticipantInfo?.Id);
+          this.error = UIResources.EditParticipantInfoDialogAvatarSubmitError;
+        }
+      }
       this.MudDialog.Close(DialogResult.Ok(true));
     }
 
     private void Cancel()
     {
+      try
+      {
+        this.CancelAvatarChanges();
+      }
+      catch (Exception ex)
+      {
+        this.Logger.LogError(ex, "Can not cancel profile changes (participant id: {ParticipantId})", this.ParticipantInfo?.Id);
+      }
       this.MudDialog.Cancel();
     }
 
     private string AvatarClassNameByUrl(string avatarUrl)
     {
-      return string.Equals(this.newAvatarUrl, avatarUrl, StringComparison.OrdinalIgnoreCase) ?
+      return string.Equals(this.newAvatarDescriptor?.RelativeFileName, avatarUrl, StringComparison.OrdinalIgnoreCase) ?
           "avatar avatar--selected" : "avatar";
-    }
-
-    private string AvatarUniqueUrl(string avatarUrl)
-    {
-      return DefaultAvatarCollection.Contains(avatarUrl) ? avatarUrl : $"{avatarUrl}?{DateTime.UtcNow.Ticks}";
     }
 
     private async Task StartUploading()
@@ -135,17 +150,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Shared
       {
         this.shouldRender = false;
 
-        var avatarRelativeDirectoryPath = Path.Combine("img", "avatars");
-        var avatarDirectory = Path.Combine(this.Environment.WebRootPath, avatarRelativeDirectoryPath);
-        if (!Directory.Exists(avatarDirectory))
-          Directory.CreateDirectory(avatarDirectory);
-        var avatarUrl = Path.Combine(avatarRelativeDirectoryPath, $"{this.ParticipantInfo.Id}{Path.GetExtension(e.File.Name)}");
+        if (this.transientAvatarDescriptor != null)
+          this.AvatarStorage.DeleteTransient(this.transientAvatarDescriptor);
 
-        var fullAvatarPath = Path.Combine(this.Environment.WebRootPath, avatarUrl);
-        await using FileStream fs = new(fullAvatarPath, FileMode.Create);
-        await e.File.OpenReadStream(MaxAvatarSizeInBytes).CopyToAsync(fs);
+        this.transientAvatarDescriptor = await this.AvatarStorage.WriteTransient(
+          e.File.OpenReadStream(MaxAvatarSizeInBytes),
+          this.ParticipantInfo.Id,
+          e.File.Name);
 
-        this.SelectAvatar(this.AvatarUniqueUrl(avatarUrl));
+        this.SelectAvatar(this.transientAvatarDescriptor.RelativeFileName);
         this.InitFullAvatarCollection();
       }
       catch (Exception ex)
@@ -159,28 +172,57 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Shared
       }
     }
 
-    private bool UploadedAvatarExist(string avatarUrl)
-    {
-      if (string.IsNullOrWhiteSpace(avatarUrl))
-        return false;
-
-      var queryIndex = avatarUrl.IndexOf("?");
-      var avatarUrlWithoutQuery = queryIndex > 0 ? avatarUrl.Substring(0, queryIndex) : avatarUrl;
-
-      if (DefaultAvatarCollection.Contains(avatarUrlWithoutQuery) || string.IsNullOrWhiteSpace(avatarUrlWithoutQuery))
-        return false;
-
-      var avatarPath = Path.Combine(this.Environment.WebRootPath, avatarUrlWithoutQuery);
-      return File.Exists(avatarPath);
-    }
-
     private void InitFullAvatarCollection()
     {
       this.fullAvatarCollection.Clear();
-      this.fullAvatarCollection.AddRange(DefaultAvatarCollection);
-      if (!DefaultAvatarCollection.Contains(this.newAvatarUrl) && this.UploadedAvatarExist(this.newAvatarUrl))
+      this.fullAvatarCollection.AddRange(AvatarStorage.DefaultAvatarCollection);
+
+      if (this.newAvatarDescriptor != null && !this.fullAvatarCollection.Contains(this.newAvatarDescriptor.RelativeFileName))
+        this.fullAvatarCollection.Add(this.newAvatarDescriptor.RelativeFileName);
+    }
+
+    private async Task<string> HandleAvatarChanges()
+    {
+      var newAvatarUrl = this.newAvatarDescriptor?.RelativeFileName;
+
+      // Попробуем получить старый аватар, если он был не из коллекции по умолчанию.
+      var oldAvatarUrl = this.ParticipantInfo.AvatarUrl;
+      var oldNotDefaultAvatarDescriptor = !string.IsNullOrWhiteSpace(oldAvatarUrl)
+        && !AvatarStorage.DefaultAvatarCollection.Contains(oldAvatarUrl) ? new AvatarDescriptor(oldAvatarUrl) : null;
+
+      // Удалим аватар если он был не из коллекции по умолчанию
+      //  и выбрали новый из коллекции по умолчанию.
+      bool needCleanOldAvatar = AvatarStorage.DefaultAvatarCollection.Contains(newAvatarUrl) && oldNotDefaultAvatarDescriptor != null;
+
+      if (this.transientAvatarDescriptor != null)
       {
-        this.fullAvatarCollection.Add(this.newAvatarUrl);
+        if (this.transientAvatarDescriptor.RelativeFileName.Equals(this.newAvatarDescriptor?.RelativeFileName))
+        {
+          await this.AvatarStorage.CommitTransient(this.transientAvatarDescriptor);
+          newAvatarUrl = AvatarDescriptor.UniqueUrl(this.transientAvatarDescriptor.TargetRelativeFileName);
+
+          // Удалим старый аватар если он был не из коллекции по умолчанию
+          //  и новый загруженный аватар отличается именем.
+          needCleanOldAvatar = oldNotDefaultAvatarDescriptor != null
+            && !this.transientAvatarDescriptor.TargetRelativeFileName.Equals(oldNotDefaultAvatarDescriptor.RelativeFileName);
+        }
+        else
+          this.AvatarStorage.DeleteTransient(this.transientAvatarDescriptor);
+      }
+      this.transientAvatarDescriptor = null;
+
+      if (needCleanOldAvatar)
+        this.AvatarStorage.DeleteAvatar(oldNotDefaultAvatarDescriptor);
+
+      return newAvatarUrl;
+    }
+
+    private void CancelAvatarChanges()
+    {
+      if (this.transientAvatarDescriptor != null)
+      {
+        this.AvatarStorage.DeleteTransient(this.transientAvatarDescriptor);
+        this.transientAvatarDescriptor = null;
       }
     }
   }

@@ -10,7 +10,7 @@
         {
           var avatarClassName = this.AvatarClassNameByUrl(avatar);
           <div class="mr-3" style="cursor:pointer" @onclick="@(() => this.SelectAvatar(avatar))">
-            <Avatar ClassNames="@avatarClassName" Url="@avatar" IsLarge="true" />
+            <Avatar ClassNames="@avatarClassName" Url="@(AvatarDescriptor.UniqueUrl(avatar))" IsLarge="true" />
           </div>
         }
 

@@ -124,6 +124,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to submit profile changes, try again later..
+        /// </summary>
+        public static string EditParticipantInfoDialogAvatarSubmitError {
+            get {
+                return ResourceManager.GetString("EditParticipantInfoDialogAvatarSubmitError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to upload image, try again later..
         /// </summary>
         public static string EditParticipantInfoDialogAvatarUploadError {

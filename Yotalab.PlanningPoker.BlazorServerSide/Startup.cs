@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
+using Yotalab.PlanningPoker.BlazorServerSide.Services.FilesStoraging;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.Mailing;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide
@@ -57,6 +58,11 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       services.AddScoped<JSInteropFunctions>();
       services.AddMudServices();
       services.AddHttpClient();
+      services.AddSingleton(provider =>
+      {
+        var webEnvironment = provider.GetRequiredService<IWebHostEnvironment>();
+        return new AvatarStorage(webEnvironment.WebRootPath, "img/avatars", "img/avatars/tmp");
+      });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

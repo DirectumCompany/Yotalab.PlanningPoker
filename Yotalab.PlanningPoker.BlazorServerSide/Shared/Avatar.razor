@@ -15,12 +15,11 @@
 
   private string imgSrc;
   private Size imgSize;
-  private const string DefaultAvatar = "img/default_avatar.png";
 
   protected override void OnParametersSet()
   {
     base.OnParametersSet();
-    this.imgSrc = this.Url ?? DefaultAvatar;
+    this.imgSrc = this.Url ?? AvatarStorage.DefaultAvatar;
     this.imgSize = this.IsLarge ? Size.Large : this.IsSmall ? Size.Small : Size.Medium;
   }
 }
