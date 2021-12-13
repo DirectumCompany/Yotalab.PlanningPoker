@@ -22,7 +22,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
     private Vote participantVote;
     private SessionInfo session;
     private Bulletin bulletin;
-    private IReadOnlyCollection<ParticipantInfoDTO> participantVotes;
+    private IReadOnlyCollection<ParticipantInfoDTO> participantVotes = new List<ParticipantInfoDTO>();
     private bool userNotJoinedToSession = false;
     private StreamSubscriptionHandle<SessionProcessingNotification> sessionProcessingSubscription;
     private StreamSubscriptionHandle<ParticipantsChangedNotification> participantsChangedSubscription;
