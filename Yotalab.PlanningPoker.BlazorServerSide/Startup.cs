@@ -35,6 +35,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
 
       if (this.Environment.IsDevelopment())
       {
+        services.AddDatabaseDeveloperPageExceptionFilter();
         services.AddTransient<IEmailSender, DebugEmailSender>();
       }
       else
@@ -71,7 +72,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
-        app.UseDatabaseErrorPage();
+        app.UseDeveloperExceptionPage();
+        app.UseMigrationsEndPoint();
       }
       else
       {

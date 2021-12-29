@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Yotalab.PlanningPoker.BlazorServerSide.Data;
 
 [assembly: HostingStartup(typeof(Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.IdentityHostingStartup))]
@@ -23,10 +22,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
       {
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-          options.UseMySql(context.Configuration.GetConnectionString("DefaultConnection"), dbOptions =>
-          {
-            dbOptions.ServerVersion(new Version(10, 5, 8), ServerType.MariaDb);
-          });
+          var connectionString = context.Configuration.GetConnectionString("DefaultConnection");
+          options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         });
 
         services
