@@ -48,7 +48,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services.FilesStoraging
       if (!DefaultAvatarCollection.Contains(avatarDescriptor.RelativeFileName))
       {
         var fullPath = Path.Combine(this.webRootPath, avatarDescriptor.RelativeFileName);
-        File.Delete(fullPath);
+        if (File.Exists(fullPath))
+          File.Delete(fullPath);
       }
     }
 
