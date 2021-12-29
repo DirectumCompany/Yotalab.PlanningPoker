@@ -4,9 +4,9 @@
 # Стек технологий
 Сервер - Orleans https://github.com/dotnet/orleans
 
-Веб-клиент - Blazor Server Side https://docs.microsoft.com/ru-ru/aspnet/core/blazor/hosting-models?view=aspnetcore-3.1
+Веб-клиент - Blazor Server Side https://docs.microsoft.com/ru-ru/aspnet/core/blazor/hosting-models?view=aspnetcore-6.0
 
-UI Framework - Bootstrap https://getbootstrap.com/
+UI Framework - MudBlazor https://github.com/MudBlazor/MudBlazor
 
 # База данных по умолчанию
 https://mariadb.org/download/ - строка подключения в \Yotalab.PlanningPoker.BlazorServerSide\appsettings.Development.json
