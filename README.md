@@ -4,7 +4,7 @@
 # Стек технологий
 Сервер - Orleans https://github.com/dotnet/orleans
 
-Веб-клиент - Blazor Server Side https://docs.microsoft.com/ru-ru/aspnet/core/blazor/hosting-models?view=aspnetcore-6.0
+Веб-клиент - Blazor Server Side https://docs.microsoft.com/ru-ru/aspnet/core/blazor/hosting-models?view=aspnetcore-6.0#blazor-server
 
 UI Framework - MudBlazor https://github.com/MudBlazor/MudBlazor
 
