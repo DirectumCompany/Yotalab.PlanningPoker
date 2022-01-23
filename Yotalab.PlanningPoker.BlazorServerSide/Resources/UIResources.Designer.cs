@@ -223,6 +223,24 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to refresh page.
+        /// </summary>
+        public static string ErrorBoundaryRefreshLink {
+            get {
+                return ResourceManager.GetString("ErrorBoundaryRefreshLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something went wrong, try.
+        /// </summary>
+        public static string ErrorBoundaryText {
+            get {
+                return ResourceManager.GetString("ErrorBoundaryText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exclude.
         /// </summary>
         public static string ExcludeParticipantButton {

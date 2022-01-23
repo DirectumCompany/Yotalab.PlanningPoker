@@ -171,6 +171,12 @@
   <data name="English" xml:space="preserve">
     <value>English</value>
   </data>
+  <data name="ErrorBoundaryRefreshLink" xml:space="preserve">
+    <value>обновить страницу</value>
+  </data>
+  <data name="ErrorBoundaryText" xml:space="preserve">
+    <value>Что-то пошло не так, попробуйте</value>
+  </data>
   <data name="ExcludeParticipantButton" xml:space="preserve">
     <value>Исключить</value>
   </data>
