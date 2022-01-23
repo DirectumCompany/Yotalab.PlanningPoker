@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Orleans;
+using Orleans.Configuration;
 using Orleans.Hosting;
 
 namespace Yotalab.PlanningPoker.BlazorServerSide.Services
@@ -13,11 +15,21 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
   {
     private readonly ILogger<ClusterService> logger;
 
-    public ClusterService(ILogger<ClusterService> logger)
+    public ClusterService(ILogger<ClusterService> logger, IConfiguration configuration)
     {
       this.logger = logger;
+      var clusterConnectionString = Environment.GetEnvironmentVariable("CLUSTER_STORAGE");
       this.Client = new ClientBuilder()
-        .UseLocalhostClustering()
+        .UseAdoNetClustering(options =>
+        {
+          options.Invariant = "MySql.Data.MySqlConnector";
+          options.ConnectionString = clusterConnectionString;
+        })
+        .Configure<ClusterOptions>(options =>
+        {
+          options.ClusterId = "planingpoker-cluster";
+          options.ServiceId = "planingpoker";
+        })
         .AddSimpleMessageStreamProvider("SMS")
         .Build();
     }

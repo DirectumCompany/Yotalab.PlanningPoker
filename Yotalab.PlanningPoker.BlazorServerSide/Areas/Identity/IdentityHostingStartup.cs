@@ -22,7 +22,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
       {
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-          var connectionString = context.Configuration.GetConnectionString("DefaultConnection");
+          var connectionString =
+            Environment.GetEnvironmentVariable("CONNECTION_STRING") ??
+            context.Configuration.GetConnectionString("DefaultConnection");
           options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         });
 
@@ -64,7 +66,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
         var dataProtectionConfig = context.Configuration.GetSection("DataProtection");
         if (dataProtectionConfig != null)
         {
-          var directory = dataProtectionConfig["Directory"];
+          var directory = Environment.GetEnvironmentVariable("DATA_PROTECTION_DIRECTORY") ?? dataProtectionConfig["Directory"];
           var certificateThumbprint = dataProtectionConfig["CertificateThumbprint"];
           var dataProtectionBuilder = services.AddDataProtection();
           if (!string.IsNullOrWhiteSpace(directory))

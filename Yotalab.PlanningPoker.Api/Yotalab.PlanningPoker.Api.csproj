@@ -3,17 +3,25 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Platforms>AnyCPU;x86</Platforms>
+    <UserSecretsId>42d4b418-ded2-48c6-a171-db73fe8fc4f7</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Orleans.Clustering.AdoNet" Version="3.5.1" />
+    <PackageReference Include="Microsoft.Orleans.Server" Version="3.5.1" />
+
     <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="3.5.1" />
     <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="3.5.1" />
     <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="3.5.1" />
     <PackageReference Include="Microsoft.Orleans.Persistence.AdoNet" Version="3.5.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="MySqlConnector" Version="2.1.2" />
     <PackageReference Include="OrleansDashboard" Version="3.6.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
+    <PackageReference Include="Serilog.Expressions" Version="3.2.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />

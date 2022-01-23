@@ -33,7 +33,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
         webBuilder.UseStartup<Startup>();
       })
       // Если Silo хостится в отдельном процессе, то эту строчку закоментировать.
-      .UseOrleansSiloInProcess()
+      // .UseOrleansSiloInProcess()
       ;
 
     private static void MigrateDatabase(IServiceProvider services, ILogger<Program> logger)

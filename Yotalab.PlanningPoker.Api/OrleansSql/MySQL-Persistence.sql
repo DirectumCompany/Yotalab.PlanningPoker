@@ -83,7 +83,7 @@ CREATE TABLE OrleansStorage
     -- to be indexed, so the values are hashed and only collisions will be solved
     -- by using the fields. That is, after the indexed queries have pinpointed the right
     -- rows down to [0, n] relevant ones, n being the number of collided value pairs.
-) ROW_FORMAT = COMPRESSED KEY_BLOCK_SIZE = 16;
+) ROW_FORMAT = DYNAMIC;
 ALTER TABLE OrleansStorage ADD INDEX IX_OrleansStorage (GrainIdHash, GrainTypeHash);
 
 -- The following alters the column to JSON format if MySQL is at least of version 5.7.8.

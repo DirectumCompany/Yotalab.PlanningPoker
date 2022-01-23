@@ -5,10 +5,11 @@
     <UserSecretsId>aspnet-Yotalab.PlanningPoker.BlazorServerSide-96E73655-0B5E-4E5E-A58F-DBC782C828E0</UserSecretsId>
     <ServerGarbageCollection>false</ServerGarbageCollection>
     <Platforms>AnyCPU;x86</Platforms>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Yotalab.PlanningPoker.Api\GenericHostExtensions.cs" Link="GenericHostExtensions.cs" />
     <Compile Include="..\Yotalab.PlanningPoker.Api\PrivateSetterContractResolver.cs" Link="PrivateSetterContractResolver.cs" />
   </ItemGroup>
 
@@ -24,11 +25,13 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.1" />
     <PackageReference Include="Microsoft.Orleans.Client" Version="3.5.1" />
+    <PackageReference Include="Microsoft.Orleans.Clustering.AdoNet" Version="3.5.1" />
     <PackageReference Include="Microsoft.Orleans.Core" Version="3.5.1" />
     <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="3.5.1" />
     <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="3.5.1" />
     <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="3.5.1" />
     <PackageReference Include="Microsoft.Orleans.Persistence.AdoNet" Version="3.5.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.1" ExcludeAssets="All" />
     <PackageReference Include="MudBlazor" Version="6.0.2" />
     <PackageReference Include="OrleansDashboard" Version="3.6.1" />

@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+  sql:
+    environment:
+      - MARIADB_ROOT_PASSWORD=11111
+    ports:
+      - "3307:3306"
+    volumes:
+      - ${APPDATA}/MariaDB/Data:/var/lib/mysql
+
+  planningpoker.api:
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+      - GRAIN_STORAGE=Server=sql;Port=3306;Database=agilepoker;User=root;Password=11111
+      - PUB_SUB_STORAGE=Server=sql;Port=3306;Database=agilepoker;User=root;Password=11111
+      - CLUSTER_STORAGE=Server=sql;Port=3306;Database=agilepoker;User=root;Password=11111
+      - LOGS_DIRECTORY=/logs
+    ports:
+      - "30000"
+      - "11111"
+      - "8080:8080"
+    volumes:
+      - ${APPDATA}/PlaningPoker/logs:/logs
+
+  planningpoker.web:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - CONNECTION_STRING=Server=sql;Port=3306;Database=agilepoker;User=root;Password=11111
+      - CLUSTER_STORAGE=Server=sql;Port=3306;Database=agilepoker;User=root;Password=11111
+      - DATA_PROTECTION_DIRECTORY=/keys
+      - LOGS_DIRECTORY=/logs
+    ports:
+      - "64623:80"
+      - "44313:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/PlaningPoker/keys:/keys
+      - ${APPDATA}/PlaningPoker/logs:/logs

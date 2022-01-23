@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  sql:
+    image: mariadb
+
+  planningpoker.api:
+    image: ${DOCKER_REGISTRY-}planningpokerapi
+    build:
+      context: .
+      dockerfile: Yotalab.PlanningPoker.Api/Dockerfile
+    depends_on:
+      - sql
+
+  planningpoker.web:
+    image: ${DOCKER_REGISTRY-}planningpokerweb
+    build:
+      context: .
+      dockerfile: Yotalab.PlanningPoker.BlazorServerSide/Dockerfile
+    depends_on:
+      - planningpoker.api

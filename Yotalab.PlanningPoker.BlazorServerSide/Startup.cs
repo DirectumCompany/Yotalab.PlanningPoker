@@ -29,7 +29,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       services.AddRazorPages();
       services.AddServerSideBlazor();
       // Если используется UseOrleansSiloInProcess то эту строчку надо оставить закоментированной.
-      // services.AddClusterService();
+      services.AddClusterService();
 
       services.AddLocalization();
 
