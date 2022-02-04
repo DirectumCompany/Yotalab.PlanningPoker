@@ -26,15 +26,19 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       host.Run();
     }
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-      Host.CreateDefaultBuilder(args)
+    public static IHostBuilder CreateHostBuilder(string[] args)
+    {
+      var builder = Host.CreateDefaultBuilder(args)
       .ConfigureWebHostDefaults(webBuilder =>
       {
         webBuilder.UseStartup<Startup>();
-      })
-      // Если Silo хостится в отдельном процессе, то эту строчку закоментировать.
-      // .UseOrleansSiloInProcess()
-      ;
+      });
+      var clusterStorage = Environment.GetEnvironmentVariable("CLUSTER_STORAGE");
+      if (string.IsNullOrWhiteSpace(clusterStorage))
+        builder.UseOrleansSiloInProcess();
+
+      return builder;
+    }
 
     private static void MigrateDatabase(IServiceProvider services, ILogger<Program> logger)
     {

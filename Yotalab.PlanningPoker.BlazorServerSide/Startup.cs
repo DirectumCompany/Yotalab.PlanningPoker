@@ -28,8 +28,10 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
     {
       services.AddRazorPages();
       services.AddServerSideBlazor();
-      // Если используется UseOrleansSiloInProcess то эту строчку надо оставить закоментированной.
-      services.AddClusterService();
+
+      var clusterStorage = System.Environment.GetEnvironmentVariable("CLUSTER_STORAGE");
+      if (!string.IsNullOrWhiteSpace(clusterStorage))
+        services.AddClusterService();
 
       services.AddLocalization();
 
