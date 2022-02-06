@@ -22,7 +22,7 @@
    * Получить содержимое документа фрейма.
    * @param {any} frameElement Ссылка на фрейм.
    */
-  getFrameContentDocumentInnerText(frameElement) {
+  getFrameContentDocumentInnerText: function (frameElement) {
     if (frameElement == null)
       return null;
 
