@@ -19,7 +19,6 @@
     },
     "Yotalab.PlanningPoker.Api": {
       "commandName": "Project",
-      "launchUrl": "weatherforecast",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       },
