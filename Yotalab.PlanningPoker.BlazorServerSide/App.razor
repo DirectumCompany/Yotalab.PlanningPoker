@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Logging
 
 <MudThemeProvider Theme="this.theme" />
 <MudDialogProvider />
@@ -42,6 +43,7 @@
 
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedLocalStorage LocalStorage
+@inject ILogger<App> Logger
 
 @code {
   private const string ThemeNameStorageKey = ".AgilePoker.ThemeName";
@@ -54,8 +56,17 @@
 
   protected override async Task OnInitializedAsync()
   {
-    var storedThemeName = await this.LocalStorage.GetAsync<string>(ThemeNameStorageKey);
-    this.themeName = storedThemeName.Success ? storedThemeName.Value : Themes.GetName(this.theme);
+    try
+    {
+      var storedThemeName = await this.LocalStorage.GetAsync<string>(ThemeNameStorageKey);
+      this.themeName = storedThemeName.Success ? storedThemeName.Value : Themes.GetName(this.theme);
+    }
+    catch (System.Security.Cryptography.CryptographicException cex)
+    {
+      this.themeName = Themes.GetName(this.theme);
+      await this.LocalStorage.SetAsync(ThemeNameStorageKey, this.themeName);
+      this.Logger.LogWarning(cex, "Error during read ThemeName from protected local storage");
+    }
     this.theme = Themes.GetTheme(this.themeName);
     this.switchThemeCallback = new EventCallbackFactory().Create<MudTheme>(this, this.SwitchTheme);
   }

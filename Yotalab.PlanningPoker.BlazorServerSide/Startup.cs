@@ -28,11 +28,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
     {
       services.AddRazorPages();
       services.AddServerSideBlazor();
-
-      var clusterStorage = System.Environment.GetEnvironmentVariable("CLUSTER_STORAGE");
-      if (!string.IsNullOrWhiteSpace(clusterStorage))
-        services.AddClusterService();
-
       services.AddLocalization();
 
       if (this.Environment.IsDevelopment())

@@ -18,7 +18,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
     public ClusterService(ILogger<ClusterService> logger, IConfiguration configuration)
     {
       this.logger = logger;
-      var clusterConnectionString = Environment.GetEnvironmentVariable("CLUSTER_STORAGE");
+      var clusterConnectionString = configuration.GetConnectionString("DefaultClusterStorage");
       this.Client = new ClientBuilder()
         .UseAdoNetClustering(options =>
         {
@@ -36,27 +36,13 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
 
     public IClusterClient Client { get; }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
-    {
-      await this.Client.Connect(async error =>
+    public Task StartAsync(CancellationToken cancellationToken) => this.Client.Connect(async error =>
       {
         logger.LogError(error, error.Message);
         await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
         return true;
       });
-    }
 
     public Task StopAsync(CancellationToken cancellationToken) => this.Client.Close();
-  }
-
-  public static class ClusterServiceBuilderExtensions
-  {
-    public static IServiceCollection AddClusterService(this IServiceCollection services)
-    {
-      services.AddSingleton<ClusterService>();
-      services.AddSingleton<IHostedService>(_ => _.GetService<ClusterService>());
-      services.AddTransient(_ => _.GetService<ClusterService>().Client);
-      return services;
-    }
   }
 }

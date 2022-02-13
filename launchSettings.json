@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "planningpoker.web",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "planningpoker.api": "StartDebugging",
+        "planningpoker.web": "StartDebugging",
+        "sql": "StartWithoutDebugging"
+      }
+    }
+  }
+}

@@ -65,7 +65,8 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
     {
     }
 
-    private Bulletin()
+    internal Bulletin()
+      : base(new BulletinItemComparer())
     {
       // Требует десериализатор.
     }

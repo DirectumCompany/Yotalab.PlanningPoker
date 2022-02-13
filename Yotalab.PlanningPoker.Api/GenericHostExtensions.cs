@@ -30,8 +30,9 @@ namespace Yotalab.PlanningPoker.Hosting
           ListUsedTCPPort();
           var siloPort = context.Configuration.GetValue<int>("Orleans:SiloPort", 11111);
           var gatewayPort = context.Configuration.GetValue<int>("Orleans:GatewayPort", 30000);
+          var dashboardPort = context.Configuration.GetValue<int>("Orleans:DashboardPort", 8080);
 
-          var clusterConnectionString = Environment.GetEnvironmentVariable("CLUSTER_STORAGE");
+          var clusterConnectionString = context.Configuration.GetConnectionString("DefaultClusterStorage");
           if (string.IsNullOrWhiteSpace(clusterConnectionString))
             builder.UseLocalhostClustering(siloPort, gatewayPort);
           else
@@ -50,29 +51,30 @@ namespace Yotalab.PlanningPoker.Hosting
           builder.AddAdoNetGrainStorageAsDefault(options =>
           {
             options.Invariant = "MySql.Data.MySqlConnector";
-            options.ConnectionString =
-              Environment.GetEnvironmentVariable("GRAIN_STORAGE") ??
-              context.Configuration.GetConnectionString("DefaultGrainStorage");
+            options.ConnectionString = context.Configuration.GetConnectionString("DefaultGrainStorage");
             options.UseJsonFormat = true;
             options.ConfigureJsonSerializerSettings = (jsonOptions) =>
             {
               jsonOptions.ConstructorHandling = Newtonsoft.Json.ConstructorHandling.AllowNonPublicDefaultConstructor;
               jsonOptions.ContractResolver = new PrivateSetterContractResolver();
+              jsonOptions.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto;
             };
           });
           builder.AddAdoNetGrainStorage("PubSubStore", options =>
           {
             options.Invariant = "MySql.Data.MySqlConnector";
-            options.ConnectionString =
-              Environment.GetEnvironmentVariable("PUB_SUB_STORAGE") ??
-              context.Configuration.GetConnectionString("DefaultPubSubStorage");
+            options.ConnectionString = context.Configuration.GetConnectionString("DefaultPubSubStorage");
             options.UseJsonFormat = true;
           });
           builder.AddSimpleMessageStreamProvider("SMS");
-          builder.UseDashboard(options =>
+          if (dashboardPort != default)
           {
-            options.HideTrace = true;
-          });
+            builder.UseDashboard(options =>
+            {
+              options.Port = dashboardPort;
+              options.HideTrace = true;
+            });
+          }
         });
     }
 

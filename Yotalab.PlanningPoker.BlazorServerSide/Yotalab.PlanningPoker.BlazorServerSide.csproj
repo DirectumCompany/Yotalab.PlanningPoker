@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\Yotalab.PlanningPoker.Api\GenericHostExtensions.cs" Link="GenericHostExtensions.cs" />
     <Compile Include="..\Yotalab.PlanningPoker.Api\PrivateSetterContractResolver.cs" Link="PrivateSetterContractResolver.cs" />
   </ItemGroup>
 

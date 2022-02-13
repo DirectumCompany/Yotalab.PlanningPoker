@@ -2,6 +2,7 @@ using System;
 using System.Runtime;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -29,12 +30,19 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
     public static IHostBuilder CreateHostBuilder(string[] args)
     {
       var builder = Host.CreateDefaultBuilder(args)
-      .ConfigureWebHostDefaults(webBuilder =>
-      {
-        webBuilder.UseStartup<Startup>();
-      });
-      var clusterStorage = Environment.GetEnvironmentVariable("CLUSTER_STORAGE");
-      if (string.IsNullOrWhiteSpace(clusterStorage))
+        .ConfigureAppConfiguration((context, configurationBuilder) =>
+        {
+          configurationBuilder.AddEnvironmentVariables("PLANNING_POKER_");
+        })
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+          webBuilder.UseStartup<Startup>();
+        });
+
+      var useOrleansClusterValue = Environment.GetEnvironmentVariable("PLANNING_POKER_USE_ORLEANS_CLUSTER");
+      if (bool.TryParse(useOrleansClusterValue, out var useOrleansCluster) && useOrleansCluster)
+        builder.UseOrleansOutOfProcess();
+      else
         builder.UseOrleansSiloInProcess();
 
       return builder;
