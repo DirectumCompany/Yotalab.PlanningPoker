@@ -1,20 +1,21 @@
 version: '3.4'
 
 services:
-  sql:
+  planningpoker.storages:
     environment:
       - MARIADB_ROOT_PASSWORD=11111
+      - MARIADB_DATABASE=planningpoker_identity
     ports:
       - "3307:3306"
     volumes:
-      - ${APPDATA}/MariaDB/Data:/var/lib/mysql
+      - ${APPDATA}/PlanningPoker/Storages/Data:/var/lib/mysql
 
   planningpoker.api:
     environment:
       - DOTNET_ENVIRONMENT=Development
-      - MYSQLCONNSTR_DefaultGrainStorage=Server=sql;Port=3306;Database=agilepoker;User=root;Password=11111
-      - MYSQLCONNSTR_DefaultPubSubStorage=Server=sql;Port=3306;Database=agilepoker;User=root;Password=11111
-      - MYSQLCONNSTR_DefaultClusterStorage=Server=sql;Port=3306;Database=agilepoker;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultGrainStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_grains;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultPubSubStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_pubsub;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultClusterStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_clustering;User=root;Password=11111
     ports:
       - "30000"
       - "11111"
@@ -27,8 +28,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - PLANNING_POKER_USE_ORLEANS_CLUSTER=true
-      - MYSQLCONNSTR_DefaultConnection=Server=sql;Port=3306;Database=agilepoker;User=root;Password=11111
-      - MYSQLCONNSTR_DefaultClusterStorage=Server=sql;Port=3306;Database=agilepoker;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultConnection=Server=planningpoker.storages;Port=3306;Database=planningpoker_identity;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultClusterStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_clustering;User=root;Password=11111
     ports:
       - "64623:80"
       - "44313:443"

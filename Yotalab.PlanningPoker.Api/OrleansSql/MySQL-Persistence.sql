@@ -1,4 +1,4 @@
-﻿-- The design criteria for this table are:
+-- The design criteria for this table are:
 --
 -- 1. It can contain arbitrary content serialized as binary, XML or JSON. These formats
 -- are supported to allow one to take advantage of in-storage processing capabilities for

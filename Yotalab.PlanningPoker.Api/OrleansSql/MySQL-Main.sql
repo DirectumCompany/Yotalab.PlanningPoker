@@ -1,4 +1,4 @@
-﻿/*
+/*
 Implementation notes:
 
 1) The general idea is that data is read and written through Orleans specific queries.
