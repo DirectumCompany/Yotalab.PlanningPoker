@@ -9,7 +9,7 @@
       "serviceActions": {
         "planningpoker.api": "StartDebugging",
         "planningpoker.web": "StartDebugging",
-        "sql": "StartWithoutDebugging"
+        "planningpoker.storages": "StartWithoutDebugging"
       }
     }
   }
