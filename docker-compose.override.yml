@@ -58,7 +58,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - PLANNING_POKER_ORLEANS__USEORLEANSCLUSTER=true
+      - PLANNING_POKER_ORLEANS__USECLUSTER=true
       - MYSQLCONNSTR_DefaultConnection=Server=planningpoker.identity;Port=3306;Database=planningpoker_identity;User=root;Password=11111
       - MYSQLCONNSTR_DefaultClusterStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_clustering;User=root;Password=11111
     ports:
