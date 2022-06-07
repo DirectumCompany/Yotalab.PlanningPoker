@@ -28,9 +28,12 @@ namespace Yotalab.PlanningPoker.Hosting
           // Поэтому пока вручную можно менять в конфиге на не занятый порт.
           // И выведем в консоль занятые порты, чтобы разбираться было легче.
           ListUsedTCPPort();
-          var siloPort = context.Configuration.GetValue<int>("Orleans:SiloPort", 11111);
-          var gatewayPort = context.Configuration.GetValue<int>("Orleans:GatewayPort", 30000);
-          var dashboardPort = context.Configuration.GetValue<int>("Orleans:DashboardPort", 8080);
+          var siloPort = context.Configuration.GetValue("Orleans:SiloPort", 11111);
+          var gatewayPort = context.Configuration.GetValue("Orleans:GatewayPort", 30000);
+          var dashboardPort = context.Configuration.GetValue("Orleans:DashboardPort", 8080);
+          var useDashboard = context.Configuration.GetValue("Orleans:UseDashboard", false);
+          var dashboardHost = context.Configuration.GetValue("Orleans:DashboardHost", false);
+          var clusterId = context.Configuration.GetValue("Orleans:ClusterId", "planingpoker-cluster");
 
           var clusterConnectionString = context.Configuration.GetConnectionString("DefaultClusterStorage");
           if (string.IsNullOrWhiteSpace(clusterConnectionString))
@@ -43,7 +46,7 @@ namespace Yotalab.PlanningPoker.Hosting
             })
             .Configure<ClusterOptions>(options =>
             {
-              options.ClusterId = "planingpoker-cluster";
+              options.ClusterId = clusterId;
               options.ServiceId = "planingpoker";
             })
             .ConfigureEndpoints(siloPort, gatewayPort);
@@ -67,12 +70,13 @@ namespace Yotalab.PlanningPoker.Hosting
             options.UseJsonFormat = true;
           });
           builder.AddSimpleMessageStreamProvider("SMS");
-          if (dashboardPort != default)
+          if (useDashboard || dashboardHost)
           {
             builder.UseDashboard(options =>
             {
               options.Port = dashboardPort;
               options.HideTrace = true;
+              options.HostSelf = dashboardHost;
             });
           }
         });

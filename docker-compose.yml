@@ -8,6 +8,13 @@ services:
       context: .
       dockerfile: Storages.Dockerfile
 
+  planningpoker.identity:
+    image: ${DOCKER_REGISTRY-}planningpoker/identity
+    container_name: PlanningPoker-Identity
+    build:
+      context: .
+      dockerfile: Identity.Dockerfile
+
   planningpoker.api:
     image: ${DOCKER_REGISTRY-}planningpoker/api
     container_name: PlanningPoker-API
