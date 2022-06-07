@@ -39,7 +39,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
           webBuilder.UseStartup<Startup>();
         });
 
-      var useOrleansClusterValue = Environment.GetEnvironmentVariable("PLANNING_POKER_USE_ORLEANS_CLUSTER");
+      var useOrleansClusterValue = Environment.GetEnvironmentVariable("PLANNING_POKER_ORLEANS__USEORLEANSCLUSTER");
       if (bool.TryParse(useOrleansClusterValue, out var useOrleansCluster) && useOrleansCluster)
         builder.UseOrleansOutOfProcess();
       else
