@@ -243,9 +243,6 @@
   <data name="SessionsEmpty" xml:space="preserve">
     <value>You are not participating in any session yet</value>
   </data>
-  <data name="StartedSessionState" xml:space="preserve">
-    <value>Voting has begun...</value>
-  </data>
   <data name="StartSessionButton" xml:space="preserve">
     <value>Start</value>
   </data>
@@ -254,6 +251,9 @@
   </data>
   <data name="StopSessionButton" xml:space="preserve">
     <value>Stop</value>
+  </data>
+  <data name="Voted" xml:space="preserve">
+    <value>Voted: {0}/{1}</value>
   </data>
   <data name="VotingInProcess" xml:space="preserve">
     <value>Voting is underway</value>

@@ -34,6 +34,7 @@ namespace Yotalab.PlanningPoker.Grains
 
       this.grainState.State.ParticipantVotes[participantId] = vote;
       this.NotifyAcceptVote(participantId, vote);
+      this.NotifySessionInfoChanged();
 
       this.TryAutostopSession();
 
@@ -387,6 +388,7 @@ namespace Yotalab.PlanningPoker.Grains
           Name = this.grainState.State.Name,
           AutoStop = this.grainState.State.AutoStop,
           ProcessingState = this.grainState.State.ProcessingState,
+          VotesCount = this.grainState.State.ParticipantVotes.Count(pair => !Vote.Unset.Equals(pair.Value)),
           ParticipantsCount = hasParticipants ? this.grainState.State.ParticipantVotes.Keys.Count : 0
         };
       }
