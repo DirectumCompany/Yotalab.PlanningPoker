@@ -75,7 +75,7 @@
     if (this.Session.ProcessingState == SessionProcessingState.Started)
     {
       this.buttonText = UIResources.StopSessionButton;
-      this.sessionStatus = string.Format(UIResources.Voted, this.Session.VotesCount, this.Session.ParticipantsCount);
+      this.sessionStatus = UIResources.StartedSessionState;
       this.requestedState = SessionProcessingState.Stopped;
       this.alertSeverity = Severity.Info;
       this.buttonColor = Color.Warning;

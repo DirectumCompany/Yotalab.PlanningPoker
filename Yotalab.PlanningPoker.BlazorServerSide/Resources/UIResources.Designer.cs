@@ -439,7 +439,16 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Start.
+        ///   Looks up a localized string similar to Voting has begun....
+        /// </summary>
+        public static string StartedSessionState {
+            get {
+                return ResourceManager.GetString("StartedSessionState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start.
         /// </summary>
         public static string StartSessionButton {
             get {
@@ -448,7 +457,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Voting stopped.
+        ///   Looks up a localized string similar to Voting stopped.
         /// </summary>
         public static string StoppedSessionState {
             get {
@@ -462,15 +471,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         public static string StopSessionButton {
             get {
                 return ResourceManager.GetString("StopSessionButton", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Voted: {0}/{1}.
-        /// </summary>
-        public static string Voted {
-            get {
-                return ResourceManager.GetString("Voted", resourceCulture);
             }
         }
         

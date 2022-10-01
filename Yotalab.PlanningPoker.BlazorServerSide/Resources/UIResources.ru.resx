@@ -243,6 +243,9 @@
   <data name="SessionsEmpty" xml:space="preserve">
     <value>Вы пока не участвуете ни в одной сессии</value>
   </data>
+  <data name="StartedSessionState" xml:space="preserve">
+    <value>Голосование началось...</value>
+  </data>
   <data name="StartSessionButton" xml:space="preserve">
     <value>Начать</value>
   </data>
@@ -251,9 +254,6 @@
   </data>
   <data name="StopSessionButton" xml:space="preserve">
     <value>Остановить</value>
-  </data>
-  <data name="Voted" xml:space="preserve">
-    <value>Проголосовало: {0}/{1}</value>
   </data>
   <data name="VotingInProcess" xml:space="preserve">
     <value>Голосование идет</value>
