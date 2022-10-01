@@ -475,6 +475,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Voted: {0}/{1}.
+        /// </summary>
+        public static string VotedParticipantsCount {
+            get {
+                return ResourceManager.GetString("VotedParticipantsCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Voting is underway.
         /// </summary>
         public static string VotingInProcess {
