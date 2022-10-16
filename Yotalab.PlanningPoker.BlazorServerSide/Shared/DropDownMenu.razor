@@ -2,23 +2,25 @@
   RenderFragment childContent =
   @<div>
     @if (this.ChildContent != null)
-    {
-      @this.ChildContent
-    }
-    else
-    {
-      @foreach (var item in this.Items)
       {
-        <MudMenuItem OnClick="@this.CreateOnClickCallback(item)">
-          @if (!string.IsNullOrWhiteSpace(item.Icon))
-          {
-            <MudIcon Style="pointer-events:none" Class="mud-float-left mr-2" Icon="@item.Icon" Color="@item.IconColor" />
-          }
-          <MudText Class="mud-float-left">@item.Title</MudText>
-        </MudMenuItem>
+        @this.ChildContent
       }
-    }
-  </div>;
+      else
+      {
+        @foreach (var item in this.Items)
+        {
+          <MudMenuItem OnClick="@this.CreateOnClickCallback(item)">
+            <div class="d-flex">
+              @if (!string.IsNullOrWhiteSpace(item.Icon))
+              {
+                <MudIcon Style="pointer-events:none" Class="mr-2" Icon="@item.Icon" Color="@item.IconColor" />
+              }
+              <MudText>@item.Title</MudText>
+            </div>
+          </MudMenuItem>
+        }
+      }
+    </div>;
 }
 
 @if (this.ButtonTemplate != null)
