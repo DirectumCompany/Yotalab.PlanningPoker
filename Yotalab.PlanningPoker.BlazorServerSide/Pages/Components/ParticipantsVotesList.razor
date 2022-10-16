@@ -6,10 +6,14 @@
     <MudListSubheader Class="ml-n2 mb-n4">
       <b>
         <span class="text-muted mr-2">
-          if (this.Session.ProcessingState == SessionProcessingState.Started)
+          @if (this.Session.ProcessingState == SessionProcessingState.Started)
+          {
             @string.Format(UIResources.VotedParticipantsCount, this.PaticipantVotes.Count(pair => !Vote.Unset.Equals(pair.Vote)), this.PaticipantVotes.Count())
+          }
           else
+          {
             @string.Format(UIResources.ParticipantsCount, this.PaticipantVotes.Count())
+          }
         </span>
       </b>
     </MudListSubheader>
