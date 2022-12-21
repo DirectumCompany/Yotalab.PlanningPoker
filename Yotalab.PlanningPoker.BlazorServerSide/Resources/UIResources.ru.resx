@@ -255,6 +255,9 @@
   <data name="StopSessionButton" xml:space="preserve">
     <value>Остановить</value>
   </data>
+  <data name="VotedParticipantsCount" xml:space="preserve">
+    <value>Проголосовало: {0}/{1}</value>
+  </data>
   <data name="VotingInProcess" xml:space="preserve">
     <value>Голосование идет</value>
   </data>
