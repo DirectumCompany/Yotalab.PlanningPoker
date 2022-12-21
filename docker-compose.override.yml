@@ -24,7 +24,7 @@ services:
       - PLANNING_POKER_ORLEANS__DASHBOARDPORT=8081
       - PLANNING_POKER_ORLEANS__USEDASHBOARD=true
       - PLANNING_POKER_ORLEANS__DASHBOARDHOST=true
-      - PLANNING_POKER_ORLEANS__CLUSTERID=hankir
+      - PLANNING_POKER_ORLEANS__CLUSTERID=planingpoker-cluster
       - MYSQLCONNSTR_DefaultGrainStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_grains;User=root;Password=11111
       - MYSQLCONNSTR_DefaultPubSubStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_pubsub;User=root;Password=11111
       - MYSQLCONNSTR_DefaultClusterStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_clustering;User=root;Password=11111
@@ -59,6 +59,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - PLANNING_POKER_ORLEANS__USECLUSTER=true
+      - PLANNING_POKER_ORLEANS__CLUSTERID=planingpoker-cluster
       - MYSQLCONNSTR_DefaultConnection=Server=planningpoker.identity;Port=3306;Database=planningpoker_identity;User=root;Password=11111
       - MYSQLCONNSTR_DefaultClusterStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_clustering;User=root;Password=11111
     ports:
