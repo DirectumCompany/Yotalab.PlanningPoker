@@ -2,6 +2,7 @@ using System;
 using System.Runtime;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -26,15 +27,26 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       host.Run();
     }
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-      Host.CreateDefaultBuilder(args)
-      .ConfigureWebHostDefaults(webBuilder =>
-      {
-        webBuilder.UseStartup<Startup>();
-      })
-      // Если Silo хостится в отдельном процессе, то эту строчку закоментировать.
-      .UseOrleansSiloInProcess()
-      ;
+    public static IHostBuilder CreateHostBuilder(string[] args)
+    {
+      var builder = Host.CreateDefaultBuilder(args)
+        .ConfigureAppConfiguration((context, configurationBuilder) =>
+        {
+          configurationBuilder.AddEnvironmentVariables("PLANNING_POKER_");
+        })
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+          webBuilder.UseStartup<Startup>();
+        });
+
+      var useOrleansClusterValue = Environment.GetEnvironmentVariable("PLANNING_POKER_ORLEANS__USECLUSTER");
+      if (bool.TryParse(useOrleansClusterValue, out var useOrleansCluster) && useOrleansCluster)
+        builder.UseOrleansOutOfProcess();
+      else
+        builder.UseOrleansSiloInProcess();
+
+      return builder;
+    }
 
     private static void MigrateDatabase(IServiceProvider services, ILogger<Program> logger)
     {

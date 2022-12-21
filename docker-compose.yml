@@ -1,0 +1,34 @@
+version: '3.4'
+
+services:
+  planningpoker.storages:
+    image: ${DOCKER_REGISTRY-}planningpoker/storages
+    container_name: PlanningPoker-Storages
+    build:
+      context: .
+      dockerfile: Storages.Dockerfile
+
+  planningpoker.identity:
+    image: ${DOCKER_REGISTRY-}planningpoker/identity
+    container_name: PlanningPoker-Identity
+    build:
+      context: .
+      dockerfile: Identity.Dockerfile
+
+  planningpoker.api:
+    image: ${DOCKER_REGISTRY-}planningpoker/api
+    container_name: PlanningPoker-API
+    build:
+      context: .
+      dockerfile: Yotalab.PlanningPoker.Api/Dockerfile
+    depends_on:
+      - planningpoker.storages
+
+  planningpoker.web:
+    image: ${DOCKER_REGISTRY-}planningpoker/web
+    container_name: PlanningPoker-WebApp
+    build:
+      context: .
+      dockerfile: Yotalab.PlanningPoker.BlazorServerSide/Dockerfile
+    depends_on:
+      - planningpoker.api

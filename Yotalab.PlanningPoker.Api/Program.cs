@@ -1,32 +1,24 @@
-using Microsoft.AspNetCore.Hosting;
+using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Orleans;
 using Orleans.Hosting;
 using Yotalab.PlanningPoker.Hosting;
 
-namespace Yotalab.PlanningPoker.Api
-{
-  public class Program
-  {
-    public static void Main(string[] args)
-    {
-      CreateHostBuilder(args).Build().Run();
-    }
+Console.Title = "PlanningPoker API";
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-      Host.CreateDefaultBuilder(args)
-      .ConfigureWebHostDefaults(webBuilder =>
-      {
-        webBuilder.UseStartup<Startup>();
-      })
-      .ConfigureServices(services =>
-      {
-        services.Configure<ConsoleLifetimeOptions>(options =>
-        {
-          options.SuppressStatusMessages = true;
-        });
-      })
-      .UseOrleansSiloInProcess();
-  }
-}
+await Host.CreateDefaultBuilder()
+  .ConfigureAppConfiguration((context, configurationBuilder) =>
+  {
+    configurationBuilder.AddEnvironmentVariables("PLANNING_POKER_");
+  })
+  .UseOrleansSiloInProcess()
+  .ConfigureServices(services =>
+  {
+    services.Configure<ConsoleLifetimeOptions>(options =>
+    {
+      options.SuppressStatusMessages = true;
+    });
+  })
+  .RunConsoleAsync();

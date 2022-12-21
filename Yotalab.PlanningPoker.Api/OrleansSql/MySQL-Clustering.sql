@@ -1,4 +1,4 @@
-﻿-- For each deployment, there will be only one (active) membership version table version column which will be updated periodically.
+-- For each deployment, there will be only one (active) membership version table version column which will be updated periodically.
 CREATE TABLE OrleansMembershipVersionTable
 (
     DeploymentId NVARCHAR(150) NOT NULL,

@@ -1,0 +1,73 @@
+version: '3.4'
+
+services:
+  planningpoker.storages:
+    environment:
+      - MARIADB_ROOT_PASSWORD=11111
+    ports:
+      - "3307:3306"
+    volumes:
+      - ${APPDATA}/PlanningPoker/Storages/Data:/var/lib/mysql
+
+  planningpoker.identity:
+    environment:
+      - MARIADB_ROOT_PASSWORD=11111
+      - MARIADB_DATABASE=planningpoker_identity
+    ports:
+      - "3308:3306"
+    volumes:
+      - ${APPDATA}/PlanningPoker/Identity/Data:/var/lib/mysql
+
+  planningpoker.api:
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+      - PLANNING_POKER_ORLEANS__DASHBOARDPORT=8081
+      - PLANNING_POKER_ORLEANS__USEDASHBOARD=true
+      - PLANNING_POKER_ORLEANS__DASHBOARDHOST=true
+      - PLANNING_POKER_ORLEANS__CLUSTERID=planingpoker-cluster
+      - MYSQLCONNSTR_DefaultGrainStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_grains;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultPubSubStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_pubsub;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultClusterStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_clustering;User=root;Password=11111
+    ports:
+      - "30000"
+      - "11111"
+      - "8080:8081"
+    volumes:
+      - ./logs:/logs
+
+  # Silo without dashboard for scaling
+  #planningpoker.api-silo:
+  #  image: ${DOCKER_REGISTRY-}planningpoker/api
+  #  build:
+  #    context: .
+  #    dockerfile: Yotalab.PlanningPoker.Api/Dockerfile
+  #  depends_on:
+  #    - planningpoker.api
+  #  environment:
+  #    - DOTNET_ENVIRONMENT=Development
+  #    - MYSQLCONNSTR_DefaultGrainStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_grains;User=root;Password=11111
+  #    - MYSQLCONNSTR_DefaultPubSubStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_pubsub;User=root;Password=11111
+  #    - MYSQLCONNSTR_DefaultClusterStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_clustering;User=root;Password=11111
+  #  ports:
+  #    - "30000"
+  #    - "11111"
+  #  volumes:
+  #    - ./logs:/logs
+
+  planningpoker.web:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - PLANNING_POKER_ORLEANS__USECLUSTER=true
+      - PLANNING_POKER_ORLEANS__CLUSTERID=planingpoker-cluster
+      - MYSQLCONNSTR_DefaultConnection=Server=planningpoker.identity;Port=3306;Database=planningpoker_identity;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultClusterStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_clustering;User=root;Password=11111
+    ports:
+      - "64623:80"
+      - "44313:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/PlanningPoker/Avatars:/app/wwwroot/img/avatars
+      - ./keys:/keys
+      - ./logs:/logs

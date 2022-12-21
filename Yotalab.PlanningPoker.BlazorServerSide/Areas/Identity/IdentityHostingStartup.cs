@@ -61,18 +61,14 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity
           };
         });
 
-        var dataProtectionConfig = context.Configuration.GetSection("DataProtection");
-        if (dataProtectionConfig != null)
-        {
-          var directory = dataProtectionConfig["Directory"];
-          var certificateThumbprint = dataProtectionConfig["CertificateThumbprint"];
-          var dataProtectionBuilder = services.AddDataProtection();
-          if (!string.IsNullOrWhiteSpace(directory))
-            dataProtectionBuilder.PersistKeysToFileSystem(new DirectoryInfo(directory));
+        var directory = context.Configuration.GetValue<string>("DataProtection:Directory");
+        var certificateThumbprint = context.Configuration.GetValue<string>("DataProtection:CertificateThumbprint");
+        var dataProtectionBuilder = services.AddDataProtection();
+        if (!string.IsNullOrWhiteSpace(directory))
+          dataProtectionBuilder.PersistKeysToFileSystem(new DirectoryInfo(directory));
 
-          if (!string.IsNullOrWhiteSpace(certificateThumbprint))
-            dataProtectionBuilder.ProtectKeysWithCertificate(certificateThumbprint);
-        }
+        if (!string.IsNullOrWhiteSpace(certificateThumbprint))
+          dataProtectionBuilder.ProtectKeysWithCertificate(certificateThumbprint);
 
         services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
       });
