@@ -64,14 +64,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
       StateHasChanged();
     }
 
-    private void HandleCheckVote(Vote vote)
-    {
-      if (this.EditArgs.Bulletin.IsEnabled(vote))
-        this.EditArgs.Bulletin.Disable(vote);
-      else
-        this.EditArgs.Bulletin.Enable(vote);
-    }
-
     private async Task ConfirmAsync()
     {
       if (!this.editContext.Validate())

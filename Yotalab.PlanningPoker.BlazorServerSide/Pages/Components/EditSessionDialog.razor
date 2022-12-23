@@ -10,30 +10,7 @@
         <div class="mb-3">
           <MudSwitch @bind-Checked="@this.EditArgs.AutoStop" Label="@UIResources.EditSessionDialogAutoStopLabel" Color="Color.Primary" title="@UIResources.EditSessionDialogAutoStopHint" />
         </div>
-        <div class="d-flex flex-wrap justify-center" style="max-height:300px; overflow-y:auto">
-          @foreach (var bulletinItem in this.EditArgs.Bulletin)
-          {
-            var vote = bulletinItem.Vote;
-            if (vote.IsUnset)
-              continue;
-
-            var voteChecked = !bulletinItem.IsDisabled;
-            <MudPaper Class="d-flex mr-4 mb-4" Style="min-width: 110px; cursor: pointer">
-              <MudCheckBox T="bool" Checked="voteChecked"
-                           Style="position:relative;left:-8px;height:30px;width:30px"
-                           CheckedChanged="@((args) => this.HandleCheckVote(vote))"
-                           Color="Color.Primary">
-              </MudCheckBox>
-              <MudText @onclick="@((args) => this.HandleCheckVote(vote))"
-                       Typo="Typo.h4"
-                       Align="Align.Center"
-                       Class="flex-grow-1 flex-shrink-0 pa-2"
-                       Style="cursor:inherit">
-                @vote.Value
-              </MudText>
-            </MudPaper>
-          }
-        </div>
+        <BulletinEditor Bulletin="this.EditArgs.Bulletin" />
       </EditForm>
     }
   </DialogContent>
