@@ -79,6 +79,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Card editing mode.
+        /// </summary>
+        public static string BulletinEditMode {
+            get {
+                return ResourceManager.GetString("BulletinEditMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string CancelButton {

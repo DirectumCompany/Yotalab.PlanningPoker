@@ -123,6 +123,9 @@
   <data name="BackToMySessionsButton" xml:space="preserve">
     <value>Вернуться к моим сессиям</value>
   </data>
+  <data name="BulletinEditMode" xml:space="preserve">
+    <value>Режим редактирования карт</value>
+  </data>
   <data name="CancelButton" xml:space="preserve">
     <value>Отменить</value>
   </data>

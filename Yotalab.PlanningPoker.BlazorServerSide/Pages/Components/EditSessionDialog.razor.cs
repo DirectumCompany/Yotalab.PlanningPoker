@@ -12,6 +12,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
   {
     private bool formInvalid;
     private EditContext editContext;
+    private bool bulletinEditorEditModeOn;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 

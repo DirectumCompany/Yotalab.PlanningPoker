@@ -7,6 +7,7 @@
     <Platforms>AnyCPU;x86</Platforms>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <UseRazorSourceGenerator>true</UseRazorSourceGenerator>
   </PropertyGroup>
 
   <ItemGroup>

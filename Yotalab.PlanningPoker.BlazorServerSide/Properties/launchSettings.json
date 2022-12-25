@@ -1,20 +1,9 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iis": {
-      "applicationUrl": "https://localhost/PlanningPoker",
-      "sslPort": 0
-    },
-    "iisExpress": {
-      "applicationUrl": "http://localhost:64623",
-      "sslPort": 44313
-    }
-  },
   "profiles": {
     "IIS": {
       "commandName": "IIS",
       "launchBrowser": true,
+      "launchUrl": "https://localhost/PlanningPoker",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -45,6 +34,18 @@
       },
       "publishAllPorts": true,
       "useSSL": true
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "https://localhost/PlanningPoker",
+      "sslPort": 0
+    },
+    "iisExpress": {
+      "applicationUrl": "http://localhost:64623",
+      "sslPort": 44313
     }
   }
 }
