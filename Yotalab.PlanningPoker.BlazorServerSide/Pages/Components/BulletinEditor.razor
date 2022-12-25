@@ -7,7 +7,9 @@
       if (vote.IsUnset)
         continue;
 
-      <MudPaper Class="d-flex mr-4 mb-4" Style="min-width: 110px;">
+      var paperStyle = "min-width: 110px;" + (this.invalidVotes.Contains(vote) ? "border: 1px solid red" : string.Empty);
+
+      <MudPaper Class="d-flex mr-4 mb-4" Style="@paperStyle">
         <MudIcon Style="position: relative; left:-8px; top: -8px; cursor: pointer;"
              Size="@Size.Small"
              Icon="@Icons.Material.Filled.Cancel"

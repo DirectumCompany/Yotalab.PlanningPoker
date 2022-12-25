@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Components;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 
@@ -6,11 +7,18 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
 {
   partial class BulletinEditor
   {
+    private HashSet<Vote> invalidVotes = new HashSet<Vote>();
+
     [Parameter]
     public Bulletin Bulletin { get; set; }
 
     [Parameter]
     public bool IsEditMode { get; set; }
+
+    protected override void OnParametersSet()
+    {
+      this.invalidVotes.Clear();
+    }
 
     private void HandleCheckVote(Vote vote)
     {
@@ -21,8 +29,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
     }
     private void HandleRemoveVoteClick(Vote vote)
     {
-      var item = this.Bulletin.Single(i => i.Vote.Equals(vote));
-      this.Bulletin.Remove(item);
+      var items = this.Bulletin.Where(i => i.Vote.Equals(vote)).ToList();
+      items.ForEach(i => this.Bulletin.Remove(i));
     }
 
     private void HandleAddVoteClick()
@@ -36,9 +44,12 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
 
     private void HandleVoteValueChange(Vote vote, ChangeEventArgs e)
     {
+      this.invalidVotes.Remove(vote);
+
       var value = e.Value as string;
       if (string.IsNullOrWhiteSpace(value))
       {
+        this.invalidVotes.Add(vote);
         return;
       }
 
@@ -54,6 +65,12 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
       else
       {
         newVote = new Vote(value);
+      }
+
+      if (this.Bulletin.Any(i => i.Vote.Equals(newVote)))
+      {
+        this.invalidVotes.Add(vote);
+        return;
       }
 
       this.Bulletin.Replace(vote, newVote);
