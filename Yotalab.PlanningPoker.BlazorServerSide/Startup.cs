@@ -4,7 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.FeatureManagement;
 using MudBlazor.Services;
+using Yotalab.PlanningPoker.BlazorServerSide.Filters;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.FilesStoraging;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.Mailing;
@@ -61,6 +63,12 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
         var webEnvironment = provider.GetRequiredService<IWebHostEnvironment>();
         return new AvatarStorage(webEnvironment.WebRootPath, "img/avatars", "img/avatars/tmp");
       });
+
+      services
+        .AddFeatureManagement()
+        .AddFeatureFilter<SnowflakesFeatureFilter>();
+
+      services.Configure<FeatureManagementOptions>(options => options.IgnoreMissingFeatureFilters = true);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
