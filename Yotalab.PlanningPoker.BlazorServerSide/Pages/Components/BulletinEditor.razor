@@ -1,4 +1,29 @@
-﻿<div class="d-flex flex-wrap justify-center pt-3" style="max-height:350px; overflow-y:auto">
+﻿@if (this.IsEditMode)
+{
+  <div class="d-flex mb-4 justify-center">
+    <div class="mr-4 align-self-center">
+      <MudIconButton OnClick="this.HandleAddVoteClick"
+                   Icon="@Icons.Material.Filled.Add"
+                   Variant="Variant.Filled"
+                   Color="Color.Tertiary">
+      </MudIconButton>
+    </div>
+
+    <MudPaper Class="d-flex justify-space-between pa-2" Style="flex-basis: 80%">
+      @foreach (var emoji in this.emojiCards)
+      {
+        <MudText Typo="Typo.h4"
+             @onclick="(args) => this.HandleAddEmojiVoteClick(emoji)"
+             Style="cursor: pointer"
+             Align="Align.Center">
+          @emoji
+        </MudText>
+      }
+    </MudPaper>
+  </div>
+}
+
+<div class="d-flex flex-wrap justify-center align-content-start pt-3" style="max-height:500px; min-height: 160px; overflow-y:auto">
   @if (this.IsEditMode)
   {
     @foreach (var bulletinItem in this.Bulletin)
@@ -27,14 +52,6 @@
         </div>
       </MudPaper>
     }
-
-    <div class="mr-4 mb-4 align-self-center">
-      <MudIconButton OnClick="this.HandleAddVoteClick"
-                   Icon="@Icons.Material.Filled.Add"
-                   Variant="Variant.Filled"
-                   Color="Color.Tertiary">
-      </MudIconButton>
-    </div>
   }
   else
   {

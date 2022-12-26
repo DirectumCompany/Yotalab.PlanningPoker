@@ -126,6 +126,12 @@
   <data name="BulletinEditMode" xml:space="preserve">
     <value>Режим редактирования карт</value>
   </data>
+  <data name="BulletinItemAlreadyExists" xml:space="preserve">
+    <value>Карта со значением {0} уже добавлена</value>
+  </data>
+  <data name="BulletinItemIsEmpty" xml:space="preserve">
+    <value>Карта с пустым значением недопустима</value>
+  </data>
   <data name="CancelButton" xml:space="preserve">
     <value>Отменить</value>
   </data>
