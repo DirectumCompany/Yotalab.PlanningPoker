@@ -1,0 +1,43 @@
+﻿.bulletin-editor-drop-zone .mud-dropitem-placeholder {
+  width: 2px;
+  padding: 0 !important;
+}
+
+.bulletin-editor-drop-zone .mud-drop-item-preview-start {
+  top: -20px;
+}
+
+.bulletin-container {
+  max-height: 500px;
+  min-height: 160px;
+  overflow-y: auto;
+}
+
+::deep .bulletin-item {
+  flex-basis: 110px;
+  max-width: 110px;
+  cursor: pointer;
+}
+
+.bulletin-item-check {
+  position: relative;
+  left: -8px;
+  height: 30px;
+  width: 30px;
+}
+
+.bulletin-item-remove {
+  position: relative;
+  cursor: pointer;
+}
+
+.bulletin-item-value-editor {
+  border: none;
+  background: transparent;
+  outline: none;
+  text-align: center;
+}
+
+.bulletin-item-value {
+  cursor: inherit;
+}

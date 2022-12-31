@@ -55,20 +55,6 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
       return this.Any(item => Equals(item.Vote, vote) && !item.IsDisabled);
     }
 
-    public void Replace(Vote vote, Vote newVote)
-    {
-      var existingItem = this.FirstOrDefault(i => i.Vote.Equals(vote));
-      if (existingItem != null)
-      {
-        var items = this.ToList();
-        var existingItemIndex = items.IndexOf(existingItem);
-        items.Remove(existingItem);
-        items.Insert(existingItemIndex, new BulletinItem(newVote));
-        this.Clear();
-        items.ForEach(i => this.Add(i));
-      }
-    }
-
     public Bulletin(IEnumerable<Vote> votes)
       : base(votes.Select(v => new BulletinItem(v)), new BulletinItemComparer())
     {

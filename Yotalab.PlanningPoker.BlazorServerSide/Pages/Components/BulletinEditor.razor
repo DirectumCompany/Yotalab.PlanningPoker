@@ -23,38 +23,50 @@
   </div>
 }
 
-<div class="d-flex flex-wrap justify-center align-content-start pt-3" style="max-height:500px; min-height: 160px; overflow-y:auto">
-  @if (this.IsEditMode)
-  {
-    @foreach (var bulletinItem in this.Bulletin)
-    {
-      var vote = bulletinItem.Vote;
-      if (vote.IsUnset)
-        continue;
 
-      var paperStyle = "min-width: 110px;" + (this.invalidVotes.Contains(vote) ? "border: 1px solid red" : string.Empty);
-
-      <MudPaper Class="d-flex mr-4 mb-4" Style="@paperStyle">
-        <MudIcon Style="position: relative; left:-8px; top: -8px; cursor: pointer;"
-             Size="@Size.Small"
-             Icon="@Icons.Material.Filled.Cancel"
-             Color="Color.Secondary"
-             @onclick="@(() => this.HandleRemoveVoteClick(vote))">
+@if (this.IsEditMode)
+{
+  <MudDropContainer T="BulletinItemViewModel"
+                  @ref="this.itemsReorderContainer"
+                  Items="@bulletinEditViewModels.Items"
+                  ItemsSelector="@((item, dropzone) => true)"
+                  ItemDropped="HandleVoteDropped"
+                  Class="py-3"
+                  Style="max-height:500px; min-height: 160px; overflow-y:auto">
+    <ChildContent>
+      <MudDropZone T="BulletinItemViewModel"
+                 Identifier="Bulletin"
+                 Class="d-flex flex-wrap justify-center align-content-start can-drop-class gap-3"
+                 ItemDraggingClass="item-dragging"
+                 AllowReorder="true" />
+    </ChildContent>
+    <ItemRenderer>
+      @{
+        var paperStyle = "max-width: 110px;" + (context.IsInvalid ? "border: 1px solid red" : string.Empty);
+      }
+      <MudPaper Class="d-flex" Style="@paperStyle">
+        <MudIcon Style="position: relative; cursor: pointer;"
+               Size="@Size.Small"
+               Icon="@Icons.Material.Filled.Cancel"
+               Color="Color.Secondary"
+               @onclick="@(() => this.HandleRemoveVoteClick(context))">
         </MudIcon>
-        <div class="flex-grow-1 flex-shrink-0 pa-2" style="width: 100%" data-value="@vote.Value">
+        <div class="flex-grow-1 flex-shrink-0 pa-2" style="width: 100%">
           <input maxlength="4"
-             class="mud-typography mud-typography-h4 mud-inherit-text"
-             style="border: none; outline: none; text-align: center;"
-             size="2"
-             value="@vote.Value"
-             @onchange="@((args) => this.HandleVoteValueChange(vote, args))"
-             type="text" />
+               class="mud-typography mud-typography-h4 mud-inherit-text"
+               style="border: none; background: transparent; outline: none; text-align: center;"
+               size="2"
+               value="@context.Vote.Value"
+               @onchange="@((args) => this.HandleVoteValueChange(context, args))"
+               type="text" />
         </div>
       </MudPaper>
-    }
-  }
-  else
-  {
+    </ItemRenderer>
+  </MudDropContainer>
+}
+else
+{
+  <div class="d-flex flex-wrap justify-center align-content-start py-3 gap-3" style="max-height:500px; min-height: 160px; overflow-y:auto">
     @foreach (var bulletinItem in this.Bulletin)
     {
       var vote = bulletinItem.Vote;
@@ -62,7 +74,7 @@
         continue;
 
       var voteChecked = !bulletinItem.IsDisabled;
-      <MudPaper Class="d-flex mr-4 mb-4" Style="min-width: 110px; cursor: pointer">
+      <MudPaper Class="d-flex" Style="flex-basis: 110px; cursor: pointer">
         <MudCheckBox T="bool" Checked="voteChecked"
                  Style="position:relative;left:-8px;height:30px;width:30px"
                  CheckedChanged="@((args) => this.HandleCheckVote(vote))"
@@ -77,5 +89,5 @@
         </MudText>
       </MudPaper>
     }
-  }
-</div>
+  </div>
+}

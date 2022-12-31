@@ -35,7 +35,7 @@
     <PackageReference Include="Microsoft.Orleans.Persistence.AdoNet" Version="3.6.5" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.1" ExcludeAssets="All" />
-    <PackageReference Include="MudBlazor" Version="6.0.6" />
+    <PackageReference Include="MudBlazor" Version="6.1.6" />
     <PackageReference Include="OrleansDashboard" Version="3.6.2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
