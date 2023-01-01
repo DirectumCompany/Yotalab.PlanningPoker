@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using MudBlazor.Utilities;
@@ -124,7 +126,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
 
     private void HandleVoteDropped(MudItemDropInfo<BulletinItemViewModel> dropItem)
     {
-      this.bulletinEditViewModels.UpdateOrder(dropItem);
+      if (this.itemsReorderContainer.HasTransactionIndexChanged() && dropItem.IndexInZone != dropItem.Item.Order)
+        this.bulletinEditViewModels.UpdateOrder(dropItem);
     }
   }
 
