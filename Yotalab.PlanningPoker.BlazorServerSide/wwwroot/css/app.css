@@ -39,12 +39,3 @@
   align-self: flex-start;
   margin-top: 32px;
 }
-
-.can-drop-class .mud-dropitem-placeholder {
-  width: 2px;
-  padding: 0 !important;
-}
-
-.can-drop-class .mud-drop-item-preview-start {
-  top: -20px;
-}

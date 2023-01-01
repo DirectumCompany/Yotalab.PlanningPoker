@@ -1,43 +1,72 @@
-﻿.bulletin-editor-drop-zone .mud-dropitem-placeholder {
-  width: 2px;
-  padding: 0 !important;
+﻿.bulletin-editor-root ::deep .bulletin-editor-toolbox {
+  display: flex;
+  justify-content: center;
 }
 
-.bulletin-editor-drop-zone .mud-drop-item-preview-start {
-  top: -20px;
-}
+  .bulletin-editor-root ::deep .bulletin-editor-toolbox .bulletin-editor-toolbox-add {
+    align-self: center;
+  }
 
-.bulletin-container {
+  .bulletin-editor-root ::deep .bulletin-editor-toolbox .bulletin-editor-toolbox-emoji {
+    display: flex;
+    flex-basis: 80%;
+    justify-content: space-between;
+  }
+
+.bulletin-editor-root ::deep .bulletin-editor {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: center;
   max-height: 500px;
   min-height: 160px;
   overflow-y: auto;
 }
 
-::deep .bulletin-item {
-  flex-basis: 110px;
-  max-width: 110px;
-  cursor: pointer;
-}
+  .bulletin-editor-root ::deep .bulletin-editor .mud-dropitem-placeholder:first-child {
+    position: relative;
+    left: 24px;
+  }
 
-.bulletin-item-check {
-  position: relative;
-  left: -8px;
-  height: 30px;
-  width: 30px;
-}
+  .bulletin-editor-root ::deep .bulletin-editor .mud-dropitem-placeholder {
+    width: 2px;
+    padding: 0 !important;
+  }
 
-.bulletin-item-remove {
-  position: relative;
-  cursor: pointer;
-}
+  .bulletin-editor-root ::deep .bulletin-editor .mud-drop-item-preview-start {
+    left: 10px;
+    position: relative;
+    flex-basis: 10px;
+    height: auto;
+  }
 
-.bulletin-item-value-editor {
-  border: none;
-  background: transparent;
-  outline: none;
-  text-align: center;
-}
+  .bulletin-editor-root ::deep .bulletin-editor .bulletin-item {
+    display: flex;
+    min-width: 110px;
+    cursor: pointer;
+  }
 
-.bulletin-item-value {
-  cursor: inherit;
-}
+    .bulletin-editor-root ::deep .bulletin-editor .bulletin-item .bulletin-item-check {
+      position: relative;
+      left: -8px;
+      height: 30px;
+      width: 30px;
+    }
+
+    .bulletin-editor-root ::deep .bulletin-editor .bulletin-item .bulletin-item-remove {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .bulletin-editor-root ::deep .bulletin-editor .bulletin-item .bulletin-item-value {
+      cursor: inherit;
+      flex-grow: 1;
+      flex-shrink: 0;
+    }
+
+      .bulletin-editor-root ::deep .bulletin-editor .bulletin-item .bulletin-item-value .bulletin-item-value-editor {
+        border: none;
+        background: transparent;
+        outline: none;
+        text-align: center;
+      }
