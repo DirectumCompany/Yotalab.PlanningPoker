@@ -11,7 +11,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Filters
 
     public SnowflakesFeatureFilter()
     {
-      this.startPeriod = new DateTime(DateTime.Now.Year, 12, 1);
+      var now = DateTime.Now;
+      this.startPeriod = now.Month != 1 ? new DateTime(now.Year, 12, 1) : new DateTime(now.Year - 1, 12, 1);
       this.endPeriod = startPeriod.AddDays(45);
     }
 
