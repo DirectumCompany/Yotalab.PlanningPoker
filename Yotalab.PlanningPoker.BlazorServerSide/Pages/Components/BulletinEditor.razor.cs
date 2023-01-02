@@ -207,9 +207,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
       var emojiVotes = this.bulletin.Where(i => i.Vote.Value?.Equals(emoji) == true);
       if (!emojiVotes.Any())
       {
-        var newItem = new BulletinItem(new Vote(emoji));
-        this.bulletin.Add(newItem);
-        this.bulletinItemsViewModel.Add(new BulletinItemViewModel(newItem, this.bulletin.Count));
+        this.AddVote(new Vote(emoji));
         return true;
       }
 
@@ -219,12 +217,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
     public void AddNumber()
     {
       var numbers = this.bulletin.Where(i => i.Vote.IsNumber);
-      BulletinItem newItem;
       if (numbers.Any())
-        newItem = new BulletinItem(new Vote(numbers.Max(i => double.Parse(i.Vote.Value)) + 10));
+        this.AddVote(new Vote(numbers.Max(i => double.Parse(i.Vote.Value)) + 10));
       else
-        newItem = new BulletinItem(new Vote(0));
+        this.AddVote(new Vote(0));
+    }
 
+    private void AddVote(Vote vote)
+    {
+      var newItem = new BulletinItem(vote);
       this.bulletin.Add(newItem);
       this.bulletinItemsViewModel.Add(new BulletinItemViewModel(newItem, this.bulletin.Count));
     }
