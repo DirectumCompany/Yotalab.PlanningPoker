@@ -10,7 +10,7 @@
       </MudIconButton>
 
       <MudMenu Label="@UIResources.BulletinEditModeEmojiMenuLabel"
-             Class="d-sm-none d-md-flex pa-2"
+             Class="d-sm-flex d-md-none pa-2"
              Variant="Variant.Filled"
              FullWidth="true"
              EndIcon="@Icons.Material.Filled.KeyboardArrowDown"
@@ -26,7 +26,7 @@
         }
       </MudMenu>
 
-      <MudPaper Class="bulletin-editor-toolbox-emoji d-none d-sm-flex d-md-none ml-2">
+      <MudPaper Class="bulletin-editor-toolbox-emoji d-none d-sm-none d-md-flex ml-2">
         @foreach (var emoji in this.emojiCards)
         {
           <MudText Typo="Typo.h6"
