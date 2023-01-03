@@ -126,6 +126,9 @@
   <data name="BulletinEditMode" xml:space="preserve">
     <value>Режим редактирования карт</value>
   </data>
+  <data name="BulletinEditModeEmojiMenuLabel" xml:space="preserve">
+    <value>Эмодзи</value>
+  </data>
   <data name="BulletinItemAlreadyExists" xml:space="preserve">
     <value>Карта со значением {0} уже добавлена</value>
   </data>

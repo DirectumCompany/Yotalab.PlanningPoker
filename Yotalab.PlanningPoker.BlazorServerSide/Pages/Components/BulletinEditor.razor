@@ -1,20 +1,37 @@
 ﻿<div class="bulletin-editor-root">
   @if (this.IsEditMode)
   {
-    <div class="bulletin-editor-toolbox mb-4">
-      <MudIconButton Class="bulletin-editor-toolbox-add mr-4"
+    <div class="bulletin-editor-toolbox ml-3">
+      <MudIconButton Class="bulletin-editor-toolbox-add"
                    OnClick="this.HandleAddVoteClick"
                    Icon="@Icons.Material.Filled.Add"
                    Variant="Variant.Filled"
                    Color="Color.Tertiary">
       </MudIconButton>
 
-      <MudPaper Class="bulletin-editor-toolbox-emoji pa-2">
+      <MudMenu Label="@UIResources.BulletinEditModeEmojiMenuLabel"
+             Class="d-sm-none d-md-flex pa-2"
+             Variant="Variant.Filled"
+             FullWidth="true"
+             EndIcon="@Icons.Material.Filled.KeyboardArrowDown"
+             IconColor="Color.Secondary">
         @foreach (var emoji in this.emojiCards)
         {
-          <MudText Typo="Typo.h4"
+          <MudMenuItem OnClick="(args) => this.HandleAddEmojiVoteClick(emoji)">
+            <MudText Typo="Typo.h6"
+                 Align="Align.Center">
+              @emoji
+            </MudText>
+          </MudMenuItem>
+        }
+      </MudMenu>
+
+      <MudPaper Class="bulletin-editor-toolbox-emoji d-none d-sm-flex d-md-none ml-2">
+        @foreach (var emoji in this.emojiCards)
+        {
+          <MudText Typo="Typo.h6"
                @onclick="(args) => this.HandleAddEmojiVoteClick(emoji)"
-               Style="cursor: pointer"
+               Class="cursor-pointer px-2"
                Align="Align.Center">
             @emoji
           </MudText>
@@ -27,6 +44,7 @@
   {
     <MudDropContainer T="BulletinItemViewModel"
                     @ref="this.itemsReorderContainer"
+                    Class="bulletin-editor-drop-container"
                     Items="@bulletinEditViewModels.Items"
                     ItemsSelector="@((item, dropzone) => true)"
                     ItemDropped="HandleVoteDropped">
@@ -43,7 +61,7 @@
         <MudPaper Class="bulletin-item" Style="@paperStyle">
           <MudIcon Class="bulletin-item-remove"
                  Size="@Size.Small"
-                 Icon="@Icons.Material.Filled.Cancel"
+                 Icon="@Icons.Material.Rounded.Cancel"
                  Color="Color.Secondary"
                  @onclick="@(() => this.HandleRemoveVoteClick(context))">
           </MudIcon>
@@ -61,29 +79,31 @@
   }
   else
   {
-    <div class="bulletin-editor py-3 gap-3">
-      @foreach (var bulletinItem in this.Bulletin)
-      {
-        var vote = bulletinItem.Vote;
-        if (vote.IsUnset)
-          continue;
+    <div class="bulletin-editor-drop-container">
+      <div class="bulletin-editor py-3 gap-3">
+        @foreach (var bulletinItem in this.Bulletin)
+        {
+          var vote = bulletinItem.Vote;
+          if (vote.IsUnset)
+            continue;
 
-        var voteChecked = !bulletinItem.IsDisabled;
-        <MudPaper Class="bulletin-item">
-          <MudCheckBox T="bool"
-                   Class="bulletin-item-check"
-                   Checked="voteChecked"
-                   CheckedChanged="@((args) => this.HandleCheckVote(vote))"
-                   Color="Color.Primary">
-          </MudCheckBox>
-          <MudText @onclick="@((args) => this.HandleCheckVote(vote))"
-               Typo="Typo.h4"
-               Align="Align.Center"
-               Class="bulletin-item-value py-2">
-            @vote.Value
-          </MudText>
-        </MudPaper>
-      }
+          var voteChecked = !bulletinItem.IsDisabled;
+          <MudPaper Class="bulletin-item">
+            <MudCheckBox T="bool"
+                     Class="bulletin-item-check"
+                     Checked="voteChecked"
+                     CheckedChanged="@((args) => this.HandleCheckVote(vote))"
+                     Color="Color.Primary">
+            </MudCheckBox>
+            <MudText @onclick="@((args) => this.HandleCheckVote(vote))"
+                 Typo="Typo.h4"
+                 Align="Align.Center"
+                 Class="bulletin-item-value py-2">
+              @vote.Value
+            </MudText>
+          </MudPaper>
+        }
+      </div>
     </div>
   }
 </div>

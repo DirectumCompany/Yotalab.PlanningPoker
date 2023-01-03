@@ -15,11 +15,11 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
     {
       Vote.Coffee.Value,
       Vote.IDontKnown.Value,
-      "🐱‍🐉",
       "🙀",
       "🍔",
       "🍕",
-      "🚀"
+      "🚀",
+      "💩"
     };
 
     private MudDropContainer<BulletinItemViewModel> itemsReorderContainer;

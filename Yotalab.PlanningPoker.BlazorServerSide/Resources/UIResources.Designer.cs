@@ -88,6 +88,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Emojis.
+        /// </summary>
+        public static string BulletinEditModeEmojiMenuLabel {
+            get {
+                return ResourceManager.GetString("BulletinEditModeEmojiMenuLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A card with a value of {0} has already been added.
         /// </summary>
         public static string BulletinItemAlreadyExists {

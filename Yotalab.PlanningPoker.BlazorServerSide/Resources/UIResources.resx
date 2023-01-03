@@ -126,6 +126,9 @@
   <data name="BulletinEditMode" xml:space="preserve">
     <value>Card editing mode</value>
   </data>
+  <data name="BulletinEditModeEmojiMenuLabel" xml:space="preserve">
+    <value>Emojis</value>
+  </data>
   <data name="BulletinItemAlreadyExists" xml:space="preserve">
     <value>A card with a value of {0} has already been added</value>
   </data>

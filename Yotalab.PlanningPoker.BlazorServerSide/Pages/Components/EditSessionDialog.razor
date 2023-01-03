@@ -2,12 +2,12 @@
   <DialogContent>
     @if (this.editContext != null)
     {
-      <EditForm EditContext="@this.editContext">
+      <EditForm EditContext="@this.editContext" style="display: flex; flex-direction: column; max-height: 65vh;">
         <DataAnnotationsValidator />
         <div class="mb-3">
           <MudTextField Label="@UIResources.EditSessionDialogNameLabel" @bind-Value="@this.EditArgs.Name" For="@(() => this.EditArgs.Name)" Immediate="true" />
         </div>
-        <div class="mb-3 d-flex">
+        <div class="mb-3 d-flex flex-wrap">
           <MudSwitch @bind-Checked="@this.EditArgs.AutoStop" Label="@UIResources.EditSessionDialogAutoStopLabel" Color="Color.Primary" title="@UIResources.EditSessionDialogAutoStopHint" />
           <MudSpacer />
           <MudSwitch @bind-Checked="@this.bulletinEditorEditModeOn" Label="@UIResources.BulletinEditMode" Color="Color.Secondary" title="@UIResources.BulletinEditMode" />
