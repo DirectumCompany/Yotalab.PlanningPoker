@@ -12,7 +12,7 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
   [Immutable]
   public class Vote : IEquatable<Vote>
   {
-    public static readonly Vote Unset = new Vote(null);
+    public static readonly Vote Unset = new Vote();
     public static readonly Vote Zero = new Vote(0);
     public static readonly Vote Half = new Vote(0.5);
     public static readonly Vote One = new Vote(1);
@@ -64,17 +64,17 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
 
     #region Конструкторы
 
-    private Vote(string value)
+    public Vote(string value)
     {
-      this.Value = value;
+      this.Value = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    private Vote(int value)
+    public Vote(int value)
     {
       this.Value = value.ToString();
     }
 
-    private Vote(double value)
+    public Vote(double value)
     {
       this.Value = value.ToString();
     }

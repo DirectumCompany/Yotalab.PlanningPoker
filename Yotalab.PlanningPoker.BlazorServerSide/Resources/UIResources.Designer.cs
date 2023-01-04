@@ -79,6 +79,42 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Card editing mode.
+        /// </summary>
+        public static string BulletinEditMode {
+            get {
+                return ResourceManager.GetString("BulletinEditMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Emojis.
+        /// </summary>
+        public static string BulletinEditModeEmojiMenuLabel {
+            get {
+                return ResourceManager.GetString("BulletinEditModeEmojiMenuLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A card with a value of {0} has already been added.
+        /// </summary>
+        public static string BulletinItemAlreadyExists {
+            get {
+                return ResourceManager.GetString("BulletinItemAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A card with an empty value is not allowed.
+        /// </summary>
+        public static string BulletinItemIsEmpty {
+            get {
+                return ResourceManager.GetString("BulletinItemIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string CancelButton {

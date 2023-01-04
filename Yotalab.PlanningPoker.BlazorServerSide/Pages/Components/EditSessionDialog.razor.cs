@@ -12,6 +12,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
   {
     private bool formInvalid;
     private EditContext editContext;
+    private bool bulletinEditorEditModeOn;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
@@ -62,14 +63,6 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
     {
       this.formInvalid = !this.editContext.Validate();
       StateHasChanged();
-    }
-
-    private void HandleCheckVote(Vote vote)
-    {
-      if (this.EditArgs.Bulletin.IsEnabled(vote))
-        this.EditArgs.Bulletin.Disable(vote);
-      else
-        this.EditArgs.Bulletin.Enable(vote);
     }
 
     private async Task ConfirmAsync()
