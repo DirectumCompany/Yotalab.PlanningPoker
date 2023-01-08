@@ -120,6 +120,9 @@
   <data name="AddModeratorButton" xml:space="preserve">
     <value>Make Moderator</value>
   </data>
+  <data name="AddObserverButton" xml:space="preserve">
+    <value>Make Observer</value>
+  </data>
   <data name="BackToMySessionsButton" xml:space="preserve">
     <value>Back to My Sessions</value>
   </data>
@@ -231,6 +234,9 @@
   <data name="RemoveModeratorButton" xml:space="preserve">
     <value>Cancel Moderator</value>
   </data>
+  <data name="RemoveObserverButton" xml:space="preserve">
+    <value>Make Participant</value>
+  </data>
   <data name="RemoveSession" xml:space="preserve">
     <value>Remove</value>
   </data>
@@ -281,5 +287,8 @@
   </data>
   <data name="YouModerator" xml:space="preserve">
     <value>You a moderator</value>
+  </data>
+  <data name="YouObserverAndCanNotVote" xml:space="preserve">
+    <value>You are an observer and cannot vote</value>
   </data>
 </root>

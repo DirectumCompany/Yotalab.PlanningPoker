@@ -10,20 +10,36 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications
   [Immutable]
   public class ParticipantsChangedNotification
   {
-    public ParticipantsChangedNotification(Guid sessionId, HashSet<Guid> newParticipants, HashSet<Guid> excludedParticipants)
+    public static ParticipantsChangedNotification CreateForChangedParticipants(Guid sessionId, HashSet<Guid> newParticipants, HashSet<Guid> excludedParticipants)
     {
-      this.SessionId = sessionId;
-      this.NewParticipants = newParticipants;
-      this.ExcludedParticipants = excludedParticipants;
+      return new ParticipantsChangedNotification(sessionId)
+      {
+        NewParticipants = newParticipants,
+        ExcludedParticipants = excludedParticipants
+      };
     }
 
-    public ParticipantsChangedNotification(Guid sessionId,
-      HashSet<Guid> newParticipants, HashSet<Guid> excludedParticipants,
-      HashSet<Guid> addedModerators, HashSet<Guid> removedModerators)
-      : this(sessionId, newParticipants, excludedParticipants)
+    public static ParticipantsChangedNotification CreateForChangedModerators(Guid sessionId, HashSet<Guid> addedModerators, HashSet<Guid> removedModerators)
     {
-      this.AddedModerators = addedModerators;
-      this.RemovedModerators = removedModerators;
+      return new ParticipantsChangedNotification(sessionId)
+      {
+        AddedModerators = addedModerators,
+        RemovedModerators = removedModerators
+      };
+    }
+
+    public static ParticipantsChangedNotification CreateForChangedObservers(Guid sessionId, HashSet<Guid> addedObservers, HashSet<Guid> removedObservers)
+    {
+      return new ParticipantsChangedNotification(sessionId)
+      {
+        AddedObservers = addedObservers,
+        RemovedObservers = removedObservers
+      };
+    }
+
+    private ParticipantsChangedNotification(Guid sessionId)
+    {
+      this.SessionId = sessionId;
     }
 
     /// <summary>
@@ -34,21 +50,31 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications
     /// <summary>
     /// Получить новых участников планирования.
     /// </summary>
-    public HashSet<Guid> NewParticipants { get; }
+    public HashSet<Guid> NewParticipants { get; private set; }
 
     /// <summary>
     /// Получить исключенных участников сессии планирования.
     /// </summary>
-    public HashSet<Guid> ExcludedParticipants { get; }
+    public HashSet<Guid> ExcludedParticipants { get; private set; }
 
     /// <summary>
     /// Получить добавленных модераторов.
     /// </summary>
-    public HashSet<Guid> AddedModerators { get; }
+    public HashSet<Guid> AddedModerators { get; private set; }
 
     /// <summary>
     /// Получить удаленных модераторов.
     /// </summary>
-    public HashSet<Guid> RemovedModerators { get; }
+    public HashSet<Guid> RemovedModerators { get; private set; }
+
+    /// <summary>
+    /// Получить добавленных наблюдателей.
+    /// </summary>
+    public HashSet<Guid> AddedObservers { get; private set; }
+
+    /// <summary>
+    /// Получить удаленных наблюдателей.
+    /// </summary>
+    public HashSet<Guid> RemovedObservers { get; private set; }
   }
 }

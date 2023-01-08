@@ -39,12 +39,13 @@
                              Bulletin="this.bulletin"
                              ParticipantId="this.ParticipantId"
                              ParticipantVote="this.participantVote"
-                             CanVote="this.session.ProcessingState == SessionProcessingState.Started || this.session.ProcessingState == SessionProcessingState.Stopped" />
+                             CanVote="this.CanVote()"
+                             CanNotVoteMessage="@this.CanNotVoteMessage()"/>
             }
           }
           else
           {
-            <ParticipantsVotesResult PaticipantVotes="this.participantVotes" />
+            <ParticipantsVotesResult PaticipantVotes="this.participantVotes.Where(v => !this.session.ObserverIds.Contains(v.Id))" />
           }
         </MudItem>
         <MudItem md="5" lg="4">

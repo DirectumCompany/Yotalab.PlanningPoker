@@ -47,6 +47,11 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
     public ImmutableArray<Guid> ModeratorIds { get; set; }
 
     /// <summary>
+    /// Получить или установить список наблюдателей сессии.
+    /// </summary>
+    public ImmutableArray<Guid> ObserverIds { get; set; }
+
+    /// <summary>
     /// Получить или установить количество участников сессии планирования.
     /// </summary>
     public int ParticipantsCount { get; set; }
