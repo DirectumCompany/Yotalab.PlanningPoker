@@ -70,6 +70,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Make Observer.
+        /// </summary>
+        public static string AddObserverButton {
+            get {
+                return ResourceManager.GetString("AddObserverButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back to My Sessions.
         /// </summary>
         public static string BackToMySessionsButton {
@@ -403,6 +412,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Make Participant.
+        /// </summary>
+        public static string RemoveObserverButton {
+            get {
+                return ResourceManager.GetString("RemoveObserverButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove.
         /// </summary>
         public static string RemoveSession {
@@ -552,6 +570,15 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         public static string YouModerator {
             get {
                 return ResourceManager.GetString("YouModerator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are an observer and cannot vote.
+        /// </summary>
+        public static string YouObserverAndCanNotVote {
+            get {
+                return ResourceManager.GetString("YouObserverAndCanNotVote", resourceCulture);
             }
         }
     }

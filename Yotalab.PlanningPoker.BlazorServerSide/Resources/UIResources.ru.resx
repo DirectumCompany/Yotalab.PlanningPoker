@@ -120,6 +120,9 @@
   <data name="AddModeratorButton" xml:space="preserve">
     <value>Сделать модератором</value>
   </data>
+  <data name="AddObserverButton" xml:space="preserve">
+    <value>Сделать наблюдателем</value>
+  </data>
   <data name="BackToMySessionsButton" xml:space="preserve">
     <value>Вернуться к моим сессиям</value>
   </data>
@@ -231,6 +234,9 @@
   <data name="RemoveModeratorButton" xml:space="preserve">
     <value>Отменить модератора</value>
   </data>
+  <data name="RemoveObserverButton" xml:space="preserve">
+    <value>Сделать участником</value>
+  </data>
   <data name="RemoveSession" xml:space="preserve">
     <value>Удалить</value>
   </data>
@@ -281,5 +287,8 @@
   </data>
   <data name="YouModerator" xml:space="preserve">
     <value>Вы модератор</value>
+  </data>
+  <data name="YouObserverAndCanNotVote" xml:space="preserve">
+    <value>Вы наблюдатель и не можете голосовать</value>
   </data>
 </root>

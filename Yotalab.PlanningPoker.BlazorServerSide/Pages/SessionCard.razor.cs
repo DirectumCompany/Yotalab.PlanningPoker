@@ -142,6 +142,22 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
       EditSessionDialog.Show(this.DialogService, UIResources.EditSessionDialogTitle, this.editSessionArgs, onConfirm);
     }
 
+    public bool CanVote()
+    {
+      return
+        !this.session.ObserverIds.Contains(this.ParticipantId) &&
+        (this.session.ProcessingState == SessionProcessingState.Started ||
+        this.session.ProcessingState == SessionProcessingState.Stopped);
+    }
+
+    public string CanNotVoteMessage()
+    {
+      if (this.session.ObserverIds.Contains(this.ParticipantId))
+        return UIResources.YouObserverAndCanNotVote;
+
+      return UIResources.NotStartedSessionState;
+    }
+
     public async ValueTask DisposeAsync()
     {
       try

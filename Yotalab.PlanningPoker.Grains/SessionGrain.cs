@@ -66,6 +66,7 @@ namespace Yotalab.PlanningPoker.Grains
         return Task.CompletedTask;
 
       this.grainState.State.ParticipantVotes.Remove(participantId);
+      this.grainState.State.ObserverIds.Remove(participantId);
 
       // После удаления участника, удалим его из модераторов, если он там был.
       if (this.grainState.State.ModeratorIds.Contains(participantId))
@@ -209,6 +210,30 @@ namespace Yotalab.PlanningPoker.Grains
       return this.grainState.WriteStateAsync();
     }
 
+    public Task AddObserver(Guid participantId, Guid initiatorId)
+    {
+      if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
+        throw new InvalidOperationException($"Only moderator can add observer. Initiator: {initiatorId}");
+
+      this.grainState.State.ObserverIds.Add(participantId);
+
+      this.NotifyObserversChanged(new HashSet<Guid>() { participantId }, new HashSet<Guid>());
+
+      return this.grainState.WriteStateAsync();
+    }
+
+    public Task RemoveObserver(Guid participantId, Guid initiatorId)
+    {
+      if (!this.grainState.State.ModeratorIds.Contains(initiatorId))
+        throw new InvalidOperationException($"Only moderator can remove observer. Initiator: {initiatorId}");
+
+      this.grainState.State.ObserverIds.Remove(participantId);
+
+      this.NotifyObserversChanged(new HashSet<Guid>(), new HashSet<Guid>() { participantId });
+
+      return this.grainState.WriteStateAsync();
+    }
+
     public Task ChangeInfo(ChangeSessionInfoArgs args)
     {
       this.grainState.State.Name = args.Name;
@@ -238,6 +263,7 @@ namespace Yotalab.PlanningPoker.Grains
       // больше времени на это тратить не хочется.
       this.grainState.State.ParticipantVotes.Clear();
       this.grainState.State.ModeratorIds.Clear();
+      this.grainState.State.ObserverIds.Clear();
 
       await Task.WhenAll(participants.Select(participant => participant.Leave(sessionId)));
       await this.grainState.ClearStateAsync();
@@ -285,6 +311,9 @@ namespace Yotalab.PlanningPoker.Grains
           this.grainState.State.ModeratorIds.Add(this.grainState.State.ModeratorId);
       }
 
+      if (this.grainState.State.ObserverIds == null)
+        this.grainState.State.ObserverIds = new HashSet<Guid>();
+
       if (this.grainState.State.Bulletin == null)
         this.grainState.State.Bulletin = Bulletin.Default();
 
@@ -307,7 +336,7 @@ namespace Yotalab.PlanningPoker.Grains
     {
       var sessionId = this.GetPrimaryKey();
       this.GetStreamProvider("SMS").GetStream<ParticipantsChangedNotification>(sessionId, typeof(ParticipantsChangedNotification).FullName)
-        .OnNextAsync(new ParticipantsChangedNotification(sessionId, new HashSet<Guid>() { participantId }, new HashSet<Guid>()))
+        .OnNextAsync(ParticipantsChangedNotification.CreateForChangedParticipants(sessionId, new HashSet<Guid>() { participantId }, new HashSet<Guid>()))
         .Ignore();
     }
 
@@ -315,7 +344,7 @@ namespace Yotalab.PlanningPoker.Grains
     {
       var sessionId = this.GetPrimaryKey();
       this.GetStreamProvider("SMS").GetStream<ParticipantsChangedNotification>(sessionId, typeof(ParticipantsChangedNotification).FullName)
-        .OnNextAsync(new ParticipantsChangedNotification(sessionId, new HashSet<Guid>(), new HashSet<Guid>() { participantId }))
+        .OnNextAsync(ParticipantsChangedNotification.CreateForChangedParticipants(sessionId, new HashSet<Guid>(), new HashSet<Guid>() { participantId }))
         .Ignore();
     }
 
@@ -323,7 +352,15 @@ namespace Yotalab.PlanningPoker.Grains
     {
       var sessionId = this.GetPrimaryKey();
       this.GetStreamProvider("SMS").GetStream<ParticipantsChangedNotification>(sessionId, typeof(ParticipantsChangedNotification).FullName)
-        .OnNextAsync(new ParticipantsChangedNotification(sessionId, new HashSet<Guid>(), new HashSet<Guid>(), addedModerators, removedModerator))
+        .OnNextAsync(ParticipantsChangedNotification.CreateForChangedModerators(sessionId, addedModerators, removedModerator))
+        .Ignore();
+    }
+
+    private void NotifyObserversChanged(HashSet<Guid> addedObservers, HashSet<Guid> removedObservers)
+    {
+      var sessionId = this.GetPrimaryKey();
+      this.GetStreamProvider("SMS").GetStream<ParticipantsChangedNotification>(sessionId, typeof(ParticipantsChangedNotification).FullName)
+        .OnNextAsync(ParticipantsChangedNotification.CreateForChangedObservers(sessionId, addedObservers, removedObservers))
         .Ignore();
     }
 
@@ -384,6 +421,7 @@ namespace Yotalab.PlanningPoker.Grains
           IsInitialized = hasModerators,
           ModeratorId = this.grainState.State.ModeratorId,
           ModeratorIds = hasModerators ? this.grainState.State.ModeratorIds.ToImmutableArray() : ImmutableArray<Guid>.Empty,
+          ObserverIds = this.grainState.State.ObserverIds.ToImmutableArray(),
           Name = this.grainState.State.Name,
           AutoStop = this.grainState.State.AutoStop,
           ProcessingState = this.grainState.State.ProcessingState,
@@ -403,7 +441,10 @@ namespace Yotalab.PlanningPoker.Grains
     private void TryAutostopSession()
     {
       var processingState = this.grainState.State.ProcessingState;
-      var allParticipantsVoted = this.grainState.State.ParticipantVotes.All(v => !Vote.Unset.Equals(v.Value));
+      var observerIds = this.grainState.State.ObserverIds;
+      var allParticipantsVoted = this.grainState.State.ParticipantVotes
+        .Where(v => !observerIds.Contains(v.Key))
+        .All(v => !Vote.Unset.Equals(v.Value));
       var sessionNotStopped = processingState != SessionProcessingState.Stopped;
       var autostopEnabled = this.grainState.State.AutoStop;
       if (autostopEnabled && allParticipantsVoted && sessionNotStopped)
@@ -438,6 +479,11 @@ namespace Yotalab.PlanningPoker.Grains
     /// Получить или установить список модераторов сессии.
     /// </summary>
     public HashSet<Guid> ModeratorIds { get; set; }
+
+    /// <summary>
+    /// Получить или установить список наблюдателей сессии.
+    /// </summary>
+    public HashSet<Guid> ObserverIds { get; set; }
 
     /// <summary>
     /// Получить или установить состояние голосования.

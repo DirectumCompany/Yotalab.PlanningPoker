@@ -115,6 +115,22 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces
     Task RemoveModerator(Guid participantId);
 
     /// <summary>
+    /// Добавить наблюдателя сессии.
+    /// </summary>
+    /// <param name="participantId">Идентификатор участника.</param>
+    /// <param name="initiatorId">Инициатор добавления наблюдателя.</param>
+    /// <returns>Задача на добавление наблюдателя.</returns>
+    Task AddObserver(Guid participantId, Guid initiatorId);
+
+    /// <summary>
+    /// Удалить наблюдателя сессии.
+    /// </summary>
+    /// <param name="participantId">Идентификатор участника.</param>
+    /// <param name="initiatorId">Инициатор удаления наблюдателя.</param>
+    /// <returns>Задача на удаление наблюдателя.</returns>
+    Task RemoveObserver(Guid participantId, Guid initiatorId);
+
+    /// <summary>
     /// Изменить информацию о сессии.
     /// </summary>
     /// <param name="args">Аргументы изменения информации о сессии.</param>

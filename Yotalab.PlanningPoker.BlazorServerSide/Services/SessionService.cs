@@ -145,6 +145,18 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       return sessionGrain.RemoveModerator(participantId);
     }
 
+    public Task AddObserver(Guid sessionId, Guid participantId, Guid initiatorId)
+    {
+      var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
+      return sessionGrain.AddObserver(participantId, initiatorId);
+    }
+
+    public Task RemoveObserver(Guid sessionId, Guid participantId, Guid initiatorId)
+    {
+      var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);
+      return sessionGrain.RemoveObserver(participantId, initiatorId);
+    }
+
     public Task Remove(Guid sessionId, Guid participantId)
     {
       var sessionGrain = this.client.GetGrain<ISessionGrain>(sessionId);

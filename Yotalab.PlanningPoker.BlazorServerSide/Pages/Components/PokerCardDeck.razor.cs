@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using Yotalab.PlanningPoker.BlazorServerSide.Resources;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 
@@ -30,6 +29,9 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
     [Parameter]
     public bool CanVote { get; set; }
 
+    [Parameter]
+    public string CanNotVoteMessage { get; set; }
+
     protected override void OnParametersSet()
     {
       this.selectedVote = this.ParticipantVote;
@@ -44,10 +46,10 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
         this.selectedVote = value;
         this.StateHasChanged();
       }
-      else
+      else if (!string.IsNullOrWhiteSpace(this.CanNotVoteMessage))
       {
         this.Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-        this.Snackbar.Add(UIResources.NotStartedSessionState, Severity.Warning, options =>
+        this.Snackbar.Add(this.CanNotVoteMessage, Severity.Warning, options =>
         {
           options.SnackbarVariant = Variant.Filled;
           options.VisibleStateDuration = 2000;

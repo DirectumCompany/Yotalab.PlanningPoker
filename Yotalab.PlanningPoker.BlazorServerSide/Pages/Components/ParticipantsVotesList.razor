@@ -8,7 +8,9 @@
         <span class="text-muted mr-2">
           @if (this.Session.ProcessingState == SessionProcessingState.Started)
           {
-            @string.Format(UIResources.VotedParticipantsCount, this.PaticipantVotes.Count(pair => !Vote.Unset.Equals(pair.Vote)), this.PaticipantVotes.Count())
+            @string.Format(UIResources.VotedParticipantsCount,
+          this.PaticipantVotes.Count(pair => !Vote.Unset.Equals(pair.Vote)),
+          this.PaticipantVotes.Count() - this.Session.ObserverIds.Count())
           }
           else
           {
@@ -33,7 +35,11 @@
             </MudText>
             @if (this.Session.ModeratorIds.Contains(participant.Id))
             {
-              <MudIcon Icon="@Icons.Material.Filled.LocalPolice" Color="Color.Warning" />
+              <MudIcon Class="mr-1" Icon="@Icons.Material.Filled.LocalPolice" Color="Color.Warning" />
+            }
+            @if (this.Session.ObserverIds.Contains(participant.Id))
+            {
+              <MudIcon Icon="@Icons.Material.Filled.RemoveRedEye" Color="Color.Info" />
             }
           </div>
           <div class="d-flex align-center">

@@ -69,6 +69,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
             });
           }
 
+          contextMenuItems.Add(this.AddRemoveObserver());
+
           contextMenuItems.Add(new DropDownMenuItem()
           {
             OnClickAsync = (args) => this.Service.KickAsync(this.Session.Id, this.Participant.Id, this.ParticipantId),
@@ -79,6 +81,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
         }
         else // Меню на себе.
         {
+          contextMenuItems.Add(this.AddRemoveObserver());
+
           if (this.Session.ModeratorIds.Length > 1)
           {
             contextMenuItems.Add(new DropDownMenuItem()
@@ -111,6 +115,25 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
       }
 
       return contextMenuItems;
+    }
+
+    private DropDownMenuItem AddRemoveObserver()
+    {
+      return this.Session.ObserverIds.Contains(this.Participant.Id) ?
+         new DropDownMenuItem()
+         {
+           OnClickAsync = (args) => this.SessionService.RemoveObserver(this.Session.Id, this.Participant.Id, this.ParticipantId),
+           Icon = MudBlazorIcons.Material.Filled.Person,
+           IconColor = MudBlazorColor.Success,
+           Title = UIResources.RemoveObserverButton
+         } :
+        new DropDownMenuItem()
+        {
+          OnClickAsync = (args) => this.SessionService.AddObserver(this.Session.Id, this.Participant.Id, this.ParticipantId),
+          Icon = MudBlazorIcons.Material.Filled.RemoveRedEye,
+          IconColor = MudBlazorColor.Info,
+          Title = UIResources.AddObserverButton
+        };
     }
   }
 }
