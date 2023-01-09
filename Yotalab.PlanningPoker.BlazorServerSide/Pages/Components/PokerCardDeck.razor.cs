@@ -46,7 +46,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
         this.selectedVote = value;
         this.StateHasChanged();
       }
-      else if (!string.IsNullOrEmpty(this.CanNotVoteMessage))
+      else if (!string.IsNullOrWhiteSpace(this.CanNotVoteMessage))
       {
         this.Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
         this.Snackbar.Add(this.CanNotVoteMessage, Severity.Warning, options =>
