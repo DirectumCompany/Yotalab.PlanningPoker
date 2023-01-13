@@ -4,19 +4,19 @@
   <MudButton Variant="Variant.Text" Color="Color.Primary" Link="@this.Navigation.BaseUri">@UIResources.MySessions</MudButton>
   <MudSpacer />
   <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Target="_blank" Link="https://github.com/DirectumCompany/Yotalab.PlanningPoker"></MudIconButton>
-  <MudIconButton Icon="@Icons.Material.Filled.ModeNight" OnClick="this.SwitchNightMode"></MudIconButton>
+  <MudIconButton Icon="@Icons.Material.Filled.ModeNight" OnClick="this.HandleIsDarkModeClick"></MudIconButton>
   <ProfileLink />
 </div>
 
 @code {
-  [CascadingParameter(Name = "SwitchTheme")]
-  private EventCallback<MudTheme> SwitchTheme { get; set; }
+  [CascadingParameter(Name = "SwitchIsDarkMode")]
+  private EventCallback<bool> SwitchIsDarkMode { get; set; }
 
-  [CascadingParameter(Name = "Theme")]
-  private MudTheme Theme { get; set; }
+  [CascadingParameter(Name = "IsDarkMode")]
+  private bool IsDarkMode { get; set; }
 
-  private async Task SwitchNightMode()
+  private async Task HandleIsDarkModeClick()
   {
-    await this.SwitchTheme.InvokeAsync(this.Theme == Themes.Default ? Themes.NightMode : Themes.Default);
+    await this.SwitchIsDarkMode.InvokeAsync(!this.IsDarkMode);
   }
 }

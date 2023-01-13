@@ -1,30 +1,30 @@
 ﻿@using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Logging
 
-<MudThemeProvider Theme="this.theme" />
+<MudThemeProvider IsDarkMode="this.isDarkMode" Theme="Themes.Default" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <ErrorBoundary>
   <ChildContent>
-    <CascadingValue Value="this.theme" Name="Theme">
-      <CascadingValue Value="this.switchThemeCallback" Name="SwitchTheme">
+    <CascadingValue Value="this.isDarkMode" Name="IsDarkMode">
+      <CascadingValue Value="this.switchIsDarkModeCallback" Name="SwitchIsDarkMode">
         <CascadingAuthenticationState>
           <Router AppAssembly="@typeof(Program).Assembly">
             <Found Context="routeData">
               @if (routeData != null)
-              {
-                var pageType = routeData.PageType;
-                var allowAnonymousAttribute = pageType.GetCustomAttributes(typeof(AllowAnonymousAttribute), true).FirstOrDefault();
-                if (allowAnonymousAttribute == null)
                 {
-                  <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                  var pageType = routeData.PageType;
+                  var allowAnonymousAttribute = pageType.GetCustomAttributes(typeof(AllowAnonymousAttribute), true).FirstOrDefault();
+                  if (allowAnonymousAttribute == null)
+                  {
+                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                  }
+                  else
+                  {
+                    <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                  }
                 }
-                else
-                {
-                  <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-                }
-              }
             </Found>
             <NotFound>
               <LayoutView Layout="@typeof(MainLayout)">
@@ -46,36 +46,31 @@
 @inject ILogger<App> Logger
 
 @code {
-  private const string ThemeNameStorageKey = ".AgilePoker.ThemeName";
+  private const string IsDarkModeStorageKey = ".AgilePoker.IsDarkMode";
 
-  private MudTheme theme;
+  private bool isDarkMode = false;
 
-  private string themeName;
-
-  private EventCallback<MudTheme> switchThemeCallback;
+  private EventCallback<bool> switchIsDarkModeCallback;
 
   protected override async Task OnInitializedAsync()
   {
     try
     {
-      var storedThemeName = await this.LocalStorage.GetAsync<string>(ThemeNameStorageKey);
-      this.themeName = storedThemeName.Success ? storedThemeName.Value : Themes.GetName(this.theme);
+      var storedIsDarkMode = await this.LocalStorage.GetAsync<bool>(IsDarkModeStorageKey);
+      this.isDarkMode = storedIsDarkMode.Value;
     }
     catch (System.Security.Cryptography.CryptographicException cex)
     {
-      this.themeName = Themes.GetName(this.theme);
-      await this.LocalStorage.SetAsync(ThemeNameStorageKey, this.themeName);
-      this.Logger.LogWarning(cex, "Error during read ThemeName from protected local storage");
+      await this.LocalStorage.SetAsync(IsDarkModeStorageKey, this.isDarkMode);
+      this.Logger.LogWarning(cex, "Error during read IsDarkMode from protected local storage");
     }
-    this.theme = Themes.GetTheme(this.themeName);
-    this.switchThemeCallback = new EventCallbackFactory().Create<MudTheme>(this, this.SwitchTheme);
+
+    this.switchIsDarkModeCallback = new EventCallbackFactory().Create<bool>(this, this.SwitchIsDarkMode);
   }
 
-  private async Task SwitchTheme(MudTheme newTheme)
+  private async Task SwitchIsDarkMode(bool isDarkMode)
   {
-    this.themeName = Themes.GetName(newTheme);
-    this.theme = newTheme;
-
-    await this.LocalStorage.SetAsync(ThemeNameStorageKey, this.themeName);
+    this.isDarkMode = isDarkMode;
+    await this.LocalStorage.SetAsync(IsDarkModeStorageKey, this.isDarkMode);
   }
 }
