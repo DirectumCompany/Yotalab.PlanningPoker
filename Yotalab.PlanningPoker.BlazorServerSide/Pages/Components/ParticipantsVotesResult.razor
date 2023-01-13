@@ -1,20 +1,22 @@
 ﻿@using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO
 
 <div style="position:relative">
-  <MudOverlay Visible="true" Absolute="true" Style="pointer-events: none; bottom: 70px; left: -20px;">
-    <div style="text-align:center">
-      <div class="text-muted">@string.Format(UIResources.ParticipantsCount, this.PaticipantVotes.Count())</div>
-      <div><h2>@string.Format(UIResources.ChartAverage, this.FormatAverage(this.average))</h2></div>
-    </div>
-  </MudOverlay>
-
   <div class="d-none d-sm-block">
     <MudChart ChartType="ChartType.Donut"
               Class="mud-chart-legend-bottom-verticaler"
               Height="50%" Width="50%"
               InputData="@this.chartData.Select(d => d.ParticipantCount).ToArray()"
               InputLabels="@this.chartData.Select(d => d.Vote).ToArray()"
-              LegendPosition="@Position.Bottom" />
+              LegendPosition="@Position.Bottom">
+      <CustomGraphics>
+        <text class="text-muted" x="50%" y="47%" dominant-baseline="middle" text-anchor="middle" fill="#424242ff" font-size="1.4" font-family="'Roboto','Helvetica','Arial','sans-serif'">
+          @string.Format(UIResources.ParticipantsCount, this.PaticipantVotes.Count())
+        </text>
+        <text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle" fill="#424242ff" font-size="2.2" font-weight="bold" font-family="'Roboto','Helvetica','Arial','sans-serif'">
+          @string.Format(UIResources.ChartAverage, this.FormatAverage(this.average))
+        </text>
+      </CustomGraphics>
+    </MudChart>
   </div>
   <div class="d-sm-none">
     <MudChart ChartType="ChartType.Donut"
@@ -22,7 +24,16 @@
               Height="100%" Width="100%"
               InputData="@this.chartData.Select(d => d.ParticipantCount).ToArray()"
               InputLabels="@this.chartData.Select(d => d.Vote).ToArray()"
-              LegendPosition="@Position.Bottom" />
+              LegendPosition="@Position.Bottom">
+      <CustomGraphics>
+        <text class="text-muted" x="50%" y="47%" dominant-baseline="middle" text-anchor="middle" fill="#424242ff" font-size="1.4" font-family="'Roboto','Helvetica','Arial','sans-serif'">
+          @string.Format(UIResources.ParticipantsCount, this.PaticipantVotes.Count())
+        </text>
+        <text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle" fill="#424242ff" font-size="2.2" font-weight="bold" font-family="'Roboto','Helvetica','Arial','sans-serif'">
+          @string.Format(UIResources.ChartAverage, this.FormatAverage(this.average))
+        </text>
+      </CustomGraphics>
+    </MudChart>
   </div>
 </div>
 
@@ -46,10 +57,10 @@
       var voteCount = voteGroup.Count();
       var percents = (double)voteCount / (double)allVotesCount;
       this.chartData.Add(new ChartDataItem()
-      {
-        Vote = string.Format(UIResources.ChartVoteSummary, voteGroup.Key, this.FormatPercents(percents), voteCount),
-        ParticipantCount = voteCount
-      });
+        {
+          Vote = string.Format(UIResources.ChartVoteSummary, voteGroup.Key, this.FormatPercents(percents), voteCount),
+          ParticipantCount = voteCount
+        });
     }
   }
 
