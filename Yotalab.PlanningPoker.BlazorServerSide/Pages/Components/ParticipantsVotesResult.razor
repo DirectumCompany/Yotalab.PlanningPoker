@@ -9,14 +9,12 @@
               InputLabels="@this.chartData.Select(d => d.Vote).ToArray()"
               LegendPosition="@Position.Bottom">
       <CustomGraphics>
-        <g fill="black">
-          <text class="text-muted" x="50%" y="47%" dominant-baseline="middle" text-anchor="middle" fill="var(--mud-palette-text-primary)" font-size="1.4" font-family="'Roboto','Helvetica','Arial','sans-serif'">
-            @string.Format(UIResources.ParticipantsCount, this.PaticipantVotes.Count())
-          </text>
-          <text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle" fill="var(--mud-palette-text-primary)" font-size="2.2" font-weight="bold" font-family="'Roboto','Helvetica','Arial','sans-serif'">
-            @string.Format(UIResources.ChartAverage, this.FormatAverage(this.average))
-          </text>
-        </g>
+        <text class="text-muted" x="50%" y="47%" dominant-baseline="middle" text-anchor="middle" fill="var(--mud-palette-text-primary)" font-size="1.4" font-family="'Roboto','Helvetica','Arial','sans-serif'">
+          @string.Format(UIResources.ParticipantsCount, this.PaticipantVotes.Count())
+        </text>
+        <text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle" fill="var(--mud-palette-text-primary)" font-size="2.2" font-weight="bold" font-family="'Roboto','Helvetica','Arial','sans-serif'">
+          @string.Format(UIResources.ChartAverage, this.FormatAverage(this.average))
+        </text>
       </CustomGraphics>
     </MudChart>
   </div>
@@ -28,14 +26,12 @@
               InputLabels="@this.chartData.Select(d => d.Vote).ToArray()"
               LegendPosition="@Position.Bottom">
       <CustomGraphics>
-        <g fill="black">
-          <text class="text-muted" x="50%" y="47%" dominant-baseline="middle" text-anchor="middle" fill="var(--mud-palette-text-primary)" font-size="1.4" font-family="'Roboto','Helvetica','Arial','sans-serif'">
-            @string.Format(UIResources.ParticipantsCount, this.PaticipantVotes.Count())
-          </text>
-          <text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle" fill="var(--mud-palette-text-primary)" font-size="2.2" font-weight="bold" font-family="'Roboto','Helvetica','Arial','sans-serif'">
-            @string.Format(UIResources.ChartAverage, this.FormatAverage(this.average))
-          </text>
-        </g>
+        <text class="text-muted" x="50%" y="47%" dominant-baseline="middle" text-anchor="middle" fill="var(--mud-palette-text-primary)" font-size="1.4" font-family="'Roboto','Helvetica','Arial','sans-serif'">
+          @string.Format(UIResources.ParticipantsCount, this.PaticipantVotes.Count())
+        </text>
+        <text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle" fill="var(--mud-palette-text-primary)" font-size="2.2" font-weight="bold" font-family="'Roboto','Helvetica','Arial','sans-serif'">
+          @string.Format(UIResources.ChartAverage, this.FormatAverage(this.average))
+        </text>
       </CustomGraphics>
     </MudChart>
   </div>
