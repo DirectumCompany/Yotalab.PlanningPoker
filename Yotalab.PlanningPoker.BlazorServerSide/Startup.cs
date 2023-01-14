@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 using MudBlazor.Services;
+using Orleans;
 using Yotalab.PlanningPoker.BlazorServerSide.Filters;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.FilesStoraging;
@@ -32,6 +34,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       services.AddServerSideBlazor();
       services.AddLocalization();
 
+      services.AddScoped<CircuitHandler, TrackingCircuitHandler>();
+
       if (this.Environment.IsDevelopment())
       {
         services.AddDatabaseDeveloperPageExceptionFilter();
@@ -55,6 +59,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
 
       services.AddSingleton<SessionService>();
       services.AddSingleton<ParticipantsService>();
+      services.AddSingleton<UsersActivityService>();
       services.AddScoped<JSInteropFunctions>();
       services.AddMudServices();
       services.AddHttpClient();

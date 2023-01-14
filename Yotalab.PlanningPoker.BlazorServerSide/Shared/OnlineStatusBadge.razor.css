@@ -1,0 +1,9 @@
+﻿.online-status ::deep .mud-badge-medium .mud-badge {
+  height: 14px;
+  min-width: 14px;
+}
+
+.online-status ::deep .mud-badge-small .mud-badge {
+  left: 21px;
+  top: 17px;
+}

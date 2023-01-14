@@ -25,7 +25,11 @@
         <div class="d-flex align-center justify-space-between">
           <div class="d-flex align-center">
             <div class="mr-3">
-              <Avatar Url="@participant.AvatarUrl" />
+              <OnlineStatusBadge ParticipantId="participant.Id">
+                <BadgeContent>
+                  <Avatar Url="@participant.AvatarUrl" />
+                </BadgeContent>
+              </OnlineStatusBadge>
             </div>
             <MudText Class="my-0 mr-2 d-none d-md-block">
               @(string.IsNullOrEmpty(participant.Name) ? UIResources.NamelessParticipantName : participant.Name)
