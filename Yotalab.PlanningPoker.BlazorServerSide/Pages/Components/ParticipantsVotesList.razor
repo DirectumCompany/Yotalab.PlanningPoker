@@ -22,7 +22,7 @@
     @foreach (var participant in this.PaticipantVotes.OrderByDescending(p => p.Id == this.ParticipantId))
     {
       <MudListItem>
-        <div class="d-flex align-center justify-space-between">
+        <div @key="@participant.Id" class="d-flex align-center justify-space-between">
           <div class="d-flex align-center">
             <div class="mr-3">
               <OnlineStatusBadge ParticipantId="participant.Id">
