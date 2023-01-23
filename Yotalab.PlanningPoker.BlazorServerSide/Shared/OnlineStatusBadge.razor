@@ -1,0 +1,20 @@
+﻿@{
+  var className = $"mud-badge-{this.BadgeSize.ToString().ToLower()}";
+}
+@if (Guid.Empty.Equals(this.ParticipantId))
+{
+  @BadgeContent
+}
+else
+{
+  <div class="online-status">
+    <MudBadge Class="@className"
+            Origin="Origin.BottomRight"
+            Color="this.isOnline ? Color.Success : Color.Default"
+            Overlap="true"
+            Bordered="true"
+            Dot="this.BadgeSize == Size.Small">
+      @BadgeContent
+    </MudBadge>
+  </div>
+}

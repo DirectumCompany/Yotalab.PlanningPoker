@@ -17,4 +17,8 @@
     <ProjectReference Include="..\Yotalab.PlanningPoker.Grains.Interfaces\Yotalab.PlanningPoker.Grains.Interfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Orleans_CodeGenInputs Remove="UserOnlineStatusGrain.cs" />
+  </ItemGroup>
+
 </Project>
