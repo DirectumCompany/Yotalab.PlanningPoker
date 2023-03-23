@@ -53,6 +53,24 @@ services:
       - ${APPDATA}/AgilePoker/Logs:/logs
       - ${APPDATA}/AgilePoker/Configs/api.json:/app/appsettings.json:ro
 
+  agilepoker.api-replica:
+    image: agilepoker/api:latest
+    build:
+      context: api
+    depends_on:
+      - agilepoker.storages
+    environment:
+      - PLANNING_POKER_ORLEANS__CLUSTERID=agilepoker-cluster
+      - MYSQLCONNSTR_DefaultGrainStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_grains;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultPubSubStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_pubsub;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultClusterStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_clustering;User=root;Password=11111
+    expose:
+      - "30000"
+      - "11111"
+    volumes:
+      - ${APPDATA}/AgilePoker/Logs:/logs
+      - ${APPDATA}/AgilePoker/Configs/api.json:/app/appsettings.json:ro
+
   agilepoker.web:
     image: agilepoker/web:latest
     container_name: agilepoker-web
