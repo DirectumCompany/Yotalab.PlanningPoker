@@ -11,8 +11,8 @@ services:
       context: storages
     environment:
       - MARIADB_ROOT_PASSWORD=11111
-    expose:
-      - "3306"
+    ports:
+      - "3309:3306"
     volumes:
       - ${APPDATA}/AgilePoker/Storages/Data:/var/lib/mysql
 
@@ -24,8 +24,8 @@ services:
     environment:
       - MARIADB_ROOT_PASSWORD=11111
       - MARIADB_DATABASE=agilepoker_identity
-    expose:
-      - "3306"
+    ports:
+      - "3308:3306"
     volumes:
       - ${APPDATA}/AgilePoker/Identity/Data:/var/lib/mysql
 
@@ -41,6 +41,7 @@ services:
       - PLANNING_POKER_ORLEANS__USEDASHBOARD=true
       - PLANNING_POKER_ORLEANS__DASHBOARDHOST=true
       - PLANNING_POKER_ORLEANS__CLUSTERID=agilepoker-cluster
+      - PLANNING_POKER_ORLEANS__SERVICEID=agilepoker
       - MYSQLCONNSTR_DefaultGrainStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_grains;User=root;Password=11111
       - MYSQLCONNSTR_DefaultPubSubStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_pubsub;User=root;Password=11111
       - MYSQLCONNSTR_DefaultClusterStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_clustering;User=root;Password=11111
@@ -61,6 +62,7 @@ services:
       - agilepoker.storages
     environment:
       - PLANNING_POKER_ORLEANS__CLUSTERID=agilepoker-cluster
+      - PLANNING_POKER_ORLEANS__SERVICEID=agilepoker
       - MYSQLCONNSTR_DefaultGrainStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_grains;User=root;Password=11111
       - MYSQLCONNSTR_DefaultPubSubStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_pubsub;User=root;Password=11111
       - MYSQLCONNSTR_DefaultClusterStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_clustering;User=root;Password=11111

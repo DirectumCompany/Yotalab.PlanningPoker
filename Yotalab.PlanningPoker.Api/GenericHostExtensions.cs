@@ -34,6 +34,7 @@ namespace Yotalab.PlanningPoker.Hosting
           var useDashboard = context.Configuration.GetValue("Orleans:UseDashboard", false);
           var dashboardHost = context.Configuration.GetValue("Orleans:DashboardHost", false);
           var clusterId = context.Configuration.GetValue("Orleans:ClusterId", "planingpoker-cluster");
+          var serviceId = context.Configuration.GetValue("Orleans:ServiceId", "planingpoker");
 
           var clusterConnectionString = context.Configuration.GetConnectionString("DefaultClusterStorage");
           if (string.IsNullOrWhiteSpace(clusterConnectionString))
@@ -47,7 +48,7 @@ namespace Yotalab.PlanningPoker.Hosting
             .Configure<ClusterOptions>(options =>
             {
               options.ClusterId = clusterId;
-              options.ServiceId = "planingpoker";
+              options.ServiceId = serviceId;
             })
             .ConfigureEndpoints(siloPort, gatewayPort);
 
