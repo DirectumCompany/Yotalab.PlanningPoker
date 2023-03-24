@@ -9,6 +9,7 @@ services:
       args:
         dbname_prefix: agilepoker
       context: storages
+    command: ['mysqld', '--lower_case_table_names=1']
     environment:
       - MARIADB_ROOT_PASSWORD=11111
     ports:
@@ -21,6 +22,7 @@ services:
     container_name: agilepoker-identity
     build:
       context: identity
+    command: ['mysqld', '--lower_case_table_names=1']
     environment:
       - MARIADB_ROOT_PASSWORD=11111
       - MARIADB_DATABASE=agilepoker_identity
