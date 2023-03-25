@@ -58,8 +58,6 @@ services:
 
   agilepoker.api-replica:
     image: agilepoker/api:latest
-    build:
-      context: api
     depends_on:
       - agilepoker.storages
     environment:
