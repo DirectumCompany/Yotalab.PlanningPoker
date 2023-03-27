@@ -51,7 +51,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
               this.Configuration.GetValue<int>("SmtpEmailSender:Port"),
               this.Configuration.GetValue<bool>("SmtpEmailSender:EnableSSL"),
               this.Configuration["SmtpEmailSender:UserName"],
-              this.Configuration["SmtpEmailSender:Password"]),
+              this.Configuration["SmtpEmailSender:Password"],
+              this.Configuration["SmtpEmailSender:From"]),
              context.GetRequiredService<ILogger<SmtpEmailSender>>()
             );
         });

@@ -35,6 +35,7 @@ namespace Yotalab.PlanningPoker.Hosting
           var dashboardHost = context.Configuration.GetValue("Orleans:DashboardHost", false);
           var clusterId = context.Configuration.GetValue("Orleans:ClusterId", "planingpoker-cluster");
           var serviceId = context.Configuration.GetValue("Orleans:ServiceId", "planingpoker");
+          var usePubSubMemoryStorage = context.Configuration.GetValue("Orleans:UsePubSubMemoryStorage", false);
 
           var clusterConnectionString = context.Configuration.GetConnectionString("DefaultClusterStorage");
           if (string.IsNullOrWhiteSpace(clusterConnectionString))
@@ -64,12 +65,21 @@ namespace Yotalab.PlanningPoker.Hosting
               jsonOptions.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto;
             };
           });
-          builder.AddAdoNetGrainStorage("PubSubStore", options =>
+
+          if (usePubSubMemoryStorage)
           {
-            options.Invariant = "MySql.Data.MySqlConnector";
-            options.ConnectionString = context.Configuration.GetConnectionString("DefaultPubSubStorage");
-            options.UseJsonFormat = true;
-          });
+            builder.AddMemoryGrainStorage("PubSubStore");
+          }
+          else
+          {
+            builder.AddAdoNetGrainStorage("PubSubStore", options =>
+            {
+              options.Invariant = "MySql.Data.MySqlConnector";
+              options.ConnectionString = context.Configuration.GetConnectionString("DefaultPubSubStorage");
+              options.UseJsonFormat = true;
+            });
+          }
+
           builder.AddSimpleMessageStreamProvider("SMS");
           if (useDashboard || dashboardHost)
           {
