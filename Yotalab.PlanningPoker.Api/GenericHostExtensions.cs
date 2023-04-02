@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Orleans;
 using Orleans.Configuration;
 using Orleans.Hosting;
+using Orleans.Statistics;
 using Serilog;
 using Yotalab.PlanningPoker.Grains;
 using Yotalab.PlanningPoker.Grains.Interfaces;
@@ -89,6 +90,16 @@ namespace Yotalab.PlanningPoker.Hosting
               options.HideTrace = true;
               options.HostSelf = dashboardHost;
             });
+
+            switch (Environment.OSVersion.Platform)
+            {
+              case PlatformID.Win32NT:
+                builder.UsePerfCounterEnvironmentStatistics();
+                break;
+              case PlatformID.Unix:
+                builder.UseLinuxEnvironmentStatistics();
+                break;
+            }
           }
         });
     }
