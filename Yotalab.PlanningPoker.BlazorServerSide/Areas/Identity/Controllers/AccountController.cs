@@ -288,20 +288,22 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Areas.Identity.Controllers
       var user = await this.userManager.FindByEmailAsync(inputModel.Email);
       if (user == null)
       {
-        // Don't reveal that the user does not exist
-        return this.Ok();
+        return new ResetPasswordFailedResult(IdentityResult.Failed(new IdentityError()
+        {
+          Description = IdentityUIResources.ResetPasswordFailed
+        }));
       }
 
       var result = await this.userManager.ResetPasswordAsync(user, inputModel.Code, inputModel.Password);
       if (result.Succeeded)
       {
-        return this.Ok();
+        return new ResetPasswordResult();
       }
 
       foreach (var error in result.Errors)
         logger.LogError(error.Description);
 
-      return Ok();
+      return new ResetPasswordFailedResult(result);
     }
   }
 }
