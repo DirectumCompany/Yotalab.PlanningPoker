@@ -5,15 +5,13 @@ services:
     image: ${DOCKER_REGISTRY-}planningpoker/storages
     container_name: PlanningPoker-Storages
     build:
-      context: .
-      dockerfile: Storages.Dockerfile
+      context: dist/storages
 
   planningpoker.identity:
     image: ${DOCKER_REGISTRY-}planningpoker/identity
     container_name: PlanningPoker-Identity
     build:
-      context: .
-      dockerfile: Identity.Dockerfile
+      context: dist/identity
 
   planningpoker.api:
     image: ${DOCKER_REGISTRY-}planningpoker/api

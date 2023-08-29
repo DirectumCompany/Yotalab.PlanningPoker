@@ -20,6 +20,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
       this.logger = logger;
       var clusterConnectionString = configuration.GetConnectionString("DefaultClusterStorage");
       var clusterId = configuration.GetValue("Orleans:ClusterId", "planingpoker-cluster");
+      var serviceId = configuration.GetValue("Orleans:ServiceId", "planingpoker");
       this.Client = new ClientBuilder()
         .UseAdoNetClustering(options =>
         {
@@ -29,7 +30,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
         .Configure<ClusterOptions>(options =>
         {
           options.ClusterId = clusterId;
-          options.ServiceId = "planingpoker";
+          options.ServiceId = serviceId;
         })
         .AddSimpleMessageStreamProvider("SMS")
         .Build();

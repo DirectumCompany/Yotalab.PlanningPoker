@@ -25,6 +25,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services.Mailing
       {
         using var client = this.CreateClient();
         using var message = new MailMessage(this.options.UserName, email, subject, htmlMessage) { IsBodyHtml = true };
+        if (!string.IsNullOrWhiteSpace(this.options.From))
+          message.From = new MailAddress(this.options.From);
         await client.SendMailAsync(message);
       }
       catch (Exception ex)

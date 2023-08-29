@@ -9,12 +9,19 @@
     <DockerServiceName>yotalab.planningpoker.blazorserverside</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="dist\api\Dockerfile" />
+    <None Include="dist\docker-compose.yml" />
+    <None Include="dist\identity\Dockerfile" />
+    <None Include="dist\storages\Dockerfile" />
+    <None Include="dist\storages\orleanssql\MySQL-Clustering.sql" />
+    <None Include="dist\storages\orleanssql\MySQL-Main.sql" />
+    <None Include="dist\storages\orleanssql\MySQL-Persistence.sql" />
+    <None Include="dist\storages\orleanssql\MySQL-Reminders.sql" />
+    <None Include="dist\web\Dockerfile" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
-    <None Include="Identity.Dockerfile" />
-    <None Include="Storages.Dockerfile" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,100 @@
+version: '3.4'
+name: agilepoker
+
+services:
+  agilepoker.storages:
+    image: agilepoker/storages:latest
+    container_name: agilepoker-storages
+    build:
+      args:
+        dbname_prefix: agilepoker
+      context: storages
+    command: ['mysqld', '--lower_case_table_names=1']
+    environment:
+      - MARIADB_ROOT_PASSWORD=11111
+    ports:
+      - "3309:3306"
+    volumes:
+      - ${APPDATA}/AgilePoker/Storages/Data:/var/lib/mysql
+
+  agilepoker.identity:
+    image: agilepoker/identity:latest
+    container_name: agilepoker-identity
+    build:
+      context: identity
+    command: ['mysqld', '--lower_case_table_names=1']
+    environment:
+      - MARIADB_ROOT_PASSWORD=11111
+      - MARIADB_DATABASE=agilepoker_identity
+    ports:
+      - "3308:3306"
+    volumes:
+      - ${APPDATA}/AgilePoker/Identity/Data:/var/lib/mysql
+
+  agilepoker.api:
+    image: agilepoker/api:latest
+    container_name: agilepoker-api
+    build:
+      context: api
+    depends_on:
+      - agilepoker.storages
+    environment:
+      - PLANNING_POKER_ORLEANS__DASHBOARDPORT=8081
+      - PLANNING_POKER_ORLEANS__USEDASHBOARD=true
+      - PLANNING_POKER_ORLEANS__DASHBOARDHOST=true
+      - PLANNING_POKER_ORLEANS__CLUSTERID=agilepoker-cluster
+      - PLANNING_POKER_ORLEANS__SERVICEID=agilepoker
+      - MYSQLCONNSTR_DefaultGrainStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_grains;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultPubSubStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_pubsub;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultClusterStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_clustering;User=root;Password=11111
+    expose:
+      - "30000"
+      - "11111"
+    ports:
+      - "8080:8081"
+    volumes:
+      - ${APPDATA}/AgilePoker/Logs:/logs
+      - ${APPDATA}/AgilePoker/Configs/api.json:/app/appsettings.json:ro
+
+  agilepoker.api-replica:
+    image: agilepoker/api:latest
+    depends_on:
+      - agilepoker.storages
+    environment:
+      - PLANNING_POKER_ORLEANS__CLUSTERID=agilepoker-cluster
+      - PLANNING_POKER_ORLEANS__SERVICEID=agilepoker
+      - MYSQLCONNSTR_DefaultGrainStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_grains;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultPubSubStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_pubsub;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultClusterStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_clustering;User=root;Password=11111
+    expose:
+      - "30000"
+      - "11111"
+    volumes:
+      - ${APPDATA}/AgilePoker/Logs:/logs
+      - ${APPDATA}/AgilePoker/Configs/api.json:/app/appsettings.json:ro
+
+  agilepoker.web:
+    image: agilepoker/web:latest
+    container_name: agilepoker-web
+    build:
+      context: web
+    depends_on:
+      - agilepoker.api
+    environment:
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/AgilePoker-WebApp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=11111
+      - PLANNING_POKER_ORLEANS__USECLUSTER=true
+      - PLANNING_POKER_ORLEANS__CLUSTERID=agilepoker-cluster
+      - MYSQLCONNSTR_DefaultConnection=Server=agilepoker.identity;Port=3306;Database=agilepoker_identity;User=root;Password=11111
+      - MYSQLCONNSTR_DefaultClusterStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_clustering;User=root;Password=11111
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ${APPDATA}/AgilePoker/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/AgilePoker/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/AgilePoker/Avatars:/app/wwwroot/img/avatars
+      - ${APPDATA}/AgilePoker/Keys:/keys
+      - ${APPDATA}/AgilePoker/Logs:/logs
+      - ${APPDATA}/AgilePoker/Configs/web.json:/app/appsettings.json:ro
