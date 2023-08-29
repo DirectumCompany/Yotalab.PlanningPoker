@@ -40,7 +40,7 @@ namespace Yotalab.PlanningPoker.Hosting
 
           var clusterConnectionString = context.Configuration.GetConnectionString("DefaultClusterStorage");
           if (string.IsNullOrWhiteSpace(clusterConnectionString))
-            builder.UseLocalhostClustering(siloPort, gatewayPort);
+            builder.UseLocalhostClustering(siloPort, gatewayPort, serviceId: serviceId, clusterId: clusterId);
           else
             builder.UseAdoNetClustering(options =>
             {
