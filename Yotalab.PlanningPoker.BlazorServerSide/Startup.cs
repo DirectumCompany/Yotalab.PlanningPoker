@@ -108,6 +108,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       {
         endpoints.MapControllers();
         endpoints.MapBlazorHub();
+        endpoints.MapSitemap();
+        endpoints.MapRobots();
         endpoints.MapFallbackToPage("/_Host");
       });
     }
