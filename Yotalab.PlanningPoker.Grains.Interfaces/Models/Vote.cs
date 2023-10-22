@@ -10,7 +10,7 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
   /// Голос участника сессии планирования.
   /// </summary>
   [Immutable]
-  public class Vote : IEquatable<Vote>
+  public class Vote
   {
     public static readonly Vote Unset = new Vote();
     public static readonly Vote Zero = new Vote(0);
@@ -45,19 +45,47 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
     /// <summary>
     /// Получить все возможные значения голосов.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Перечисление всех возможных значений голосов.</returns>
     public static IEnumerable<Vote> GetAll()
     {
       var fields = typeof(Vote).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
       return fields.Select(f => f.GetValue(null)).OfType<Vote>();
     }
 
-    #region IEquatable<Vote>
-
-    public bool Equals(Vote other)
+    protected static bool EqualOperator(Vote left, Vote right)
     {
-      if (other == null) return false;
-      return this.Value == other.Value;
+      if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
+        return false;
+
+      return ReferenceEquals(left, right) || left.Equals(right);
+    }
+
+    protected static bool NotEqualOperator(Vote left, Vote right)
+    {
+      return !EqualOperator(left, right);
+    }
+
+    protected IEnumerable<object> GetEqualityComponents()
+    {
+      yield return this.Value;
+    }
+
+    #region Базовый класс
+
+    public override bool Equals(object obj)
+    {
+      if (obj == null || obj.GetType() != GetType())
+        return false;
+
+      var other = (Vote)obj;
+      return this.GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+    }
+
+    public override int GetHashCode()
+    {
+      return GetEqualityComponents()
+        .Select(x => x != null ? x.GetHashCode() : 0)
+        .Aggregate((x, y) => x ^ y);
     }
 
     #endregion
