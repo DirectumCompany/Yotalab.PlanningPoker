@@ -23,7 +23,7 @@
       <MudMenuItem OnClick="@(() => EditParticipantInfoDialog.Show(this.DialogService, this.participantInfo))">
         @UIResources.EditParticipantInfoButton
       </MudMenuItem>
-      <MudMenuItem Link="api/identity/account/signOut" Target="_self">@IdentityUIResources.SignOut</MudMenuItem>
+      <MudMenuItem Href="api/identity/account/signOut" Target="_self">@IdentityUIResources.SignOut</MudMenuItem>
       <MudDivider />
       <MudListSubheader Class="pb-0">
         @UIResources.InterfaceLanguage

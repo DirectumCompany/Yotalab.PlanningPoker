@@ -8,9 +8,9 @@
           <MudTextField Label="@UIResources.EditSessionDialogNameLabel" @bind-Value="@this.EditArgs.Name" For="@(() => this.EditArgs.Name)" Immediate="true" />
         </div>
         <div class="mb-3 d-flex flex-wrap">
-          <MudSwitch @bind-Checked="@this.EditArgs.AutoStop" Label="@UIResources.EditSessionDialogAutoStopLabel" Color="Color.Primary" title="@UIResources.EditSessionDialogAutoStopHint" />
+          <MudSwitch @bind-Value="@this.EditArgs.AutoStop" Label="@UIResources.EditSessionDialogAutoStopLabel" Color="Color.Primary" title="@UIResources.EditSessionDialogAutoStopHint" />
           <MudSpacer />
-          <MudSwitch @bind-Checked="@this.bulletinEditorEditModeOn" Label="@UIResources.BulletinEditMode" Color="Color.Secondary" title="@UIResources.BulletinEditMode" />
+          <MudSwitch @bind-Value="@this.bulletinEditorEditModeOn" Label="@UIResources.BulletinEditMode" Color="Color.Secondary" title="@UIResources.BulletinEditMode" />
         </div>
         <BulletinEditor Bulletin="this.EditArgs.Bulletin" IsEditMode="this.bulletinEditorEditModeOn" />
       </EditForm>

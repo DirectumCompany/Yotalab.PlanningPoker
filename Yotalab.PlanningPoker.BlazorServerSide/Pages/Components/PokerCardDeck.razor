@@ -2,7 +2,7 @@
 
 @if (this.Bulletin != null)
 {
-  <MudGrid Class="justify-center">
+  <MudGrid Class="justify-center" Spacing="3">
     @foreach (var bulletinItem in this.Bulletin)
     {
       var vote = bulletinItem.Vote;

@@ -21,7 +21,7 @@
                   <MudText Class="mr-2">@context.Name</MudText>
                   @if (context.ProcessingState == Grains.Interfaces.Models.SessionProcessingState.Started)
                   {
-                    <MudChip Label="true" Style="cursor:pointer" Class="ml-0" Color="Color.Error" Size="Size.Small">
+                    <MudChip T="string" Label="true" Style="cursor:pointer" Class="ml-0" Color="Color.Error" Size="Size.Small">
                       @UIResources.VotingInProcess
                     </MudChip>
                   }
@@ -29,11 +29,11 @@
                 <div>
                   @if (context.ModeratorIds.Contains(this.ParticipantId))
                   {
-                    <MudChip Label="true" Style="cursor:pointer" Class="mr-2 ml-0" Color="Color.Primary" Size="Size.Small">
+                    <MudChip T="string" Label="true" Style="cursor:pointer" Class="mr-2 ml-0" Color="Color.Primary" Size="Size.Small">
                       @UIResources.YouModerator
                     </MudChip>
                   }
-                  <MudChip Label="true" Style="cursor:pointer" Class="ml-0" Color="Color.Success" Size="Size.Small">
+                  <MudChip T="string" Label="true" Style="cursor:pointer" Class="ml-0" Color="Color.Success" Size="Size.Small">
                     @string.Format(@UIResources.ParticipantsCount, context.ParticipantsCount)
                   </MudChip>
                 </div>
@@ -52,14 +52,14 @@
     }
     else
     {
-      <MudList>
+      <MudList T="string">
         <MudListItem Text="@UIResources.SessionsEmpty" Disabled="true" />
       </MudList>
     }
   </MudPaper>
 
   <div class="d-flex justify-end pa-3">
-    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" OnClick="this.OnShowCreationModal" />
+    <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="this.OnShowCreationModal" />
   </div>
 }
 else
