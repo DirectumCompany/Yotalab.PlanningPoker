@@ -35,7 +35,7 @@
             @IdentityUIResources.ForgotPassword
           </MudLink>
           <div class="d-flex mt-3">
-            <MudCheckBox @bind-Checked="this.loginInputModel.RememberMe"
+            <MudCheckBox @bind-Value="this.loginInputModel.RememberMe"
                          Label="@DataAnnotationResources.RememberMeLabel"
                          For="@(() => this.loginInputModel.RememberMe)"
                          Class="ml-n2" Color="Color.Info" />
