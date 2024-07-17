@@ -17,7 +17,6 @@ namespace Yotalab.PlanningPoker.Hosting
     public static IHostBuilder UseOrleansSiloInProcess(this IHostBuilder hostBuilder)
     {
       return hostBuilder
-        .UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration))
         .UseOrleans((context, builder) =>
         {
           builder.ConfigureApplicationParts(manager => manager

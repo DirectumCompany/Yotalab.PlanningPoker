@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using Yotalab.PlanningPoker.BlazorServerSide.Data;
 using Yotalab.PlanningPoker.Hosting;
 
@@ -37,7 +38,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
         .ConfigureWebHostDefaults(webBuilder =>
         {
           webBuilder.UseStartup<Startup>();
-        });
+        })
+        .UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
       var useOrleansClusterValue = Environment.GetEnvironmentVariable("PLANNING_POKER_ORLEANS__USECLUSTER");
       if (bool.TryParse(useOrleansClusterValue, out var useOrleansCluster) && useOrleansCluster)
