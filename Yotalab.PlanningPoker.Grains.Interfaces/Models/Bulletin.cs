@@ -9,8 +9,29 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
   /// </summary>
   [Immutable]
   [GenerateSerializer]
-  public class Bulletin : HashSet<BulletinItem>
+  public class Bulletin
   {
+    [Id(0)]
+    private HashSet<BulletinItem> items;
+
+    public IReadOnlySet<BulletinItem> Items => this.items;
+
+    public BulletinItem Add(Vote vote)
+    {
+      var newItem = new BulletinItem(vote);
+      this.items.Add(newItem);
+      return newItem;
+    }
+
+    public BulletinItem Add(Vote vote, bool disabled)
+    {
+      var newItem = new BulletinItem(vote, disabled);
+      this.items.Add(newItem);
+      return newItem;
+    }
+
+    public void Remove(Vote vote) => this.items.Remove(new BulletinItem(vote));
+
     /// <summary>
     /// Бюллетень по-умолчанию из последовательности Фиббоначи, знака вопроса и чашки кофе.
     /// </summary>
@@ -26,7 +47,7 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
     /// <param name="vote">Голос.</param>
     public void Disable(Vote vote)
     {
-      foreach (var item in this)
+      foreach (var item in this.Items)
       {
         if (Equals(item.Vote, vote))
           item.Disable();
@@ -39,7 +60,7 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
     /// <param name="vote">Голос.</param>
     public void Enable(Vote vote)
     {
-      foreach (var item in this)
+      foreach (var item in this.Items)
       {
         if (Equals(item.Vote, vote))
           item.Enable();
@@ -53,23 +74,24 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
     /// <returns>True, если голос доступен для выбора, иначе - false.</returns>
     public bool IsEnabled(Vote vote)
     {
-      return this.Any(item => Equals(item.Vote, vote) && !item.IsDisabled);
+      return this.Items.Any(item => Equals(item.Vote, vote) && !item.IsDisabled);
     }
 
+    public void Clear() => this.items.Clear();
+
     public Bulletin(IEnumerable<Vote> votes)
-      : base(votes.Select(v => new BulletinItem(v)), new BulletinItemComparer())
     {
+      this.items = new HashSet<BulletinItem>(votes.Select(v => new BulletinItem(v)), new BulletinItemComparer());
     }
 
     public Bulletin(Bulletin bulletin)
-      : base(bulletin, new BulletinItemComparer())
     {
+      this.items = new HashSet<BulletinItem>(bulletin.Items, new BulletinItemComparer());
     }
 
     internal Bulletin()
-      : base(new BulletinItemComparer())
     {
-      // Требует десериализатор.
+      this.items = new HashSet<BulletinItem>(new BulletinItemComparer());
     }
   }
 }

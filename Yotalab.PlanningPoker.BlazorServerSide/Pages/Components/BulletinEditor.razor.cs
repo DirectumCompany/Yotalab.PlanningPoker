@@ -142,7 +142,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
       this.bulletin = bulletin;
       if (bulletin != null)
       {
-        var bulletinItems = this.bulletin.Where(i => !i.Vote.IsUnset).ToArray();
+        var bulletinItems = this.bulletin.Items.Where(i => !i.Vote.IsUnset).ToArray();
         for (int i = 0; i < bulletinItems.Length; i++)
           this.bulletinItemsViewModel.Add(new BulletinItemViewModel(bulletinItems[i], i));
       }
@@ -152,7 +152,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
     {
       this.bulletin.Clear();
       foreach (var item in this.bulletinItemsViewModel.OrderBy(i => i.Order))
-        this.bulletin.Add(new BulletinItem(item.Vote));
+        this.bulletin.Add(item.Vote);
     }
 
     public void UpdateOrder(MudItemDropInfo<BulletinItemViewModel> dropItem)
@@ -164,8 +164,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
     public void Remove(BulletinItemViewModel viewModel)
     {
       this.bulletinItemsViewModel.Remove(viewModel);
-      var items = this.bulletin.Where(i => i.Vote.Equals(viewModel.Vote)).ToList();
-      items.ForEach(i => this.bulletin.Remove(i));
+      this.bulletin.Remove(viewModel.Vote);
     }
 
     public bool UpdateVote(BulletinItemViewModel viewModel, string value)
@@ -190,7 +189,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
         newVote = new Vote(value);
       }
 
-      if (this.bulletin.Any(i => i.Vote.Equals(newVote) && !i.Vote.Equals(viewModel.Vote)))
+      if (this.bulletin.Items.Any(i => i.Vote.Equals(newVote) && !i.Vote.Equals(viewModel.Vote)))
       {
         viewModel.SetError(string.Format(UIResources.BulletinItemAlreadyExists, newVote.Value));
         return false;
@@ -204,7 +203,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
 
     public bool AddEmoji(string emoji)
     {
-      var emojiVotes = this.bulletin.Where(i => i.Vote.Value?.Equals(emoji) == true);
+      var emojiVotes = this.bulletin.Items.Where(i => i.Vote.Value?.Equals(emoji) == true);
       if (!emojiVotes.Any())
       {
         this.AddVote(new Vote(emoji));
@@ -216,7 +215,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
 
     public void AddNumber()
     {
-      var numbers = this.bulletin.Where(i => i.Vote.IsNumber);
+      var numbers = this.bulletin.Items.Where(i => i.Vote.IsNumber);
       if (numbers.Any())
         this.AddVote(new Vote(numbers.Max(i => double.Parse(i.Vote.Value)) + 10));
       else
@@ -225,9 +224,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
 
     private void AddVote(Vote vote)
     {
-      var newItem = new BulletinItem(vote);
-      this.bulletin.Add(newItem);
-      this.bulletinItemsViewModel.Add(new BulletinItemViewModel(newItem, this.bulletin.Count));
+      var newItem = this.bulletin.Add(vote);
+      this.bulletinItemsViewModel.Add(new BulletinItemViewModel(newItem, this.bulletin.Items.Count));
     }
   }
 

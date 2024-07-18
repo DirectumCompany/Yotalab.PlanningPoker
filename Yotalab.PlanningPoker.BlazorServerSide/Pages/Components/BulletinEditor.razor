@@ -81,7 +81,7 @@
   {
     <div class="bulletin-editor-drop-container">
       <div class="bulletin-editor py-3 gap-3">
-        @foreach (var bulletinItem in this.Bulletin)
+        @foreach (var bulletinItem in this.Bulletin.Items)
         {
           var vote = bulletinItem.Vote;
           if (vote.IsUnset)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,10 +8,7 @@ using Orleans;
 using Orleans.Configuration;
 using Orleans.Hosting;
 using Orleans.Serialization;
-using Orleans.Serialization.Serializers;
 using Orleans.Storage;
-using Yotalab.PlanningPoker.Grains.Interfaces.Models;
-using Yotalab.PlanningPoker.Grains.Interfaces.Serializers;
 
 namespace Yotalab.PlanningPoker.Hosting
 {
@@ -35,9 +31,6 @@ namespace Yotalab.PlanningPoker.Hosting
           var dashboardHost = context.Configuration.GetValue("Orleans:DashboardHost", false);
           var clusterId = context.Configuration.GetValue("Orleans:ClusterId", "planingpoker-cluster");
           var serviceId = context.Configuration.GetValue("Orleans:ServiceId", "planingpoker");
-
-          builder.Services.AddSerializer(serializeBuilder =>
-            serializeBuilder.Services.AddSingleton<IBaseCodec<HashSet<BulletinItem>>, BulletinSerializer>());
 
           var clusterConnectionString = context.Configuration.GetConnectionString("DefaultClusterStorage");
           if (string.IsNullOrWhiteSpace(clusterConnectionString))

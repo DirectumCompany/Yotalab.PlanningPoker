@@ -9,8 +9,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Orleans;
+using Yotalab.PlanningPoker.Api.Models;
 using Yotalab.PlanningPoker.Grains;
 using Yotalab.PlanningPoker.Grains.Interfaces;
+using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 using Yotalab.PlanningPoker.Hosting;
 
 namespace Yotalab.PlanningPoker.Api
@@ -60,7 +62,7 @@ namespace Yotalab.PlanningPoker.Api
       var sessionsJson = await File.ReadAllTextAsync(sessionsInputPath);
       var participantsJson = await File.ReadAllTextAsync(participantsInputPath);
 
-      var sessionMap = JsonConvert.DeserializeObject<Dictionary<Guid, SessionGrainState>>(sessionsJson, JsonSettings);
+      var sessionMap = JsonConvert.DeserializeObject<Dictionary<Guid, ObsoleteSessionGrainState>>(sessionsJson, JsonSettings);
       var participantMap = JsonConvert.DeserializeObject<Dictionary<Guid, ParticipantGrainState>>(participantsJson, JsonSettings);
 
       foreach (var session in sessionMap)
@@ -90,8 +92,28 @@ namespace Yotalab.PlanningPoker.Api
 
         var participantGrain = this.grainFactory.GetGrain<IParticipantGrain>(moderatorId);
 
-        await sessionGrain.CreateAsync(sessionState.Name, participantGrain, sessionState.AutoStop, sessionState.Bulletin);
+        Bulletin bulletine;
+        if (sessionState.Bulletin != null)
+        {
+          bulletine = new Bulletin(Enumerable.Empty<Vote>());
+          foreach (var item in sessionState.Bulletin)
+            bulletine.Add(item.Vote, item.IsDisabled);
+        }
+        else
+          bulletine = Bulletin.Default();
+
+        await sessionGrain.CreateAsync(sessionState.Name, participantGrain, sessionState.AutoStop, bulletine);
         await participantGrain.Join(sessionId);
+
+        if (sessionState.ParticipantVotes != null)
+        {
+          foreach (var participantId in sessionState.ParticipantVotes)
+          {
+            participantGrain = this.grainFactory.GetGrain<IParticipantGrain>(participantId.Key);
+            await participantGrain.Join(sessionId);
+          }
+        }
+
         if (sessionState.ModeratorIds.Count > 1)
         {
           for (int i = 1; i < sessionState.ModeratorIds.Count - 1; i++)
@@ -99,6 +121,19 @@ namespace Yotalab.PlanningPoker.Api
             var satelliteModeratorId = sessionState.ModeratorIds.Take(new Range(i, i + 1)).First();
             participantGrain = this.grainFactory.GetGrain<IParticipantGrain>(satelliteModeratorId);
             await participantGrain.Join(sessionId);
+
+            await sessionGrain.AddModerator(satelliteModeratorId);
+          }
+        }
+
+        if (sessionState.ObserverIds != null)
+        {
+          foreach (var observerId in sessionState.ObserverIds)
+          {
+            participantGrain = this.grainFactory.GetGrain<IParticipantGrain>(observerId);
+            await participantGrain.Join(sessionId);
+
+            await sessionGrain.AddObserver(observerId, moderatorId);
           }
         }
 
@@ -129,6 +164,7 @@ namespace Yotalab.PlanningPoker.Api
       }
 
       this.logger.LogInformation("Import finished.");
+      this.lifetime.StopApplication();
     }
   }
 }
