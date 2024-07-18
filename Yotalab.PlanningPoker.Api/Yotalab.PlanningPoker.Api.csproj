@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.Orleans.Clustering.AdoNet" Version="8.2.0" />
-    <PackageReference Include="Microsoft.Orleans.Serialization.NewtonsoftJson" Version="7.2.1" />
+    <PackageReference Include="Microsoft.Orleans.Serialization.NewtonsoftJson" Version="8.2.0" />
     <PackageReference Include="Microsoft.Orleans.Server" Version="8.2.0" />
     <PackageReference Include="Microsoft.Orleans.Persistence.AdoNet" Version="8.2.0" />
     <PackageReference Include="Microsoft.Orleans.Streaming" Version="8.2.0" />
