@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Orleans.Concurrency;
+using Orleans;
 
 namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
 {
@@ -8,6 +8,7 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
   /// Бюллетень голосования, с возможными для выбора голосами.
   /// </summary>
   [Immutable]
+  [GenerateSerializer]
   public class Bulletin : HashSet<BulletinItem>
   {
     /// <summary>

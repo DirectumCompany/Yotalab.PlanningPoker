@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Orleans;
 using Orleans.Configuration;
 using Orleans.Hosting;
-using Orleans.Statistics;
-using Serilog;
-using Yotalab.PlanningPoker.Grains;
-using Yotalab.PlanningPoker.Grains.Interfaces;
+using Orleans.Serialization;
+using Orleans.Serialization.Serializers;
+using Orleans.Storage;
+using Yotalab.PlanningPoker.Grains.Interfaces.Models;
+using Yotalab.PlanningPoker.Grains.Interfaces.Serializers;
 
 namespace Yotalab.PlanningPoker.Hosting
 {
@@ -19,10 +23,6 @@ namespace Yotalab.PlanningPoker.Hosting
       return hostBuilder
         .UseOrleans((context, builder) =>
         {
-          builder.ConfigureApplicationParts(manager => manager
-              .AddApplicationPart(typeof(SessionGrain).Assembly)
-              .AddApplicationPart(typeof(ISessionGrain).Assembly));
-
           // При локальном рамещении нет возможности настроить Orleans, чтобы он не занимал порты.
           // Issue запланированна на 4.0 версию https://github.com/dotnet/orleans/issues/7023
           // Поэтому пока вручную можно менять в конфиге на не занятый порт.
@@ -35,7 +35,9 @@ namespace Yotalab.PlanningPoker.Hosting
           var dashboardHost = context.Configuration.GetValue("Orleans:DashboardHost", false);
           var clusterId = context.Configuration.GetValue("Orleans:ClusterId", "planingpoker-cluster");
           var serviceId = context.Configuration.GetValue("Orleans:ServiceId", "planingpoker");
-          var usePubSubMemoryStorage = context.Configuration.GetValue("Orleans:UsePubSubMemoryStorage", false);
+
+          builder.Services.AddSerializer(serializeBuilder =>
+            serializeBuilder.Services.AddSingleton<IBaseCodec<HashSet<BulletinItem>>, BulletinSerializer>());
 
           var clusterConnectionString = context.Configuration.GetConnectionString("DefaultClusterStorage");
           if (string.IsNullOrWhiteSpace(clusterConnectionString))
@@ -57,30 +59,26 @@ namespace Yotalab.PlanningPoker.Hosting
           {
             options.Invariant = "MySql.Data.MySqlConnector";
             options.ConnectionString = context.Configuration.GetConnectionString("DefaultGrainStorage");
-            options.UseJsonFormat = true;
-            options.ConfigureJsonSerializerSettings = (jsonOptions) =>
-            {
-              jsonOptions.ConstructorHandling = Newtonsoft.Json.ConstructorHandling.AllowNonPublicDefaultConstructor;
-              jsonOptions.ContractResolver = new PrivateSetterContractResolver();
-              jsonOptions.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto;
-            };
+            options.GrainStorageSerializer = new JsonGrainStorageSerializer(
+              new OrleansJsonSerializer(
+                Options.Create(new OrleansJsonSerializerOptions
+                {
+                  JsonSerializerSettings = new Newtonsoft.Json.JsonSerializerSettings()
+                  {
+                    ConstructorHandling = Newtonsoft.Json.ConstructorHandling.AllowNonPublicDefaultConstructor,
+                    ContractResolver = new PrivateSetterContractResolver(),
+                    TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto,
+                    DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore,
+                    NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore,
+                    PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects
+                  }
+                })));
           });
 
-          if (usePubSubMemoryStorage)
-          {
-            builder.AddMemoryGrainStorage("PubSubStore");
-          }
-          else
-          {
-            builder.AddAdoNetGrainStorage("PubSubStore", options =>
-            {
-              options.Invariant = "MySql.Data.MySqlConnector";
-              options.ConnectionString = context.Configuration.GetConnectionString("DefaultPubSubStorage");
-              options.UseJsonFormat = true;
-            });
-          }
+          builder
+            .AddMemoryGrainStorage("PubSubStore")
+            .AddMemoryStreams("SMS");
 
-          builder.AddSimpleMessageStreamProvider("SMS");
           if (useDashboard || dashboardHost)
           {
             builder.UseDashboard(options =>
@@ -89,16 +87,6 @@ namespace Yotalab.PlanningPoker.Hosting
               options.HideTrace = true;
               options.HostSelf = dashboardHost;
             });
-
-            switch (Environment.OSVersion.Platform)
-            {
-              case PlatformID.Win32NT:
-                builder.UsePerfCounterEnvironmentStatistics();
-                break;
-              case PlatformID.Unix:
-                builder.UseLinuxEnvironmentStatistics();
-                break;
-            }
           }
         });
     }

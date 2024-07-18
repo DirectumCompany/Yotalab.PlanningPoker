@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Orleans;
 using Orleans.Runtime;
@@ -81,7 +82,9 @@ namespace Yotalab.PlanningPoker.Grains
       this.grainState.State.Name = newName;
       this.grainState.State.AvatarUrl = newAvatarUrl;
 
-      this.GetStreamProvider("SMS").GetStream<ParticipantChangedNotification>(Guid.Empty, typeof(IParticipantGrain).FullName)
+      var streamId = StreamId.Create(typeof(IParticipantGrain).FullName, Guid.Empty);
+      this.GetStreamProvider("SMS")
+        .GetStream<ParticipantChangedNotification>(streamId)
         .OnNextAsync(new ParticipantChangedNotification(this.ToInfo()))
         .Ignore();
 
@@ -92,12 +95,12 @@ namespace Yotalab.PlanningPoker.Grains
 
     #region Базовый класс
 
-    public override Task OnActivateAsync()
+    public override Task OnActivateAsync(CancellationToken cancellationToken)
     {
       if (this.grainState.State.SessionIds == null)
         this.grainState.State.SessionIds = new HashSet<Guid>();
 
-      return base.OnActivateAsync();
+      return base.OnActivateAsync(cancellationToken);
     }
 
     #endregion

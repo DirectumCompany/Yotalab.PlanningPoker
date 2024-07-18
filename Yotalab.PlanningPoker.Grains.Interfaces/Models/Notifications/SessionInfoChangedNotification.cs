@@ -1,4 +1,5 @@
 ﻿using System;
+using Orleans;
 using Orleans.Concurrency;
 
 namespace Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications
@@ -7,6 +8,7 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications
   /// Уведомление об изменении состояния сессии планирования.
   /// </summary>
   [Immutable]
+  [GenerateSerializer]
   public class SessionInfoChangedNotification
   {
     public SessionInfoChangedNotification(Guid sessionId)
@@ -17,6 +19,7 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications
     /// <summary>
     /// Идентификатор сессии.
     /// </summary>
+    [Id(0)]
     public Guid SessionId { get; }
   }
 }

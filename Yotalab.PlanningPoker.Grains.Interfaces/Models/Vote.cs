@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Orleans.Concurrency;
+using Orleans;
 
 namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
 {
@@ -10,6 +10,7 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
   /// Голос участника сессии планирования.
   /// </summary>
   [Immutable]
+  [GenerateSerializer]
   public class Vote
   {
     public static readonly Vote Unset = new Vote();
@@ -30,6 +31,7 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
     /// <summary>
     /// Получить значение голоса.
     /// </summary>
+    [Id(0)]
     public string Value { get; private set; }
 
     /// <summary>

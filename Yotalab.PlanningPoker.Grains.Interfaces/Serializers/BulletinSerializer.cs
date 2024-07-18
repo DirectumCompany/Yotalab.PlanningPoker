@@ -1,40 +1,26 @@
 ﻿using System;
-using System.Collections.Immutable;
-using Orleans.CodeGeneration;
-using Orleans.Serialization;
+using System.Buffers;
+using System.Collections.Generic;
+using Orleans.Serialization.Buffers;
+using Orleans.Serialization.Serializers;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
 
 namespace Yotalab.PlanningPoker.Grains.Interfaces.Serializers
 {
-  [Serializer(typeof(Bulletin))]
-  internal class BulletinSerializer
+  /// <summary>
+  /// Заглушка сериалайзера для базового класса бюллетени.
+  /// </summary>
+  public sealed class BulletinSerializer : IBaseCodec<HashSet<BulletinItem>>
   {
-    [CopierMethod]
-    public static object DeepCopier(object original, ICopyContext context)
+    public void Serialize<TBufferWriter>(ref Writer<TBufferWriter> writer, HashSet<BulletinItem> value)
+      where TBufferWriter : IBufferWriter<byte>
     {
-      // No deep copy required since Yotalab.PlanningPoker.Grains.Interfaces.Models.Bulletin is marked with the [Immutable] attribute.
-      return original;
+      throw new NotImplementedException();
     }
 
-    [SerializerMethod]
-    public static void Serializer(object untypedInput, ISerializationContext context, Type expected)
+    public void Deserialize<TInput>(ref Reader<TInput> reader, HashSet<BulletinItem> value)
     {
-      var bulletin = (Bulletin)untypedInput;
-      context.SerializeInner(bulletin.ToImmutableArray(), typeof(ImmutableArray<BulletinItem>));
-    }
-
-    [DeserializerMethod]
-    public static object Deserializer(Type expected, IDeserializationContext context)
-    {
-      var bulletin = new Bulletin();
-      context.RecordObject(bulletin);
-      var bulletinItems = (ImmutableArray<BulletinItem>)context.DeserializeInner(typeof(ImmutableArray<BulletinItem>));
-      if (!bulletinItems.IsDefaultOrEmpty)
-      {
-        foreach (var item in bulletinItems)
-          bulletin.Add(item);
-      }
-      return bulletin;
+      throw new NotImplementedException();
     }
   }
 }

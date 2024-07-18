@@ -127,15 +127,6 @@ namespace Yotalab.PlanningPoker.Api
     private static SessionGrainState DeserializeSession(string payloadJson)
     {
       var session = JsonConvert.DeserializeObject<SessionGrainState>(payloadJson, JsonSettings);
-
-      if (session.ModeratorId != Guid.Empty)
-      {
-        var moderatorIds = session.ModeratorIds ?? new HashSet<Guid>();
-        moderatorIds.Add(session.ModeratorId);
-        session.ModeratorId = Guid.Empty;
-        session.ModeratorIds = moderatorIds;
-      }
-
       return session;
     }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Orleans;
+using Orleans.Runtime;
 using Orleans.Streams;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.Args;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.DTO;
@@ -177,7 +178,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
 
     public Task<StreamSubscriptionHandle<T>> SubscribeAsync<T>(Guid sessionId, Func<T, Task> action) =>
         this.client.GetStreamProvider("SMS")
-            .GetStream<T>(sessionId, typeof(T).FullName)
+            .GetStream<T>(StreamId.Create(typeof(T).FullName, sessionId))
             .SubscribeAsync(new NotificationsObserver<T>(logger, action));
   }
 }

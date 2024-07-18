@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Orleans;
+using Orleans.Runtime;
 using Yotalab.PlanningPoker.Grains.Interfaces;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications;
 
@@ -37,8 +39,14 @@ namespace Yotalab.PlanningPoker.Grains
 
         // Делаем небольшую задержку, чтобы исключить ситуации быстрого обновления статуса.
         // Например, если пользователь обновил страницу, то без задержки статус успеет моргнуть.
-        this.offlineNotificationTimer = this.RegisterTimer(
-          this.OnNotifyOfflineTimer, null, TimeSpan.FromMilliseconds(500), TimeSpan.MaxValue);
+        this.offlineNotificationTimer = this.RegisterGrainTimer(
+          this.OnNotifyOfflineTimer,
+          new GrainTimerCreationOptions
+          {
+            DueTime = TimeSpan.FromMilliseconds(500),
+            Period = Timeout.InfiniteTimeSpan,
+            Interleave = true
+          });
       }
 
       return Task.CompletedTask;
@@ -62,7 +70,7 @@ namespace Yotalab.PlanningPoker.Grains
       return Task.CompletedTask;
     }
 
-    private Task OnNotifyOfflineTimer(object state)
+    private Task OnNotifyOfflineTimer()
     {
       this.DisposeOfflineNotificationTimer();
 
@@ -74,7 +82,9 @@ namespace Yotalab.PlanningPoker.Grains
     private void NotifyOnlineStatusChanged()
     {
       var userId = this.GetPrimaryKey();
-      this.GetStreamProvider("SMS").GetStream<UserOnlineStatusChanged>(userId, typeof(UserOnlineStatusChanged).FullName)
+      var streamId = StreamId.Create(typeof(UserOnlineStatusChanged).FullName, userId);
+      this.GetStreamProvider("SMS")
+        .GetStream<UserOnlineStatusChanged>(streamId)
         .OnNextAsync(new UserOnlineStatusChanged(userId, this.HasActiveClients))
         .Ignore();
     }

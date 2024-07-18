@@ -62,16 +62,8 @@ CREATE TABLE OrleansStorage
     GrainIdExtensionString    NVARCHAR(512) NULL,
     ServiceId                NVARCHAR(150) NOT NULL,
 
-    -- The usage of the Payload records is exclusive in that
-    -- only one should be populated at any given time and two others
-    -- are NULL. The types are separated to advantage on special
-    -- processing capabilities present on database engines (not all might
-    -- have both JSON and XML types.
-    --
-    -- One is free to alter the size of these fields.
+    -- Payload
     PayloadBinary    BLOB NULL,
-    PayloadXml        LONGTEXT NULL,
-    PayloadJson        LONGTEXT NULL,
 
     -- Informational field, no other use.
     ModifiedOn DATETIME NOT NULL,
@@ -83,13 +75,8 @@ CREATE TABLE OrleansStorage
     -- to be indexed, so the values are hashed and only collisions will be solved
     -- by using the fields. That is, after the indexed queries have pinpointed the right
     -- rows down to [0, n] relevant ones, n being the number of collided value pairs.
-) ROW_FORMAT = DYNAMIC;
+) ROW_FORMAT = COMPRESSED KEY_BLOCK_SIZE = 16;
 ALTER TABLE OrleansStorage ADD INDEX IX_OrleansStorage (GrainIdHash, GrainTypeHash);
-
--- The following alters the column to JSON format if MySQL is at least of version 5.7.8.
--- See more at https://dev.mysql.com/doc/refman/5.7/en/json.html for JSON and
--- http://dev.mysql.com/doc/refman/5.7/en/comments.html for the syntax.
-/*!50708 ALTER TABLE OrleansStorage MODIFY COLUMN PayloadJson JSON */;
 
 DELIMITER $$
 
@@ -117,8 +104,6 @@ BEGIN
     UPDATE OrleansStorage
     SET
         PayloadBinary = NULL,
-        PayloadJson = NULL,
-        PayloadXml = NULL,
         Version = Version + 1
     WHERE
         GrainIdHash = _GrainIdHash AND _GrainIdHash IS NOT NULL
@@ -151,9 +136,7 @@ CREATE PROCEDURE WriteToStorage
     in _GrainIdExtensionString NVARCHAR(512),
     in _ServiceId NVARCHAR(150),
     in _GrainStateVersion INT,
-    in _PayloadBinary BLOB,
-    in _PayloadJson LONGTEXT,
-    in _PayloadXml LONGTEXT
+    in _PayloadBinary BLOB
 )
 BEGIN
     DECLARE _newGrainStateVersion INT;
@@ -184,14 +167,12 @@ BEGIN
     -- If the version number explicitly returned is still the same, Orleans interprets it so the update did not succeed
     -- and throws an InconsistentStateException.
     --
-    -- See further information at https://dotnet.github.io/orleans/Documentation/Core-Features/Grain-Persistence.html.
+    -- See further information at https://learn.microsoft.com/dotnet/orleans/grains/grain-persistence.
     IF _GrainStateVersion IS NOT NULL
     THEN
         UPDATE OrleansStorage
         SET
             PayloadBinary = _PayloadBinary,
-            PayloadJson = _PayloadJson,
-            PayloadXml = _PayloadXml,
             ModifiedOn = UTC_TIMESTAMP(),
             Version = Version + 1
         WHERE
@@ -226,8 +207,6 @@ BEGIN
             GrainIdExtensionString,
             ServiceId,
             PayloadBinary,
-            PayloadJson,
-            PayloadXml,
             ModifiedOn,
             Version
         )
@@ -240,8 +219,6 @@ BEGIN
             _GrainIdExtensionString,
             _ServiceId,
             _PayloadBinary,
-            _PayloadJson,
-            _PayloadXml,
             UTC_TIMESTAMP(),
             1) AS TMP
         WHERE NOT EXISTS
@@ -277,8 +254,6 @@ VALUES
     'ReadFromStorageKey',
     'SELECT
         PayloadBinary,
-        PayloadXml,
-        PayloadJson,
         UTC_TIMESTAMP(),
         Version
     FROM
@@ -298,7 +273,7 @@ INSERT INTO OrleansQuery(QueryKey, QueryText)
 VALUES
 (
     'WriteToStorageKey','
-    call WriteToStorage(@GrainIdHash, @GrainIdN0, @GrainIdN1, @GrainTypeHash, @GrainTypeString, @GrainIdExtensionString, @ServiceId, @GrainStateVersion, @PayloadBinary, @PayloadJson, @PayloadXml);'
+    call WriteToStorage(@GrainIdHash, @GrainIdN0, @GrainIdN1, @GrainTypeHash, @GrainTypeString, @GrainIdExtensionString, @ServiceId, @GrainStateVersion, @PayloadBinary);'
 );
 
 INSERT INTO OrleansQuery(QueryKey, QueryText)
