@@ -10,6 +10,7 @@
 **/bin
 /logs
 /keys
+/export
 /Yotalab.PlanningPoker.BlazorServerSide/Properties/PublishProfiles/agile-poker.ru.pubxml
 /Yotalab.PlanningPoker.BlazorServerSide/.config/dotnet-tools.json
 Yotalab.PlanningPoker.BlazorServerSide/wwwroot/img/avatars
