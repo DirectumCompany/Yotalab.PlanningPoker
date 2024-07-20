@@ -26,7 +26,6 @@ services:
       - PLANNING_POKER_ORLEANS__DASHBOARDHOST=true
       - PLANNING_POKER_ORLEANS__CLUSTERID=planingpoker-cluster
       - MYSQLCONNSTR_DefaultGrainStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_grains;User=root;Password=11111
-      - MYSQLCONNSTR_DefaultPubSubStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_pubsub;User=root;Password=11111
       - MYSQLCONNSTR_DefaultClusterStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_clustering;User=root;Password=11111
     ports:
       - "30000"
@@ -46,7 +45,6 @@ services:
   #  environment:
   #    - DOTNET_ENVIRONMENT=Development
   #    - MYSQLCONNSTR_DefaultGrainStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_grains;User=root;Password=11111
-  #    - MYSQLCONNSTR_DefaultPubSubStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_pubsub;User=root;Password=11111
   #    - MYSQLCONNSTR_DefaultClusterStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_clustering;User=root;Password=11111
   #  ports:
   #    - "30000"
