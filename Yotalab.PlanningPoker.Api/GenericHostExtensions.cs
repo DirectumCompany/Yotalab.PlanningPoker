@@ -14,7 +14,7 @@ namespace Yotalab.PlanningPoker.Hosting
 {
   public static class GenericHostExtensions
   {
-    public static IHostBuilder UseOrleansSiloInProcess(this IHostBuilder hostBuilder)
+    public static IHostBuilder UseOrleansSiloInProcess(this IHostBuilder hostBuilder, bool useClustering = true)
     {
       return hostBuilder
         .UseOrleans((context, builder) =>
@@ -33,7 +33,7 @@ namespace Yotalab.PlanningPoker.Hosting
           var serviceId = context.Configuration.GetValue("Orleans:ServiceId", "planingpoker");
 
           var clusterConnectionString = context.Configuration.GetConnectionString("DefaultClusterStorage");
-          if (string.IsNullOrWhiteSpace(clusterConnectionString))
+          if (string.IsNullOrWhiteSpace(clusterConnectionString) || !useClustering)
             builder.UseLocalhostClustering(siloPort, gatewayPort, serviceId: serviceId, clusterId: clusterId);
           else
             builder.UseAdoNetClustering(options =>

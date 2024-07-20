@@ -42,10 +42,14 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
         .UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
       var useOrleansClusterValue = Environment.GetEnvironmentVariable("PLANNING_POKER_ORLEANS__USECLUSTER");
-      if (bool.TryParse(useOrleansClusterValue, out var useOrleansCluster) && useOrleansCluster)
+      bool useOrleansCluster;
+      if (!bool.TryParse(useOrleansClusterValue, out useOrleansCluster))
+        useOrleansCluster = false;
+
+      if (useOrleansCluster)
         builder.UseOrleansOutOfProcess();
       else
-        builder.UseOrleansSiloInProcess();
+        builder.UseOrleansSiloInProcess(useOrleansCluster);
 
       return builder;
     }
