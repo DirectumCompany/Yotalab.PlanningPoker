@@ -14,9 +14,12 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
     [CascadingParameter]
     protected Task<AuthenticationState> AuthenticationStateTask { get; private set; }
 
+    [Inject]
+    private NavigationManager Navigation { get; set; }
+
     protected IdentityUser User { get; private set; }
 
-    protected Guid ParticipantId => Guid.Parse(this.User.Id);
+    protected Guid ParticipantId => this.User != null ? Guid.Parse(this.User.Id) : Guid.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -25,6 +28,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Pages.Components
       {
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
         this.User = await userManager.GetUserAsync(authState.User);
+        if (this.User == null)
+          this.Navigation.NavigateTo("api/identity/account/signOut", true);
       }
       await base.OnInitializedAsync();
     }
