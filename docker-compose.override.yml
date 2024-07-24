@@ -5,7 +5,7 @@ services:
     environment:
       - MARIADB_ROOT_PASSWORD=11111
     ports:
-      - "3307:3306"
+      - "3309:3306"
     volumes:
       - ${APPDATA}/PlanningPoker/Storages/Data:/var/lib/mysql
 
@@ -24,7 +24,7 @@ services:
       - PLANNING_POKER_ORLEANS__DASHBOARDPORT=8081
       - PLANNING_POKER_ORLEANS__USEDASHBOARD=true
       - PLANNING_POKER_ORLEANS__DASHBOARDHOST=true
-      - PLANNING_POKER_ORLEANS__CLUSTERID=planingpoker-cluster
+      - PLANNING_POKER_ORLEANS__CLUSTERID=planningpoker-cluster
       - MYSQLCONNSTR_DefaultGrainStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_grains;User=root;Password=11111
       - MYSQLCONNSTR_DefaultClusterStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_clustering;User=root;Password=11111
     ports:
@@ -33,6 +33,7 @@ services:
       - "8080:8081"
     volumes:
       - ./logs:/logs
+      - ./export:/app/export:rw
 
   # Silo without dashboard for scaling
   #planningpoker.api-silo:
@@ -57,7 +58,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - PLANNING_POKER_ORLEANS__USECLUSTER=true
-      - PLANNING_POKER_ORLEANS__CLUSTERID=planingpoker-cluster
+      - PLANNING_POKER_ORLEANS__SERVICEID=planningpoker
+      - PLANNING_POKER_ORLEANS__CLUSTERID=planningpoker-cluster
       - MYSQLCONNSTR_DefaultConnection=Server=planningpoker.identity;Port=3306;Database=planningpoker_identity;User=root;Password=11111
       - MYSQLCONNSTR_DefaultClusterStorage=Server=planningpoker.storages;Port=3306;Database=planningpoker_clustering;User=root;Password=11111
     ports:

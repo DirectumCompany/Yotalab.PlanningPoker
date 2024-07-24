@@ -29,8 +29,8 @@ namespace Yotalab.PlanningPoker.Hosting
           var dashboardPort = context.Configuration.GetValue("Orleans:DashboardPort", 8080);
           var useDashboard = context.Configuration.GetValue("Orleans:UseDashboard", false);
           var dashboardHost = context.Configuration.GetValue("Orleans:DashboardHost", false);
-          var clusterId = context.Configuration.GetValue("Orleans:ClusterId", "planingpoker-cluster");
-          var serviceId = context.Configuration.GetValue("Orleans:ServiceId", "planingpoker");
+          var clusterId = context.Configuration.GetValue("Orleans:ClusterId", "planningpoker-cluster");
+          var serviceId = context.Configuration.GetValue("Orleans:ServiceId", "planningpoker");
 
           var clusterConnectionString = context.Configuration.GetConnectionString("DefaultClusterStorage");
           if (string.IsNullOrWhiteSpace(clusterConnectionString) || !useClustering)

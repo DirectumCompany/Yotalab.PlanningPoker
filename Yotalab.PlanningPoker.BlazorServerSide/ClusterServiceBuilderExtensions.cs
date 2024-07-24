@@ -16,8 +16,8 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
         {
           var configuration = context.Configuration;
           var clusterConnectionString = configuration.GetConnectionString("DefaultClusterStorage");
-          var clusterId = configuration.GetValue("Orleans:ClusterId", "planingpoker-cluster");
-          var serviceId = configuration.GetValue("Orleans:ServiceId", "planingpoker");
+          var clusterId = configuration.GetValue("Orleans:ClusterId", "planningpoker-cluster");
+          var serviceId = configuration.GetValue("Orleans:ServiceId", "planningpoker");
 
           clientBuilder.UseAdoNetClustering(options =>
           {
