@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Orleans;
 
 namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
 {
@@ -6,6 +7,7 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
   /// Сравниватель элементов бюллетени.
   /// Сравнивает по голосу, игнорируя признак недоступности.
   /// </summary>
+  [GenerateSerializer]
   internal class BulletinItemComparer : IEqualityComparer<BulletinItem>
   {
     #region IEqualityComparer<BulletinItem>
