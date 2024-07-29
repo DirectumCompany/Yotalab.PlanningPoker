@@ -32,6 +32,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       services.AddRazorPages();
       services.AddServerSideBlazor();
       services.AddLocalization();
+      services.AddCascadingAuthenticationState();
 
       services.AddScoped<CircuitHandler, TrackingCircuitHandler>();
 
