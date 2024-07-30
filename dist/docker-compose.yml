@@ -45,7 +45,6 @@ services:
       - PLANNING_POKER_ORLEANS__CLUSTERID=agilepoker-cluster
       - PLANNING_POKER_ORLEANS__SERVICEID=agilepoker
       - MYSQLCONNSTR_DefaultGrainStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_grains;User=root;Password=11111
-      - MYSQLCONNSTR_DefaultPubSubStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_pubsub;User=root;Password=11111
       - MYSQLCONNSTR_DefaultClusterStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_clustering;User=root;Password=11111
     expose:
       - "30000"
@@ -64,7 +63,6 @@ services:
       - PLANNING_POKER_ORLEANS__CLUSTERID=agilepoker-cluster
       - PLANNING_POKER_ORLEANS__SERVICEID=agilepoker
       - MYSQLCONNSTR_DefaultGrainStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_grains;User=root;Password=11111
-      - MYSQLCONNSTR_DefaultPubSubStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_pubsub;User=root;Password=11111
       - MYSQLCONNSTR_DefaultClusterStorage=Server=agilepoker.storages;Port=3306;Database=agilepoker_clustering;User=root;Password=11111
     expose:
       - "30000"
@@ -81,7 +79,8 @@ services:
     depends_on:
       - agilepoker.api
     environment:
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTP_PORTS=80
+      - ASPNETCORE_HTTPS_PORTS=443
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/AgilePoker-WebApp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=11111
       - PLANNING_POKER_ORLEANS__USECLUSTER=true
