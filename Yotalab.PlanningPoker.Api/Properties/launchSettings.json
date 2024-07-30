@@ -19,6 +19,8 @@
     },
     "Yotalab.PlanningPoker.Api": {
       "commandName": "Project",
+      // [export|import]
+      "commandLineArgs": "",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       },

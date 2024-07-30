@@ -7,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 using MudBlazor.Services;
-using Orleans;
 using Yotalab.PlanningPoker.BlazorServerSide.Filters;
 using Yotalab.PlanningPoker.BlazorServerSide.Services;
 using Yotalab.PlanningPoker.BlazorServerSide.Services.FilesStoraging;
@@ -33,6 +32,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide
       services.AddRazorPages();
       services.AddServerSideBlazor();
       services.AddLocalization();
+      services.AddCascadingAuthenticationState();
 
       services.AddScoped<CircuitHandler, TrackingCircuitHandler>();
 

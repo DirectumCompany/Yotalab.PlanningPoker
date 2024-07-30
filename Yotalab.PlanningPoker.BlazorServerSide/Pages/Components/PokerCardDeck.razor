@@ -2,8 +2,8 @@
 
 @if (this.Bulletin != null)
 {
-  <MudGrid Class="justify-center">
-    @foreach (var bulletinItem in this.Bulletin)
+  <MudGrid Class="justify-center" Spacing="3">
+    @foreach (var bulletinItem in this.Bulletin.Items)
     {
       var vote = bulletinItem.Vote;
       if (vote.IsUnset || bulletinItem.IsDisabled)

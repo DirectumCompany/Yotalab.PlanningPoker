@@ -1,18 +1,23 @@
-﻿namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
+﻿using Orleans;
+
+namespace Yotalab.PlanningPoker.Grains.Interfaces.Models
 {
   /// <summary>
   /// Элемент бюллетени.
   /// </summary>
+  [GenerateSerializer]
   public class BulletinItem
   {
     /// <summary>
     /// Получить голос связанный с элементом бюллетени.
     /// </summary>
+    [Id(0)]
     public Vote Vote { get; private set; }
 
     /// <summary>
     /// Получить признак того, что элемент бюллетени недоступен.
     /// </summary>
+    [Id(1)]
     public bool IsDisabled { get; private set; }
 
     /// <summary>

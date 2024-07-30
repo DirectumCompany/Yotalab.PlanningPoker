@@ -1,5 +1,5 @@
 ﻿using System;
-using Orleans.Concurrency;
+using Orleans;
 
 namespace Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications
 {
@@ -7,6 +7,7 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications
   /// Уведомление об изменении состояния сессии планирования.
   /// </summary>
   [Immutable]
+  [GenerateSerializer]
   public class SessionProcessingNotification
   {
     public SessionProcessingNotification(Guid sessionId, SessionProcessingState newProcessingState)
@@ -18,11 +19,13 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications
     /// <summary>
     /// Получить идентификатор сессии.
     /// </summary>
+    [Id(0)]
     public Guid SessionId { get; }
 
     /// <summary>
     /// Получить новое состояние сессии.
     /// </summary>
+    [Id(1)]
     public SessionProcessingState NewProcessingState { get; }
   }
 }

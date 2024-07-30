@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Orleans;
+using Orleans.Runtime;
 using Orleans.Streams;
 using Yotalab.PlanningPoker.Grains.Interfaces;
 using Yotalab.PlanningPoker.Grains.Interfaces.Models;
@@ -58,7 +59,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Services
 
     public Task<StreamSubscriptionHandle<ParticipantChangedNotification>> SubscribeAsync(Func<ParticipantChangedNotification, Task> action) =>
         this.client.GetStreamProvider("SMS")
-            .GetStream<ParticipantChangedNotification>(Guid.Empty, typeof(IParticipantGrain).FullName)
+            .GetStream<ParticipantChangedNotification>(StreamId.Create(typeof(IParticipantGrain).FullName, Guid.Empty))
             .SubscribeAsync(new NotificationsObserver<ParticipantChangedNotification>(logger, action));
   }
 }

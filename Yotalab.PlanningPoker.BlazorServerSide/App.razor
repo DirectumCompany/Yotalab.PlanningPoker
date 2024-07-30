@@ -2,6 +2,7 @@
 @using Microsoft.Extensions.Logging
 
 <MudThemeProvider IsDarkMode="this.isDarkMode" Theme="Themes.Default" />
+<MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -9,30 +10,28 @@
   <ChildContent>
     <CascadingValue Value="this.isDarkMode" Name="IsDarkMode">
       <CascadingValue Value="this.switchIsDarkModeCallback" Name="SwitchIsDarkMode">
-        <CascadingAuthenticationState>
-          <Router AppAssembly="@typeof(Program).Assembly">
-            <Found Context="routeData">
-              @if (routeData != null)
-                {
-                  var pageType = routeData.PageType;
-                  var allowAnonymousAttribute = pageType.GetCustomAttributes(typeof(AllowAnonymousAttribute), true).FirstOrDefault();
-                  if (allowAnonymousAttribute == null)
-                  {
-                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-                  }
-                  else
-                  {
-                    <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-                  }
-                }
-            </Found>
-            <NotFound>
-              <LayoutView Layout="@typeof(MainLayout)">
-                <p>Sorry, there's nothing at this address.</p>
-              </LayoutView>
-            </NotFound>
-          </Router>
-        </CascadingAuthenticationState>
+        <Router AppAssembly="@typeof(Program).Assembly">
+          <Found Context="routeData">
+            @if (routeData != null)
+            {
+              var pageType = routeData.PageType;
+              var allowAnonymousAttribute = pageType.GetCustomAttributes(typeof(AllowAnonymousAttribute), true).FirstOrDefault();
+              if (allowAnonymousAttribute == null)
+              {
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+              }
+              else
+              {
+                <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+              }
+            }
+          </Found>
+          <NotFound>
+            <LayoutView Layout="@typeof(MainLayout)">
+              <p>Sorry, there's nothing at this address.</p>
+            </LayoutView>
+          </NotFound>
+        </Router>
       </CascadingValue>
     </CascadingValue>
   </ChildContent>

@@ -9,13 +9,13 @@
       {
         @if (this.Session.ProcessingState == SessionProcessingState.Finished)
         {
-          <MudButtonGroup DisableElevation="true" Variant="Variant.Filled" Size="Size.Small" OverrideStyles="false">
+          <MudButtonGroup DropShadow="false" Variant="Variant.Filled" Size="Size.Small" OverrideStyles="false">
             <MudIconButton Icon="@Icons.Material.Filled.Refresh"
                            Size="Size.Small"
                            Class="px-1"
                            Variant="Variant.Filled"
                            Color="Color.Default"
-                           Title="@UIResources.InitialSessionButton"
+                           title="@UIResources.InitialSessionButton"
                            Disabled="@this.isSessionStateChanging"
                            @onclick="@(async () => await this.ChangeSessionState(SessionProcessingState.Initial))"
                            @ondblclick:stopPropagation="true">

@@ -1,4 +1,4 @@
-﻿using Orleans.Concurrency;
+﻿using Orleans;
 
 namespace Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications
 {
@@ -6,6 +6,7 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications
   /// Уведомление об изменении одного участника.
   /// </summary>
   [Immutable]
+  [GenerateSerializer]
   public class ParticipantChangedNotification
   {
     public ParticipantChangedNotification(ParticipantInfo changedInfo)
@@ -16,6 +17,7 @@ namespace Yotalab.PlanningPoker.Grains.Interfaces.Models.Notifications
     /// <summary>
     /// Получить измененную информацию участника.
     /// </summary>
+    [Id(0)]
     public ParticipantInfo ChangedInfo { get; }
   }
 }

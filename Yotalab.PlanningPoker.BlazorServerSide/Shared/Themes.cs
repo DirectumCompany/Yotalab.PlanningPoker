@@ -6,7 +6,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Shared
   {
     public static readonly MudTheme Default = new()
     {
-      Palette = new Palette()
+      PaletteLight = new PaletteLight()
       {
         Background = "#f8f9fa",
       }

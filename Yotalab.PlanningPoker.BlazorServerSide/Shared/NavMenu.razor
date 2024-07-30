@@ -1,9 +1,9 @@
 ﻿@inject NavigationManager Navigation
 <div class="d-flex flex-grow-1 flex-shrink-0 mx-auto align-center">
   <span class="pr-4" style="line-height: 48px"><Logotype /></span>
-  <MudButton Variant="Variant.Text" Color="Color.Primary" Link="@this.Navigation.BaseUri">@UIResources.MySessions</MudButton>
+  <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@this.Navigation.BaseUri">@UIResources.MySessions</MudButton>
   <MudSpacer />
-  <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Target="_blank" Link="https://github.com/DirectumCompany/Yotalab.PlanningPoker"></MudIconButton>
+  <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Target="_blank" Href="https://github.com/DirectumCompany/Yotalab.PlanningPoker"></MudIconButton>
   <MudIconButton Icon="@Icons.Material.Filled.ModeNight" OnClick="this.HandleIsDarkModeClick"></MudIconButton>
   <ProfileLink />
 </div>

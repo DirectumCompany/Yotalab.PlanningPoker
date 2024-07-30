@@ -16,7 +16,7 @@
     <div class="d-flex flex-row justify-center align-center mb-2">
       <div style="min-width: 0;">
         <MudText Class="mb-0 mx-2 d-none d-sm-inline" Typo="Typo.h4" Align="Align.Center">@this.session.Name</MudText>
-        <MudText Class="mb-0 mx-2 d-sm-none" Typo="Typo.subtitle1" Align="Align.Center" Style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+        <MudText Class="mb-0 mx-2 d-sm-none" Typo="Typo.h6" Align="Align.Center" Style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
           @this.session.Name
         </MudText>
       </div>
@@ -26,7 +26,7 @@
       }
     </div>
     <CascadingValue Value="@this.session">
-      <MudGrid Class="flex-column flex-nowrap flex-md-row">
+      <MudGrid Class="flex-column flex-nowrap flex-md-row" Spacing="3">
         <MudItem md="5" lg="4" Class="d-md-none">
           <SessionStatusPrompt ParticipantId="this.ParticipantId" />
         </MudItem>
