@@ -2,6 +2,8 @@
 
 @using System.Globalization
 @using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.Extensions.Logging
 
 @namespace Yotalab.PlanningPoker.BlazorServerSide.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
@@ -10,24 +12,28 @@
   Layout = null;
 }
 
+@inject ILogger<Pages__Host> Logger
+
 <!DOCTYPE html>
 <html lang="en" class="h-100">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🃏</text></svg>" />
-    <title>Agile Poker</title>
-    <base href="~/" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-    <link rel="stylesheet" href="_content/MudBlazor/MudBlazor.min.css" />
-    <link rel="stylesheet" href="Yotalab.PlanningPoker.BlazorServerSide.styles.css" />
-    <link rel="stylesheet" href="css/identity.css" />
-    <link rel="stylesheet" href="css/app.css" />
-    <link href="manifest.json" rel="manifest" />
-    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
-  </head>
-  <body class="h-100">
-    @{
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🃏</text></svg>" />
+  <title>Agile Poker</title>
+  <base href="~/" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+  <link rel="stylesheet" href="_content/MudBlazor/MudBlazor.min.css" />
+  <link rel="stylesheet" href="Yotalab.PlanningPoker.BlazorServerSide.styles.css" />
+  <link rel="stylesheet" href="css/identity.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <link href="manifest.json" rel="manifest" />
+  <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+</head>
+<body class="h-100">
+  @{
+    try
+    {
       this.HttpContext.Response.Cookies.Append(
         CookieRequestCultureProvider.DefaultCookieName,
         CookieRequestCultureProvider.MakeCookieValue(
@@ -35,28 +41,34 @@
             CultureInfo.CurrentCulture,
             CultureInfo.CurrentUICulture)));
     }
+    catch (Exception ex)
+    {
+      this.Logger.LogWarning(ex, "Failed set localization cookie. Current uri: {Uri}",
+        this.HttpContext != null ? UriHelper.GetEncodedUrl(this.HttpContext.Request) : "null");
+    }
+  }
 
-    <app>
-      <component type="typeof(App)" render-mode="Server" />
-    </app>
+  <app>
+    <component type="typeof(App)" render-mode="Server" />
+  </app>
 
-    <feature name="Snowflakes">
-      <component type="typeof(Yotalab.PlanningPoker.BlazorServerSide.Shared.Snowflakes)" render-mode="Server" />
-    </feature>
+  <feature name="Snowflakes">
+    <component type="typeof(Yotalab.PlanningPoker.BlazorServerSide.Shared.Snowflakes)" render-mode="Server" />
+  </feature>
 
-    <div id="blazor-error-ui">
-      <environment include="Staging,Production">
-        An error has occurred. This application may no longer respond until reloaded.
-      </environment>
-      <environment include="Development">
-        An unhandled exception has occurred. See browser dev tools for details.
-      </environment>
-      <a href="" class="reload">Reload</a>
-      <a class="dismiss">🗙</a>
-    </div>
+  <div id="blazor-error-ui">
+    <environment include="Staging,Production">
+      An error has occurred. This application may no longer respond until reloaded.
+    </environment>
+    <environment include="Development">
+      An unhandled exception has occurred. See browser dev tools for details.
+    </environment>
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+  </div>
 
-    <script src="_framework/blazor.server.js"></script>
-    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
-    <script src="js/interop-functions.js"></script>
-  </body>
+  <script src="_framework/blazor.server.js"></script>
+  <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+  <script src="js/interop-functions.js"></script>
+</body>
 </html>
