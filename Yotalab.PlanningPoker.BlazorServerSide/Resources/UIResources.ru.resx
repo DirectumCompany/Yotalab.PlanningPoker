@@ -222,6 +222,12 @@
   <data name="NewSessionName" xml:space="preserve">
     <value>Новая сессия</value>
   </data>
+  <data name="NotFoundText" xml:space="preserve">
+    <value>Страница не найдена, но вы можете</value>
+  </data>
+  <data name="NotFoundTextLink" xml:space="preserve">
+    <value>вернуться на главную</value>
+  </data>
   <data name="NotParticipantHint" xml:space="preserve">
     <value>Вы не являетесь участником сессии '{0}'</value>
   </data>
@@ -280,7 +286,7 @@
     <value>Голосование идет</value>
   </data>
   <data name="WellcomeSubtitle" xml:space="preserve">
-    <value>Сделайте оценку Agile проектов простой и увлекательной.</value>
+    <value>Сделайте оценку Agile проектов приятной и увлекательной.</value>
   </data>
   <data name="WellcomeTitle" xml:space="preserve">
     <value>Ясное и простое планирование!</value>

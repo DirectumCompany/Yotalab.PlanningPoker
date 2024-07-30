@@ -1,0 +1,27 @@
+﻿<!-- TODO: Return 404 StatusCode https://github.com/dotnet/aspnetcore/issues/45654 -->
+@{
+  RenderFragment renderAlert =
+  @<MudAlert Class="mt-5" Style="text-align: left" NoIcon="false" Severity="Severity.Warning" ContentAlignment="HorizontalAlignment.Center">
+    <MudText Class="d-inline">@UIResources.NotFoundText</MudText>
+    <MudLink Href="/" Class="ml-0" Underline="Underline.None">@UIResources.NotFoundTextLink</MudLink>
+  </MudAlert>;
+}
+
+<AuthorizeView>
+  <Authorized>
+    <LayoutView Layout="@typeof(MainLayout)">
+      <ErrorBoundaryContent ShowLogotype="false">
+        <AlertContent>
+          @renderAlert
+        </AlertContent>
+      </ErrorBoundaryContent>
+    </LayoutView>
+  </Authorized>
+  <NotAuthorized>
+    <ErrorBoundaryContent>
+      <AlertContent>
+        @renderAlert
+      </AlertContent>
+    </ErrorBoundaryContent>
+  </NotAuthorized>
+</AuthorizeView>

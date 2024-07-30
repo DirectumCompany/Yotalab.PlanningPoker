@@ -222,6 +222,12 @@
   <data name="NewSessionName" xml:space="preserve">
     <value>New Session</value>
   </data>
+  <data name="NotFoundText" xml:space="preserve">
+    <value>The page was not found, but you can</value>
+  </data>
+  <data name="NotFoundTextLink" xml:space="preserve">
+    <value>return to the main page</value>
+  </data>
   <data name="NotParticipantHint" xml:space="preserve">
     <value>You are not a participant of the session '{0}'</value>
   </data>
@@ -280,7 +286,7 @@
     <value>Voting is underway</value>
   </data>
   <data name="WellcomeSubtitle" xml:space="preserve">
-    <value>Make estimating Agile projects simple and fun.</value>
+    <value>Make estimating Agile projects enjoyable and fun.</value>
   </data>
   <data name="WellcomeTitle" xml:space="preserve">
     <value>Clear and simple planning!</value>

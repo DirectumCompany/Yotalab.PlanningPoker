@@ -1,10 +1,28 @@
 ﻿<MudContainer Class="h-100 d-flex flex-column mx-auto" Style="padding-top: 5%" MaxWidth="MaxWidth.Small">
   <div style="text-align: center">
-    <Logotype />
-    <MudAlert Class="mt-5" Style="text-align: left" NoIcon="false" Severity="Severity.Error" ContentAlignment="HorizontalAlignment.Center">
-      <MudText Class="d-inline">@UIResources.ErrorBoundaryText</MudText>
-      <MudLink Href="/" Class="ml-0" Underline="Underline.None">@UIResources.ErrorBoundaryRefreshLink</MudLink>
-    </MudAlert>
+    @if (this.ShowLogotype)
+    {
+      <Logotype />
+    }
+    @if (this.AlertContent == null)
+    {
+      <MudAlert Class="mt-5" Style="text-align: left" NoIcon="false" Severity="Severity.Error" ContentAlignment="HorizontalAlignment.Center">
+        <MudText Class="d-inline">@UIResources.ErrorBoundaryText</MudText>
+        <MudLink Href="/" Class="ml-0" Underline="Underline.None">@UIResources.ErrorBoundaryRefreshLink</MudLink>
+      </MudAlert>
+    }
+    else
+    {
+      @this.AlertContent
+    }
     <div style="background:url('icon-512.png');background-repeat: no-repeat;background-size:contain;min-height:512px;background-position-x:center;"></div>
   </div>
 </MudContainer>
+
+@code {
+  [Parameter]
+  public bool ShowLogotype { get; set; } = true;
+
+  [Parameter]
+  public RenderFragment AlertContent { get; set; }
+}

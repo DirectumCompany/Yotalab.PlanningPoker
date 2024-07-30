@@ -376,6 +376,24 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The page was not found, but you can.
+        /// </summary>
+        public static string NotFoundText {
+            get {
+                return ResourceManager.GetString("NotFoundText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to return to the main page.
+        /// </summary>
+        public static string NotFoundTextLink {
+            get {
+                return ResourceManager.GetString("NotFoundTextLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You are not a participant of the session &apos;{0}&apos;.
         /// </summary>
         public static string NotParticipantHint {
@@ -547,7 +565,7 @@ namespace Yotalab.PlanningPoker.BlazorServerSide.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Make estimating Agile projects simple and fun..
+        ///   Looks up a localized string similar to Make estimating Agile projects enjoyable and fun..
         /// </summary>
         public static string WellcomeSubtitle {
             get {
